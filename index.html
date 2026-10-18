@@ -445,6 +445,7 @@ form.add button{grid-column:1/-1;padding:10px;border-radius:10px;border:0;backgr
         <button type="button" data-g="respire"><span aria-hidden="true">🌬️</span>Respirer avec Georges</button>
         <button type="button" data-g="joie"><span aria-hidden="true">🌍</span>Je déborde de joie</button>
         <button type="button" data-g="parler"><span aria-hidden="true">🤝</span>Parler à quelqu'un</button>
+        <button type="button" data-exo="1" style="grid-column:1/-1"><span aria-hidden="true">🤸</span>Mon réveil du corps</button>
       </div>
     </section>
     <section class="card" aria-labelledby="xpT">
@@ -1073,9 +1074,9 @@ const OFFERTS=[
 //  - type "video" : une nouvelle vidéo gratuite sur YouTube. youtube = lien de la vidéo.
 // debut / fin : la période où Georges l'affiche sur l'écran Aujourd'hui. Après, elle reste dans « Les annonces de Georges ».
 const NOUVEAUTES=[
- {id:"lilith",type:"serie",titre:"Lilith",sous:"La vérité cachée sur l'origine de l'humanité · 7 épisodes",debut:"2026-10-18",fin:"2026-11-15",
-  youtube:"",page:"https://www.lamagiedalessa.com/product-page/lilith",coupon:"GARDIENS2026",remise:"−50 %",
-  mot:"Coucou, c'est Georges ! Une nouvelle série vient d'ouvrir ses portes. Le premier épisode est offert : écoute-le, et si tu veux la suite, j'ai un code rien que pour toi."}
+ {id:"appel",type:"serie",titre:"L'Appel des Gardiens",sous:"30 jours pour trouver le sens de ta vie",debut:"2026-10-18",fin:"2027-12-31",
+  youtube:"",page:"https://www.lamagiedalessa.com/product-page/lappeldesgardiens",coupon:"GARDIENS2026",remise:"−50 %",
+  mot:"Coucou, c'est Georges ! Tu veux aller plus loin ? 30 jours pour trouver le sens de ta vie, te souvenir de qui tu es et œuvrer pour le monde. Crois-moi, ça fera toute la différence."}
 ];
 // Méditations et soins : [titre, durée, lien YouTube]. Laisse "" tant que le lien n'existe pas.
 const MATIN=[
@@ -1252,11 +1253,11 @@ document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!document.getElemen
 function renderMedits(){
   const sec=(t,L)=>`<section class="card"><h2>${t}<span>${L.length}</span></h2>${L.map(m=>`<div class="med"><div class="info"><div class="name">${esc(m[0])}</div><div class="meta">${esc(m[1])}</div></div>${linkHTML(m)}</div>`).join("")}</section>`;
   const nv=NOUVEAUTES.filter(n=>n.debut<=today);
-  const nvHTML=nv.length?`<section class="card"><h2>Les annonces de Georges<span>${nv.length}</span></h2>${nv.map(n=>`<div class="med"><div class="info"><div class="name">${esc(n.titre)}</div><div class="meta">${n.type==="serie"?"Nouvelle série":"Vidéo gratuite"} · ${esc(n.sous)}</div></div>
+  const nvHTML=nv.length?`<section class="card"><h2>Les annonces de Georges<span>${nv.length}</span></h2>${nv.map(n=>`<div class="med"><div class="info"><div class="name">${esc(n.titre)}</div><div class="meta">${n.type==="serie"?"La série du moment":"Vidéo gratuite"} · ${esc(n.sous)}</div></div>
       ${n.type==="serie"?(n.page?`<a class="go buy" href="${esc(n.page)}" target="_blank" rel="noopener">Découvrir ↗</a>`:`<span class="soon">Lien à venir</span>`):(n.youtube?`<a class="go buy" href="${esc(n.youtube)}" target="_blank" rel="noopener">Regarder ↗</a>`:`<span class="soon">Lien à venir</span>`)}</div>`).join("")}</section>`:"";
   const exoCard=`<section class="card"><h2>Exercice du matin<span>2 min 30</span></h2><div class="med"><div class="info"><div class="name">Ancrage et étirement</div><div class="meta">5 mouvements de 30 secondes, en images</div></div><button type="button" class="go" data-exo="1">Ouvrir la fiche</button></div></section>`;
   const brCard=`<section class="card"><h2>Respirations<span>${BREATHS.length}</span></h2>${BREATHS.map((b,i)=>`<div class="med"><div class="info"><div class="name">${b.e} ${esc(b.n)}</div><div class="meta">${esc(b.s)} · ${brDur(b)}</div></div><button type="button" class="go" data-br="${i}">Respirer</button></div>`).join("")}</section>`;
-  document.getElementById("medits").innerHTML=sec("Mon voyage intérieur immersif",VOYAGES)+nvHTML+exoCard+brCard+sec("Méditations du matin",MATIN)+sec("Méditations du soir",SOIR)+sec("Pleine lune et nouvelle lune",LUNES)+sec("Soins énergétiques pour les animaux",ANIMAUX)+sec("Soins énergétiques : bulle de protection",SOIN_BULLE)+sec("Voyages intérieurs offerts",OFFERTS);
+  document.getElementById("medits").innerHTML=sec("Mon voyage intérieur immersif",VOYAGES)+nvHTML+sec("Méditations du matin",MATIN)+sec("Méditations du soir",SOIR)+sec("Pleine lune et nouvelle lune",LUNES)+sec("Soins énergétiques pour les animaux",ANIMAUX)+sec("Soins énergétiques : bulle de protection",SOIN_BULLE)+sec("Voyages intérieurs offerts",OFFERTS);
 }
 renderMedits();
 
@@ -1512,7 +1513,7 @@ document.getElementById("bkLoad").addEventListener("click",()=>{
 
 // ---------- Onglets ----------
 const SUBS={g:"",j:"",d:"Tes menus végétaux du jour. Touche « Autre idée » si une recette ne te tente pas.",
-  m:"Ton voyage Vivant, tes méditations, tes soins énergétiques et ta fiche du matin.",
+  m:"Ton voyage Vivant, tes méditations et tes soins énergétiques.",
   n:"Ton chemin, jour après jour : tes journées vivantes et tes messages intuitifs.",
   s:"Note ce que tu manges : protéines, fer, calcium, zinc, vitamine C et oméga-3 se calculent tout seuls.",
   r:"Des idées de repas 100 % végétales pour chaque moment de la journée. Touche « J'ai mangé ça » pour remplir ton suivi.",
@@ -1688,12 +1689,12 @@ function renderLaunch(){
   if(!L.length){slot.innerHTML="";return;}
   slot.innerHTML=L.map(n=>{
     const serie=n.type==="serie";
-    const ep=n.youtube?`<a class="gbig" href="${esc(n.youtube)}" target="_blank" rel="noopener">${serie?"Écouter l'épisode 1 offert":"Regarder la vidéo"}</a>`:`<span class="gbig" style="opacity:.6">${serie?"Épisode 1 bientôt en ligne":"Bientôt en ligne"}</span>`;
+    const ep=n.youtube?`<a class="gbig" href="${esc(n.youtube)}" target="_blank" rel="noopener">${serie?"Écouter l'épisode 1 offert":"Regarder la vidéo"}</a>`:(n.page?`<a class="gbig" href="${esc(n.page)}" target="_blank" rel="noopener">Je découvre</a>`:`<span class="gbig" style="opacity:.6">Bientôt en ligne</span>`);
     const coupon=serie&&n.coupon?`<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:4px"><span class="meta">${esc(n.remise||"")} avec le code</span><button type="button" class="gsoft" data-copy="${esc(n.coupon)}" style="font-weight:700;letter-spacing:1px">${esc(n.coupon)}</button></div>`:"";
     return `<section class="card launch" aria-label="Annonce de Georges">
-    <div class="gdtop"><div class="gport sm">${U(GEORGES_SVG)}</div><div class="info"><div class="ltype">${serie?"Nouvelle série":"Nouvelle vidéo"}</div><p class="lmot">${esc(n.mot)}</p></div></div>
+    <div class="gdtop"><div class="gport sm">${U(GEORGES_SVG)}</div><div class="info"><div class="ltype">${serie?"La série du moment":"Nouvelle vidéo"}</div><p class="lmot">${esc(n.mot)}</p></div></div>
     <div><div class="meta">${esc(n.sous)}</div><div class="ltitle">${esc(n.titre)}</div></div>
-    <div class="lact">${ep}${serie&&n.page?`<a class="gsoft" href="${esc(n.page)}" target="_blank" rel="noopener" style="text-decoration:none">Découvrir la série</a>`:""}
+    <div class="lact">${ep}${serie&&n.page&&n.youtube?`<a class="gsoft" href="${esc(n.page)}" target="_blank" rel="noopener" style="text-decoration:none">Découvrir la série</a>`:""}
       <button type="button" class="gsoft" data-later="${n.id}">Plus tard</button></div>${coupon}
   </section>`;}).join("");
 }
