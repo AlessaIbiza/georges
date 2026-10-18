@@ -1,0 +1,1734 @@
+<!doctype html><html lang="fr"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Georges">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#0a8379">
+<meta name="robots" content="noindex">
+<link rel="apple-touch-icon" href="icon.png">
+<link rel="icon" href="icon.png">
+<link rel="manifest" href="manifest.json">
+<style>.gate{display:none!important}[hidden]{display:none!important}</style>
+<title>Georges</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700&family=Figtree:wght@400;500;600&display=swap">
+<style>
+/* Layout: one narrow column with three tabs. Suivi = protein ring + nutrient bars + collagen bricks + daily essentials; Recettes = meal chips and recipe cards; Essentiels = nutrient guide cards */
+:root{
+  --bg:#eaf6f6; --card:#ffffff; --fg:#0c2527; --muted:#456a6c; --line:#cfe6e6;
+  --leaf:#0a8379; --leaf-soft:#d3f1ee; --iron:#a8472f; --vitc:#c98708; --zinc:#0e8a9c; --ca:#7a5c99; --o3:#2b7f86; --ok:#0a7d60;
+  --display:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif;
+  --body:"Figtree",ui-sans-serif,system-ui,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#05181a; --card:#0b2426; --fg:#e2f6f5; --muted:#8bb5b3; --line:#193a3c;
+  --leaf:#3fd8c8; --leaf-soft:#0f3a3a; --iron:#e08a6f; --vitc:#f2b63a; --zinc:#4fd3e3; --ca:#bba0d8; --o3:#6cc3c9; --ok:#3dd6a8; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#05181a; --card:#0b2426; --fg:#e2f6f5; --muted:#8bb5b3; --line:#193a3c;
+  --leaf:#3fd8c8; --leaf-soft:#0f3a3a; --iron:#e08a6f; --vitc:#f2b63a; --zinc:#4fd3e3; --ca:#bba0d8; --o3:#6cc3c9; --ok:#3dd6a8; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font:15px/1.5 var(--body);
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 40px}
+.wrap{max-width:560px;margin:0 auto;display:flex;flex-direction:column;gap:16px}
+h1{font:700 1.7rem/1.1 var(--display);margin:0;text-wrap:balance}
+.sub{color:var(--muted);margin:4px 0 0}
+.brand{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.brand svg{width:40px;height:40px;flex:none}
+.brand .bt{display:flex;flex-direction:column;line-height:1.2}
+.brand .bt b{font:700 .95rem var(--display);color:var(--leaf)}
+.brand .bt span{font-size:.8rem;color:var(--muted)}
+.tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;background:var(--line);padding:4px;border-radius:12px}
+.tabs button{padding:10px 4px;border:0;border-radius:9px;background:transparent;color:var(--muted);font:600 .9rem var(--body);cursor:pointer}
+.tabs button[aria-selected="true"]{background:var(--card);color:var(--fg);box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.pane{display:flex;flex-direction:column;gap:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.card h2{font:700 1.05rem var(--display);margin:0;padding:12px 14px;display:flex;justify-content:space-between;gap:8px;border-bottom:1px solid var(--line)}
+.card h2 span{font-variant-numeric:tabular-nums;color:var(--muted);font-weight:500;font-family:var(--body);font-size:.9rem}
+.settings{display:flex;flex-wrap:wrap;gap:10px 14px;padding:12px 14px;border-bottom:1px solid var(--line)}
+.settings label{display:flex;align-items:center;gap:6px;color:var(--muted);font-size:.88rem}
+.settings input,.settings select{padding:6px 8px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--fg);font:600 .95rem var(--body)}
+.settings input{width:64px}
+.sumtop{display:flex;gap:16px;align-items:center;padding:14px}
+.ring{width:96px;height:96px;flex:none}
+.ring circle{fill:none;stroke-width:10}
+.ring .bgc{stroke:var(--line)} .ring .fgc{stroke:var(--leaf);stroke-linecap:round;transition:stroke-dashoffset .4s}
+.ring text{fill:var(--fg);font:700 20px var(--display)} .ring .small{font:500 10px var(--body);fill:var(--muted)}
+.stats{display:flex;flex-direction:column;gap:4px;min-width:0}
+.stats b{font:700 1.15rem var(--display)}
+.bars{display:flex;flex-direction:column;gap:10px;padding:0 14px 14px}
+.bar .lab{display:flex;justify-content:space-between;font-size:.88rem;gap:8px}
+.bar .lab b{font-weight:600}
+.bar .lab span{color:var(--muted);font-variant-numeric:tabular-nums}
+.track{height:8px;border-radius:4px;background:var(--line);overflow:hidden;margin-top:4px}
+.track div{height:100%;width:0;border-radius:4px;transition:width .4s}
+.meta{color:var(--muted);font-size:.85rem}
+.bricks{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;padding:12px 14px}
+.brick{border:1.5px dashed var(--line);border-radius:10px;padding:8px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.brick b{font-size:.88rem}
+.brick span{font-size:.78rem;color:var(--muted)}
+.brick.ok{border-style:solid;border-color:var(--ok);background:var(--leaf-soft)}
+.brick.ok span{color:var(--ok)}
+.colnote{padding:0 14px 12px;margin:0}
+.bricks.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+.brick b{font-size:.82rem;line-height:1.25;hyphens:auto;overflow-wrap:anywhere}
+.how{padding:0 14px 14px;font-size:.92rem}
+.how summary{cursor:pointer;color:var(--leaf);font-weight:700;padding:4px 0}
+.how ol{margin:8px 0;padding-left:20px;display:flex;flex-direction:column;gap:6px}
+.how p{margin:8px 0 0}
+.chain{display:flex;align-items:center;justify-content:space-between;gap:6px;margin-top:10px;text-align:center;font-size:.78rem;font-weight:600}
+.chain div{flex:1;background:var(--leaf-soft);border-radius:12px;padding:8px 4px;display:flex;flex-direction:column;gap:2px}
+.chain span{font-size:1.4rem}
+.chain b{color:var(--muted)}
+.alert{margin:0 14px 14px;padding:12px 14px;border-radius:12px;border:2px solid var(--iron);background:color-mix(in srgb,var(--iron) 12%,var(--card));font-size:.92rem;line-height:1.45}
+.alert b:first-child{display:block;color:var(--iron);font:700 .95rem var(--body);margin-bottom:2px}
+.fizz{display:flex;align-items:center;justify-content:center;gap:10px;padding:0 14px 8px;font-size:1.6rem}
+.fizz .plus{font:700 1.1rem var(--display);color:var(--muted)}
+.ess{display:flex;align-items:center;gap:12px;padding:10px 14px;border-top:1px solid var(--line);cursor:pointer}
+.ess:first-of-type{border-top:0}
+.ess input{width:22px;height:22px;accent-color:var(--leaf);flex:none;margin:0}
+.ess .auto{font-size:.75rem;color:var(--ok);font-weight:600}
+.info{flex:1;min-width:0}
+.name{font-weight:600}
+.days{display:flex;justify-content:space-between;gap:4px;padding:10px 14px 12px;border-top:1px solid var(--line)}
+.days .lbl{font-size:.75rem;color:var(--muted);align-self:center;flex:none;margin-right:6px}
+.day{display:flex;flex-direction:column;align-items:center;gap:4px;font-size:.75rem;color:var(--muted);flex:1}
+.dot{width:20px;height:20px;border-radius:50%;border:1.5px solid var(--line)}
+.dot.on{background:var(--leaf);border-color:var(--leaf)}
+.day.today{color:var(--fg);font-weight:600}
+.ate{display:flex;flex-wrap:wrap;gap:6px;padding:12px 14px}
+.chip{background:var(--leaf-soft);border-radius:14px;padding:3px 10px;font-size:.85rem}
+.search{position:sticky;top:env(safe-area-inset-top,0px);z-index:2;background:var(--bg);padding-block:8px}
+.search input{width:100%;padding:11px 14px;border:1px solid var(--line);border-radius:12px;background:var(--card);color:var(--fg);font:500 1rem var(--body)}
+#cats{display:flex;flex-direction:column;gap:14px}
+.row{display:flex;align-items:center;gap:10px;padding:10px 14px;border-top:1px solid var(--line)}
+.card h2 + .row{border-top:0}
+.row.on{background:var(--leaf-soft)}
+.nut{display:flex;flex-wrap:wrap;gap:2px 10px;font-size:.8rem;margin-top:2px;font-variant-numeric:tabular-nums}
+.nut .p{color:var(--leaf)} .nut .f{color:var(--iron)} .nut .c{color:var(--vitc)} .nut .z{color:var(--zinc)} .nut .k{color:var(--ca)} .nut .o{color:var(--o3)}
+.ctr{display:flex;align-items:center;gap:6px;flex:none}
+.ctr button{width:34px;height:34px;border-radius:50%;border:1px solid var(--line);background:var(--card);color:var(--fg);font:600 1.1rem var(--body);cursor:pointer}
+.ctr button.plus{background:var(--leaf);border-color:var(--leaf);color:var(--bg)}
+.ctr .n{min-width:18px;text-align:center;font-variant-numeric:tabular-nums;font-weight:600}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--vitc);outline-offset:2px}
+.del{background:none;border:0;color:var(--iron);font:500 .8rem var(--body);cursor:pointer;padding:2px 0;margin-top:2px}
+form.add{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;padding:12px 14px}
+form.add label{display:flex;flex-direction:column;gap:3px;font-size:.82rem;color:var(--muted);min-width:0}
+form.add label.wide{grid-column:1/-1}
+form.add input{padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--fg);font:500 .95rem var(--body);width:100%}
+form.add button{grid-column:1/-1;padding:10px;border-radius:10px;border:0;background:var(--leaf);color:var(--bg);font:600 .95rem var(--body);cursor:pointer}
+.empty{padding:14px;color:var(--muted)}
+.reset{align-self:center;background:none;border:1px solid var(--line);color:var(--muted);padding:8px 16px;border-radius:20px;font:500 .9rem var(--body);cursor:pointer}
+.meals{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}
+.meals button{flex:none;padding:8px 14px;border-radius:18px;border:1px solid var(--line);background:var(--card);color:var(--fg);font:600 .9rem var(--body);cursor:pointer}
+.meals button[aria-pressed="true"]{background:var(--leaf);border-color:var(--leaf);color:var(--bg)}
+.mnote{margin:0;color:var(--muted)}
+.rec{padding:14px;display:flex;flex-direction:column;gap:10px}
+.rec h3{font:700 1.15rem/1.2 var(--display);margin:0;text-wrap:balance}
+.rhead{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.time{flex:none;font-size:.8rem;color:var(--muted);border:1px solid var(--line);border-radius:10px;padding:2px 8px}
+.rec ul,.rec ol{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:3px}
+.rec h4{margin:0;font:700 .78rem var(--body);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.badge{align-self:flex-start;font-size:.8rem;font-weight:600;color:var(--iron);border:1.5px solid var(--iron);border-radius:12px;padding:2px 10px}
+.eat{align-self:stretch;padding:11px;border-radius:10px;border:0;background:var(--leaf);color:var(--bg);font:600 .95rem var(--body);cursor:pointer}
+.more{align-self:center;background:var(--card);border:1px solid var(--line);color:var(--fg);padding:9px 18px;border-radius:20px;font:600 .9rem var(--body);cursor:pointer}
+.guide{padding:14px;display:flex;flex-direction:column;gap:6px;border-left:4px solid var(--g,var(--leaf))}
+.guide h3{font:700 1.1rem var(--display);margin:0;display:flex;justify-content:space-between;gap:8px;align-items:baseline}
+.guide h3 span{font:600 .78rem var(--body);color:var(--g,var(--leaf));text-transform:uppercase;letter-spacing:.05em;flex:none}
+.guide p{margin:0}
+.guide .src{color:var(--muted);font-size:.9rem}
+.intro{background:var(--leaf-soft);border-radius:14px;padding:14px 16px;margin:0}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--fg);color:var(--bg);padding:10px 18px;border-radius:20px;font-weight:600;font-size:.9rem;max-width:calc(100% - 32px);text-align:center;z-index:5}
+.foot{display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;padding-top:18px;border-top:1px solid var(--line);color:var(--muted);font-size:.8rem}
+.foot svg{width:30px;height:30px}
+.foot b{color:var(--fg);font-weight:600}
+.hero{padding:20px 18px;display:flex;flex-direction:column;gap:8px;background:linear-gradient(160deg,var(--leaf-soft),var(--card))}
+.dayline{font-size:.85rem;color:var(--muted)}
+.dayline b{color:var(--leaf);font-weight:700}
+.tagx{align-self:flex-start;font:700 .72rem var(--body);letter-spacing:.08em;text-transform:uppercase;color:var(--leaf)}
+.mantra{margin:0;font:700 1.45rem/1.25 var(--display);text-wrap:balance}
+.rit{display:flex;align-items:center;gap:12px;padding:12px 14px;border-top:1px solid var(--line)}
+.card h2 + div .rit:first-child{border-top:0}
+.rit input{width:24px;height:24px;accent-color:var(--leaf);flex:none;margin:0}
+.rit.done{background:var(--leaf-soft)}
+.go{flex:none;padding:7px 12px;border-radius:16px;border:1.5px solid var(--leaf);color:var(--leaf);text-decoration:none;font:600 .85rem var(--body);background:var(--card)}
+.go:focus-visible{outline:2px solid var(--vitc);outline-offset:2px}
+.soon{flex:none;font-size:.78rem;color:var(--muted);font-style:italic}
+.streak{padding:10px 14px 0;border-top:1px solid var(--line);font-weight:600}
+.streak span{color:var(--muted);font-weight:400;font-size:.88rem}
+.pad{padding:12px 14px;display:flex;flex-direction:column;gap:8px}
+.pad textarea{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--fg);font:400 1rem/1.5 var(--body);resize:vertical}
+.pad textarea:focus-visible{outline:2px solid var(--leaf);outline-offset:1px}
+.jr{padding:10px 14px;border-top:1px solid var(--line)}
+.card h2 + div .jr:first-child{border-top:0}
+.jr .meta{text-transform:capitalize}
+.jr p{margin:2px 0 0;white-space:pre-wrap}
+.med{display:flex;align-items:center;gap:12px;padding:12px 14px;border-top:1px solid var(--line)}
+.card h2 + .med{border-top:0}
+.subnav{margin-top:-4px}
+#bkCode,#bkIn{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--fg);font:500 .8rem/1.4 ui-monospace,monospace;word-break:break-all}
+.restore summary{cursor:pointer;color:var(--leaf);font-weight:600;padding:4px 0}
+.restore{display:flex;flex-direction:column;gap:8px}
+.restore[open]>*:not(summary){margin-top:8px;display:block;width:100%}
+.apphead{display:flex;align-items:center;gap:14px}
+.gport.xs{width:58px;height:58px;flex:none}
+.apphead h1{font:700 1.9rem/1 var(--display);margin:0}
+.atag{font:500 .95rem var(--body);color:var(--fg);margin-top:4px}
+.asig{font:600 .72rem var(--body);letter-spacing:.06em;text-transform:uppercase;color:var(--leaf);margin-top:3px}
+.sub:empty{display:none}
+.regle{border-top:1px solid var(--line);padding-top:10px;margin-top:4px;display:flex;flex-direction:column;gap:2px}
+.regle p{margin:0;font:500 1rem/1.4 var(--body);font-style:italic}
+.gmsg{position:fixed;inset:0;z-index:9;overflow:auto;display:flex;
+  background:radial-gradient(1.2px 1.2px at 12% 18%,#fff 60%,transparent 62%),radial-gradient(1px 1px at 32% 8%,#dffcf3 60%,transparent 62%),radial-gradient(1.6px 1.6px at 78% 14%,#fff 60%,transparent 62%),radial-gradient(1px 1px at 88% 40%,#bff5ff 60%,transparent 62%),radial-gradient(1.3px 1.3px at 58% 30%,#fff 60%,transparent 62%),radial-gradient(1px 1px at 22% 52%,#fff 60%,transparent 62%),radial-gradient(1.4px 1.4px at 66% 70%,#e8fff9 60%,transparent 62%),radial-gradient(1px 1px at 8% 84%,#fff 60%,transparent 62%),radial-gradient(1.2px 1.2px at 92% 88%,#fff 60%,transparent 62%),radial-gradient(60% 40% at 50% 30%,rgba(79,211,227,.35),transparent 70%),linear-gradient(165deg,#03231f 0%,#065a4c 38%,#0b6f80 70%,#16336e 100%);color:#effbf7;
+  padding:calc(28px + env(safe-area-inset-top,0px)) max(20px,env(safe-area-inset-right,0px)) calc(28px + env(safe-area-inset-bottom,0px)) max(20px,env(safe-area-inset-left,0px))}
+.gcard{margin:auto;max-width:380px;width:100%;display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center;animation:gin .6s ease-out}
+@keyframes gin{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.gport svg{display:block;width:100%;height:100%}
+.gport.big{width:170px;height:170px;filter:drop-shadow(0 12px 24px rgba(0,0,0,.15))}
+.gport.sm{width:64px;height:64px;flex:none}
+.gfrom{font:700 .75rem var(--body);letter-spacing:.1em;text-transform:uppercase;color:var(--leaf)}
+.gtext{margin:0;font:700 1.45rem/1.35 var(--display);text-wrap:balance}
+.ghelp{margin:0;font-size:.85rem;color:var(--muted);background:var(--card);border-radius:12px;padding:10px 12px}
+.gbtns{display:flex;flex-direction:column;gap:8px;width:100%;margin-top:6px}
+.gbig{width:100%;padding:14px;border-radius:14px;border:0;background:var(--leaf);color:var(--bg);font:700 1rem var(--body);cursor:pointer}
+.gsoft{width:100%;padding:12px;border-radius:14px;border:1px solid var(--line);background:var(--card);color:var(--fg);font:600 .95rem var(--body);cursor:pointer}
+.gday{padding:16px;display:flex;flex-direction:column;gap:12px;border:0;color:#effbf7;background:radial-gradient(1.2px 1.2px at 12% 18%,#fff 60%,transparent 62%),radial-gradient(1px 1px at 32% 8%,#dffcf3 60%,transparent 62%),radial-gradient(1.6px 1.6px at 78% 14%,#fff 60%,transparent 62%),radial-gradient(1px 1px at 88% 40%,#bff5ff 60%,transparent 62%),radial-gradient(1.3px 1.3px at 58% 30%,#fff 60%,transparent 62%),radial-gradient(1px 1px at 22% 52%,#fff 60%,transparent 62%),radial-gradient(1.4px 1.4px at 66% 70%,#e8fff9 60%,transparent 62%),radial-gradient(1px 1px at 8% 84%,#fff 60%,transparent 62%),radial-gradient(1.2px 1.2px at 92% 88%,#fff 60%,transparent 62%),radial-gradient(60% 40% at 50% 30%,rgba(79,211,227,.35),transparent 70%),linear-gradient(165deg,#03231f 0%,#065a4c 38%,#0b6f80 70%,#16336e 100%)}
+.gdtop{display:flex;gap:12px;align-items:center}
+.gquote{display:block;text-align:left;background:none;border:0;padding:2px 0 0;color:var(--fg);font:500 1rem/1.4 var(--body);cursor:pointer}
+.gb3{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.gb3 button{display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 6px;border-radius:14px;border:1px solid var(--line);background:var(--card);color:var(--fg);font:600 .82rem/1.2 var(--body);cursor:pointer;text-align:center}
+.gb3 button span{font-size:1.4rem}
+.launch{padding:16px;display:flex;flex-direction:column;gap:12px;border:2px solid var(--vitc);background:linear-gradient(160deg,color-mix(in srgb,var(--vitc) 16%,var(--card)),var(--card))}
+.launch .lmot{margin:2px 0 0;font:500 1rem/1.4 var(--body)}
+.launch .ltitle{font:700 1.2rem/1.25 var(--display)}
+.launch .ltype{font:700 .72rem var(--body);letter-spacing:.08em;text-transform:uppercase;color:var(--vitc)}
+.lact{display:flex;gap:8px}
+.lact a,.lact span.gbig{flex:1;text-align:center;text-decoration:none}
+.lact button{flex:none;width:auto;padding:12px 16px}
+.go.buy{border-color:var(--vitc);color:var(--fg);background:color-mix(in srgb,var(--vitc) 18%,var(--card))}
+.mylib{display:block;text-align:center;text-decoration:none}
+.mini{display:inline-block;margin-top:3px;font-size:.8rem;color:var(--leaf);font-weight:600}
+.gmsg .gfrom,.gday .gfrom{color:#86f0cf}
+.gmsg .gtext{color:#fff}
+.gmsg .gbig{background:#3ee0b1;color:#03231f}
+.gmsg .gsoft{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.28);color:#fff}
+.gmsg .ghelp{background:rgba(255,255,255,.1);color:#d6efe8}
+.gmsg .blabel{color:#fff}
+.gday .gquote{color:#fff}
+.gday .gb3 button{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.25);color:#fff}
+.gport.big{filter:drop-shadow(0 0 28px rgba(110,240,210,.45))}
+.talk{width:100%;display:flex;flex-direction:column;gap:10px;text-align:left}
+.tq{margin:0;font:600 1rem/1.5 var(--body);color:#fff;text-align:center}
+.tl{font:700 .72rem var(--body);letter-spacing:.08em;text-transform:uppercase;color:#86f0cf}
+.talk input{width:100%;padding:12px 14px;border-radius:12px;border:1px solid rgba(255,255,255,.3);background:rgba(255,255,255,.12);color:#fff;font:500 1rem var(--body)}
+.talk input::placeholder{color:rgba(255,255,255,.6)}
+.tn{margin:0;font-size:.9rem;color:#d6efe8}
+.tlines{background:rgba(255,255,255,.1);border-radius:14px;padding:12px 14px;display:flex;flex-direction:column;gap:7px;font-size:.92rem;color:#fff;user-select:text}
+.tlines span{display:block;font-size:.8rem;color:#bfe3da}
+.tc{font:700 .72rem var(--body);letter-spacing:.08em;text-transform:uppercase;color:#86f0cf;margin-top:4px}
+.breath{position:relative;width:200px;height:200px;display:flex;align-items:center;justify-content:center}
+.bcircle{position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle,color-mix(in srgb,var(--zinc) 45%,transparent),color-mix(in srgb,var(--leaf) 25%,transparent));transform:scale(.55);transition:transform 5s ease-in-out}
+.bcircle.in{transform:scale(1)}
+.blabel{position:relative;font:700 1.2rem var(--display)}
+.gate{position:fixed;inset:0;z-index:10;background:var(--bg);display:flex;align-items:center;justify-content:center;
+  padding:calc(24px + env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) calc(24px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));overflow:auto}
+.gbox{width:100%;max-width:380px;display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center}
+.gbox svg{width:64px;height:64px}
+.gbrand{font-size:.8rem;color:var(--muted)}
+.gtitle{font:700 1.8rem/1.1 var(--display);margin:0}
+.gbox label{color:var(--muted)}
+.gbox input{width:100%;padding:13px 14px;border:1px solid var(--line);border-radius:12px;background:var(--card);color:var(--fg);font:600 1.1rem var(--body);text-align:center;letter-spacing:.08em;text-transform:uppercase}
+.gbox button{width:100%;padding:13px;border-radius:12px;border:0;background:var(--leaf);color:var(--bg);font:700 1rem var(--body);cursor:pointer}
+.gerr{color:var(--iron);font-weight:600;min-height:1.2em}
+.gnote{font-size:.8rem;color:var(--muted)}
+.wrap{padding-bottom:84px}
+.bnav{position:fixed;left:0;right:0;bottom:0;z-index:4;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));background:var(--card);border-top:1px solid var(--line);
+  padding:6px max(8px,env(safe-area-inset-right,0px)) calc(6px + env(safe-area-inset-bottom,0px)) max(8px,env(safe-area-inset-left,0px))}
+.bnav button{display:flex;flex-direction:column;align-items:center;gap:2px;background:none;border:0;color:var(--muted);font:600 .72rem var(--body);padding:6px 2px;cursor:pointer;max-width:120px;justify-self:center;width:100%}
+.bnav button[aria-selected="true"]{color:var(--leaf)}
+.bnav svg{width:24px;height:24px}
+.toast{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
+.tophead{display:flex;align-items:center;gap:12px}
+.hello{font:700 1.3rem var(--display)}
+.ring.sm{width:72px;height:72px}
+.ring.sm text{font:700 22px var(--display)}
+.menu{padding:12px 14px;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:8px}
+.card h2 + div .menu:first-child{border-top:0}
+.menu.done{background:var(--leaf-soft)}
+.mtop{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.mlabel{font:700 .72rem var(--body);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.dtag{font-size:.8rem;font-weight:700;color:var(--ok)}
+.menu details summary{cursor:pointer;list-style:none;display:flex;flex-direction:column;gap:2px}
+.menu details summary::-webkit-details-marker{display:none}
+.menu details summary b{font:700 1.02rem var(--display)}
+.menu details summary .meta::after{content:" · voir la recette"}
+.menu details[open] summary .meta::after{content:" · masquer"}
+.menu .rbody{display:flex;flex-direction:column;gap:6px;padding-top:8px}
+.menu ul,.menu ol{margin:0;padding-left:20px}
+.mact{display:flex;gap:8px;flex-wrap:wrap}
+.mact button{padding:8px 14px;border-radius:16px;font:600 .85rem var(--body);cursor:pointer;border:1.5px solid var(--leaf)}
+.mact .eat2{background:var(--leaf);color:var(--bg)}
+.mact .swap{background:var(--card);color:var(--leaf)}
+.mact .undo{background:var(--card);color:var(--muted);border-color:var(--line)}
+.bars.mini{padding:12px 14px}
+.linkbtn{background:none;border:0;color:var(--leaf);font:600 .88rem var(--body);cursor:pointer;padding:0}
+.month{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px;padding:14px}
+.mday{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:.72rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.mday .dot{width:26px;height:26px}
+.mday.today{color:var(--fg);font-weight:700}
+.stage{position:relative;border-radius:26px;overflow:hidden;padding:22px 16px 18px;display:flex;flex-direction:column;align-items:center;gap:6px;color:#effbf7;
+  background:radial-gradient(1.2px 1.2px at 12% 18%,#fff 60%,transparent 62%),radial-gradient(1px 1px at 32% 8%,#dffcf3 60%,transparent 62%),radial-gradient(1.6px 1.6px at 78% 14%,#fff 60%,transparent 62%),radial-gradient(1px 1px at 88% 40%,#bff5ff 60%,transparent 62%),radial-gradient(1.3px 1.3px at 58% 26%,#fff 60%,transparent 62%),radial-gradient(1px 1px at 18% 48%,#fff 60%,transparent 62%),radial-gradient(1.4px 1.4px at 70% 52%,#e8fff9 60%,transparent 62%),radial-gradient(55% 45% at 50% 55%,rgba(79,211,227,.35),transparent 70%),linear-gradient(165deg,#03231f 0%,#065a4c 40%,#0b6f80 72%,#16336e 100%)}
+.ground{position:absolute;left:-10%;right:-10%;bottom:-60px;height:120px;border-radius:50%;background:radial-gradient(ellipse at center,rgba(62,224,177,.35),transparent 70%)}
+.bubble{position:relative;z-index:1;background:#fff;color:#0f2620;border-radius:18px;padding:10px 14px;font:600 .98rem/1.35 var(--body);max-width:320px;text-align:center;box-shadow:0 8px 20px rgba(0,0,0,.2);text-wrap:balance}
+.bubble:after{content:"";position:absolute;left:50%;bottom:-8px;transform:translateX(-50%);border:9px solid transparent;border-top-color:#fff;border-bottom:0}
+.dog{position:relative;z-index:1;width:210px;height:210px;cursor:pointer;animation:idle 3.2s ease-in-out infinite;transform-origin:50% 90%}
+.dog svg{width:100%;height:100%;display:block;filter:drop-shadow(0 0 26px rgba(110,240,210,.4))}
+.dog.joy{animation:hop .5s ease-in-out 3}
+.dog.sleep{animation:snooze 4s ease-in-out infinite}
+@keyframes idle{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-4px) scale(1.015)}}
+@keyframes hop{0%,100%{transform:translateY(0)}40%{transform:translateY(-22px) rotate(-3deg)}70%{transform:translateY(-6px) rotate(2deg)}}
+@keyframes snooze{0%,100%{transform:scale(1)}50%{transform:scale(1.03)}}
+.zzz{position:absolute;right:22%;top:30%;z-index:2;font:700 1.4rem var(--display);color:#bff5ff;animation:z 2.4s ease-in-out infinite}
+@keyframes z{0%{opacity:0;transform:translate(0,10px)}50%{opacity:1}100%{opacity:0;transform:translate(14px,-22px)}}
+.hearts{position:absolute;inset:0;pointer-events:none;z-index:3}
+.hearts span{position:absolute;bottom:40%;font-size:1.6rem;animation:up 1.4s ease-out forwards}
+@keyframes up{from{opacity:1;transform:translateY(0)}to{opacity:0;transform:translateY(-120px)}}
+.tname{z-index:1;font:700 .75rem var(--body);letter-spacing:.1em;text-transform:uppercase;color:#86f0cf}
+.gauges{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.gauge{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:10px;display:flex;flex-direction:column;gap:6px}
+.gauge .gl{display:flex;flex-direction:column;font:700 .85rem/1.25 var(--body)}
+.gauge .gl span{color:var(--muted);font-weight:600;font-size:.8rem;font-variant-numeric:tabular-nums;white-space:nowrap}
+.acts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.act{display:flex;flex-direction:column;align-items:center;gap:4px;padding:14px 6px;border-radius:18px;border:0;cursor:pointer;color:#fff;font:700 .95rem var(--body)}
+.act span{font-size:1.8rem;line-height:1}
+.act small{font:500 .72rem/1.2 var(--body);opacity:.9;text-align:center}
+.a1{background:linear-gradient(160deg,#0a7d60,#14a37c)} .a2{background:linear-gradient(160deg,#0e8a9c,#2bb3c4)} .a3{background:linear-gradient(160deg,#b8790a,#e0a12e)}
+.act:focus-visible,button:focus-visible{outline:3px solid var(--vitc);outline-offset:2px}
+.xp .track div{background:linear-gradient(90deg,var(--leaf),var(--zinc))}
+.rules{display:flex;flex-direction:column;gap:6px;margin:0;padding:0;list-style:none}
+.rules li{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border-radius:12px;background:var(--leaf-soft);font-size:.92rem}
+.rules li.lock{background:transparent;border:1px dashed var(--line);color:var(--muted)}
+.rules li b{flex:none;font-family:var(--display)}
+.tip{font:500 .95rem/1.45 var(--body);margin:0}
+.sheetbg{position:fixed;inset:0;z-index:8;background:rgba(3,20,17,.55);display:flex;align-items:flex-end;justify-content:center}
+.sheet{width:100%;max-width:520px;background:var(--bg);border-radius:24px 24px 0 0;max-height:88%;overflow:auto;
+  padding:18px max(16px,env(safe-area-inset-right,0px)) calc(20px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));display:flex;flex-direction:column;gap:12px;animation:sup .3s ease-out}
+@keyframes sup{from{transform:translateY(40px);opacity:.5}to{transform:none;opacity:1}}
+.sheet h3{margin:0;font:700 1.25rem var(--display)}
+.mis{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px 14px;display:flex;align-items:center;gap:12px}
+.mis .ic{font-size:1.6rem;flex:none}
+.mis .tx{flex:1;min-width:0;font-weight:600}
+.mis .tx small{display:block;font-weight:400;color:var(--muted)}
+.mis button{flex:none;border:0;border-radius:12px;padding:9px 12px;background:var(--leaf);color:var(--bg);font:700 .85rem var(--body);cursor:pointer}
+.mis.done{opacity:.55}.mis.done button{background:var(--line);color:var(--muted);cursor:default}
+.close{border:1px solid var(--line);background:var(--card);color:var(--fg);border-radius:14px;padding:12px;font:600 .95rem var(--body);cursor:pointer}
+@media (prefers-reduced-motion:reduce){.dog,.zzz,.hearts span{animation:none!important}.track div{transition:none}}
+.tamatop{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.tamatop .lvl{flex:none;font:700 .8rem var(--body);background:var(--leaf-soft);color:var(--leaf);border-radius:20px;padding:6px 12px}
+.gauge .track{height:10px}
+.xpbar{height:10px;border-radius:6px;background:var(--line);overflow:hidden}
+.xpbar div{height:100%;border-radius:6px;background:linear-gradient(90deg,var(--leaf),var(--zinc));transition:width .6s ease}
+.pad .rules{margin-top:2px}
+.stitle{font:700 .75rem var(--body);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:4px 2px -6px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+.exo{position:fixed;inset:0;z-index:9;background:var(--bg);overflow:auto;display:flex;justify-content:center;
+  padding:calc(16px + env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) calc(16px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+.exobox{width:100%;max-width:440px;display:flex;flex-direction:column;gap:14px;align-items:center;text-align:center}
+.exotop{width:100%;display:flex;justify-content:space-between;align-items:center}
+.exotop .gsoft{width:auto;flex:none;padding:8px 16px}.exotop .tagx{white-space:nowrap}
+.exofig{width:min(380px,88vw);aspect-ratio:200/160;max-width:100%;color:var(--leaf);background:var(--leaf-soft);border-radius:28px;display:grid;place-items:center;padding:14px}
+.exofig svg{width:100%;height:100%}
+.exobox h3{margin:0;font:700 1.3rem var(--display)}
+.exobox p{margin:0;color:var(--muted);max-width:34ch}
+.exotime{font:700 2.6rem var(--display);color:var(--leaf);font-variant-numeric:tabular-nums}
+.exoact{width:100%;display:flex;flex-direction:column;gap:8px}
+.brfig{width:min(300px,78vw);aspect-ratio:1;border-radius:50%;background:var(--leaf-soft);display:grid;place-items:center;position:relative}
+.brc{position:absolute;inset:6%;border-radius:50%;background:radial-gradient(circle,color-mix(in srgb,var(--leaf) 55%,transparent),color-mix(in srgb,var(--leaf) 18%,transparent));transform:scale(.45);transition-property:transform;transition-timing-function:ease-in-out}
+.brl{position:relative;font:700 1.5rem var(--display);color:var(--leaf)}
+.brwarn{font-size:.82rem;color:var(--muted);background:var(--leaf-soft);border-radius:14px;padding:10px 14px;max-width:38ch}
+.exodots{display:flex;gap:8px}.exodots i{width:10px;height:10px;border-radius:50%;background:var(--line)}.exodots i.on{background:var(--leaf)}
+.brlist{width:100%;display:flex;flex-direction:column;gap:8px;text-align:left}.brlist .gsoft{display:flex;flex-direction:column;align-items:flex-start;gap:2px;text-align:left}.brlist .gsoft span{font-weight:400;font-size:.82rem;opacity:.85}
+</style>
+
+<div class="gate" id="gate">
+  <form class="gbox" id="gateForm">
+    <svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="22" fill="var(--leaf-soft)" stroke="var(--leaf)" stroke-width="2"/><path d="M13 30c0-9 7-16 19-17-1 11-8 18-17 18" fill="var(--leaf)"/><g fill="var(--iron)"><ellipse cx="30" cy="34" rx="3.6" ry="3"/><circle cx="26.4" cy="29.6" r="1.4"/><circle cx="29.2" cy="28.2" r="1.4"/><circle cx="32.4" cy="28.6" r="1.4"/><circle cx="34.6" cy="31" r="1.4"/></g></svg>
+    <div class="gbrand">Gardien de la Terre® · par Stéphanie &amp; Georges</div>
+    <h2 class="gtitle">Georges</h2>
+    <label for="gcode">Entre le code d'accès reçu avec ton voyage intérieur Vivant.</label>
+    <input id="gcode" autocomplete="off" autocapitalize="characters" placeholder="Ton code d'accès">
+    <button type="submit">Entrer</button>
+    <div class="gerr" id="gerr" role="alert"></div>
+    <div class="gnote">Tu ne le saisis qu'une fois : ton téléphone s'en souvient.</div>
+  </form>
+</div>
+<div class="exo" id="exo" role="dialog" aria-modal="true" aria-labelledby="exoT" hidden>
+  <div class="exobox">
+    <div class="exotop"><span class="tagx" id="exoN">Mouvement 1 sur 5</span><button type="button" class="gsoft" id="exoClose">Fermer</button></div>
+    <div class="exofig" id="exoFig"></div>
+    <h3 id="exoT"></h3>
+    <p id="exoD"></p>
+    <div class="exotime" id="exoS" aria-live="polite">0:30</div>
+    <div class="exoact"><button type="button" class="gbig" id="exoGo">Lancer les 30 secondes</button><button type="button" class="gsoft" id="exoNext">Mouvement suivant</button></div>
+    <div class="exodots" id="exoDots" aria-hidden="true"></div>
+  </div>
+</div>
+<div class="exo" id="brw" role="dialog" aria-modal="true" aria-labelledby="brT" hidden>
+  <div class="exobox">
+    <div class="exotop"><span class="tagx" id="brN">Respiration</span><button type="button" class="gsoft" id="brClose">Fermer</button></div>
+    <h3 id="brT"></h3>
+    <p id="brD"></p>
+    <div class="brfig"><div class="brc" id="brC"></div><div class="brl" id="brL" aria-live="polite">Prêt ?</div></div>
+    <div class="exotime" id="brS">0</div>
+    <p class="brwarn" id="brW" hidden></p>
+    <div class="exoact"><button type="button" class="gbig" id="brGo">Commencer</button></div>
+  </div>
+</div>
+<div class="gmsg" id="gmsg" hidden>
+  <div class="gcard" role="dialog" aria-labelledby="gkicker">
+    <div class="gport big"></div>
+    <div class="gfrom" id="gkicker">Le mot de Georges</div>
+    <p class="gtext" id="gtext"></p>
+    <div id="gextra"></div>
+    <div class="gbtns" id="gbtns"></div>
+  </div>
+</div>
+<div class="wrap">
+  <header class="apphead">
+    <div class="gport xs"></div>
+    <div class="info">
+      <h1>Georges</h1>
+      <div class="atag">À tes côtés pour toujours</div>
+      <div class="asig">Gardien de la Terre® · la magie d'Alessa</div>
+    </div>
+  </header>
+  <p class="sub" id="sub"></p>
+
+  <nav class="bnav" role="tablist" aria-label="Pages">
+    <button type="button" role="tab" id="tab-g" aria-selected="false" aria-controls="pane-g"><svg viewBox="0 0 24 24" aria-hidden="true"><ellipse cx="12" cy="17" rx="4.2" ry="3.6" fill="currentColor"/><circle cx="6.5" cy="11" r="2.1" fill="currentColor"/><circle cx="10" cy="7.5" r="2.1" fill="currentColor"/><circle cx="14" cy="7.5" r="2.1" fill="currentColor"/><circle cx="17.5" cy="11" r="2.1" fill="currentColor"/></svg><span>Georges</span></button>
+    <button type="button" role="tab" id="tab-j" aria-selected="true" aria-controls="pane-j"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span>Aujourd'hui</span></button>
+    <button type="button" role="tab" id="tab-m" aria-selected="false" aria-controls="pane-m"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 15a8 8 0 0 1 16 0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><rect x="2.5" y="14" width="4.5" height="7" rx="2" fill="currentColor"/><rect x="17" y="14" width="4.5" height="7" rx="2" fill="currentColor"/></svg><span>Écouter</span></button>
+    <button type="button" role="tab" id="tab-a" aria-selected="false" aria-controls="pane-a"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="13" r="7.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 9.5c-2 0-3.2 1.6-3.2 3.5 2.4 0 3.2-1.5 3.2-3.5zM12 9.5c2 0 3.2 1.6 3.2 3.5-2.4 0-3.2-1.5-3.2-3.5z" fill="currentColor"/></svg><span>Assiette</span></button>
+    <button type="button" role="tab" id="tab-n" aria-selected="false" aria-controls="pane-n"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3.5h11a3 3 0 0 1 3 3v14H8a3 3 0 0 1-3-3z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M9 8.5h6M9 12h6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span>Journal</span></button>
+  </nav>
+
+  <!-- GEORGES, LE COMPAGNON -->
+  <div id="pane-g" class="pane" role="tabpanel" aria-labelledby="tab-g" hidden>
+    <div class="tamatop"><div class="stitle" style="margin:0">Ton gardien</div><div class="lvl" id="lvl">Gardien apprenti</div></div>
+    <section class="stage" aria-label="Georges">
+      <div class="ground"></div>
+      <div class="bubble" id="bubble" role="status"></div>
+      <div class="dog" id="dog" title="Caresse Georges"></div>
+      <div class="hearts" id="hearts"></div>
+      <div class="tname" id="moodT"></div>
+    </section>
+    <div class="gauges">
+      <div class="gauge"><div class="gl">🍃 Nourri<span id="vN"></span></div><div class="track"><div id="gN" style="background:var(--leaf)"></div></div></div>
+      <div class="gauge"><div class="gl">🐾 Joyeux<span id="vJ"></span></div><div class="track"><div id="gJ" style="background:var(--zinc)"></div></div></div>
+      <div class="gauge"><div class="gl">✨ Confiant<span id="vC"></span></div><div class="track"><div id="gC" style="background:var(--vitc)"></div></div></div>
+    </div>
+    <div class="acts">
+      <button type="button" class="act a1" data-cat="nourrir"><span>🍃</span>Nourrir<small>une bonne action pour la nature</small></button>
+      <button type="button" class="act a2" data-cat="jouer"><span>🐾</span>Jouer<small>dehors, avec ton enfant intérieur</small></button>
+      <button type="button" class="act a3" data-cat="confiance"><span>✨</span>Confiance<small>un petit défi pour toi</small></button>
+    </div>
+    <div class="stitle">Besoin de Georges ?</div>
+    <section class="card gday" aria-labelledby="gdayT">
+      <div class="gdtop">
+        <div class="gport sm"></div>
+        <div class="info">
+          <div class="gfrom" id="gdayT">Georges veille sur toi</div>
+          <button type="button" class="gquote" data-g="jour" id="gshort"></button>
+        </div>
+      </div>
+      <div class="gb3">
+        <button type="button" data-g="secours"><span aria-hidden="true">💛</span>Ça ne va pas</button>
+        <button type="button" data-g="respire"><span aria-hidden="true">🌬️</span>Respirer avec Georges</button>
+        <button type="button" data-g="joie"><span aria-hidden="true">🌍</span>Je déborde de joie</button>
+        <button type="button" data-g="parler"><span aria-hidden="true">🤝</span>Parler à quelqu'un</button>
+      </div>
+    </section>
+    <section class="card" aria-labelledby="xpT">
+      <h2 id="xpT">Mon chemin de Gardien<span id="xpN"></span></h2>
+      <div class="pad"><div class="xpbar"><div id="gX"></div></div><div class="meta" id="xpNext"></div></div>
+    </section>
+    <section class="card" aria-labelledby="rT">
+      <h2 id="rT">Les règles débloquées<span id="rN"></span></h2>
+      <div class="pad"><ul class="rules" id="rules"></ul></div>
+    </section>
+    <section class="card" aria-labelledby="tT">
+      <h2 id="tT">Le conseil nature de Georges</h2>
+      <div class="pad"><p class="tip" id="tip"></p></div>
+    </section>
+  </div>
+
+  <!-- AUJOURD'HUI -->
+  <div id="pane-j" class="pane" role="tabpanel" aria-labelledby="tab-j">
+    <section class="card hero">
+      <div class="tophead">
+        <div class="info">
+          <div class="hello" id="hello">Bonjour</div>
+          <div class="dayline" id="dayline"></div>
+        </div>
+        <svg class="ring sm" viewBox="0 0 100 100" aria-hidden="true">
+          <circle class="bgc" cx="50" cy="50" r="42"/>
+          <circle class="fgc" id="dArc" cx="50" cy="50" r="42" transform="rotate(-90 50 50)" stroke-dasharray="263.9" stroke-dashoffset="263.9"/>
+          <text id="dPct" x="50" y="58" text-anchor="middle">0 %</text>
+        </svg>
+      </div>
+      <span class="tagx">Mantra du jour</span>
+      <p class="mantra" id="mantra"></p>
+      <div class="regle"><span class="tagx">Règle du Gardien du jour</span><p id="regle"></p></div>
+      <div class="regle"><span class="tagx">Mon engagement pour la vie</span><p id="vie"></p><button type="button" class="linkbtn" id="goVie" style="align-self:flex-start">Mon assiette du jour →</button></div>
+    </section>
+
+    <div id="launchSlot"></div>
+
+
+    <section class="card" aria-labelledby="ritT">
+      <h2 id="ritT">Mes 5 engagements du jour<span id="ritScore"></span></h2>
+      <div id="ritList"></div>
+      <div class="streak" id="streak"></div>
+      <div class="days" id="vivDays" aria-label="Mes 7 derniers jours"></div>
+    </section>
+
+    <section class="card" aria-labelledby="msgT">
+      <h2 id="msgT">Mon message intuitif</h2>
+      <div class="pad">
+        <label for="msg" class="meta">Ferme les yeux, respire trois fois, et note le message qui vient. Sans réfléchir, sans juger.</label>
+        <textarea id="msg" rows="4" placeholder="Aujourd'hui, ce qui me vient…"></textarea>
+        <div class="meta" id="msgSaved"></div>
+      </div>
+    </section>
+
+    <section class="card" aria-labelledby="voeuT">
+      <h2 id="voeuT">Mon vœu du jour ✨</h2>
+      <div class="pad">
+        <label for="voeu" class="meta">Mon rêve, ma manifestation : écris-le au présent, comme si c'était déjà là. Puis ressens-le.</label>
+        <textarea id="voeu" rows="3" placeholder="Aujourd'hui, je vis…"></textarea>
+        <div class="meta" id="voeuSaved"></div>
+      </div>
+    </section>
+  </div>
+
+  <!-- JOURNAL -->
+  <div id="pane-n" class="pane" role="tabpanel" aria-labelledby="tab-n" hidden>
+    <section class="card" aria-labelledby="moisT">
+      <h2 id="moisT">Mes 28 derniers jours<span id="moisN"></span></h2>
+      <div class="month" id="month"></div>
+      <p class="meta colnote">Un rond plein, c'est une journée vivante : tes 5 engagements faits.</p>
+    </section>
+    <section class="card" aria-labelledby="saveT">
+      <h2 id="saveT">Sauvegarder ma progression</h2>
+      <div class="pad">
+        <p class="meta" style="margin:0">Ton chemin de Gardien, Georges, ton journal et tes réglages sont gardés dans ce téléphone. Crée ton code de sauvegarde et envoie-le-toi par mail : si tu changes de téléphone, il te suffira de le coller ici.</p>
+        <button type="button" class="gbig" id="bkMake">Créer mon code de sauvegarde</button>
+        <textarea id="bkCode" rows="3" readonly hidden aria-label="Ton code de sauvegarde"></textarea>
+        <div class="meta" id="bkMsg"></div>
+        <details class="restore"><summary>J'ai déjà un code de sauvegarde</summary>
+          <textarea id="bkIn" rows="3" placeholder="Colle ton code ici"></textarea>
+          <button type="button" class="gsoft" id="bkLoad">Restaurer ma progression</button>
+          <div class="meta" id="bkErr"></div>
+        </details>
+      </div>
+    </section>
+    <section class="card" id="journalCard" aria-labelledby="jrT">
+      <h2 id="jrT">Mes messages et mes vœux<span id="jN"></span></h2>
+      <div id="journal"></div>
+      <div class="empty" id="jEmpty">Tes messages intuitifs et tes vœux apparaîtront ici, jour après jour.</div>
+    </section>
+  </div>
+
+  <!-- MÉDITER -->
+  <div id="pane-m" class="pane" role="tabpanel" aria-labelledby="tab-m" hidden>
+    <p class="intro">La première fois que tu touches « Écouter » sur ton voyage Vivant, connecte-toi avec l'adresse e-mail de ton achat : ton téléphone s'en souviendra ensuite.</p>
+    <a class="gbig mylib" href="https://vivant.gardiendelaterre.com/students" target="_blank" rel="noopener">🎧 Mes séries achetées</a>
+    <div id="medits" class="pane"></div>
+  </div>
+
+  <!-- MON ASSIETTE -->
+  <div id="pane-a" class="pane" role="tabpanel" aria-labelledby="tab-a" hidden>
+  <div class="meals subnav" role="group" aria-label="Mon assiette">
+    <button type="button" id="tab-s" aria-pressed="true">Mon suivi</button>
+    <button type="button" id="tab-d" aria-pressed="false">Menus du jour</button>
+    <button type="button" id="tab-r" aria-pressed="false">Recettes</button>
+    <button type="button" id="tab-e" aria-pressed="false">Les essentiels</button>
+  </div>
+
+  <!-- MENUS DU JOUR -->
+  <div id="pane-d" class="pane">
+      <section class="card" aria-labelledby="menuT">
+      <h2 id="menuT">Mes menus du jour<span id="menuScore"></span></h2>
+      <div id="menus"></div>
+    </section>
+
+      <section class="card" aria-labelledby="aliT">
+      <h2 id="aliT">Mon alimentation<span><button type="button" class="linkbtn" id="goA">Mon suivi complet →</button></span></h2>
+      <div class="bars mini" id="miniBars"></div>
+    </section>
+  </div>
+
+  <!-- SUIVI -->
+  <div id="pane-s" class="pane" role="tabpanel" aria-labelledby="tab-s">
+    <section class="card" aria-label="Résumé du jour">
+      <div class="settings">
+        <label for="kg">Poids <input id="kg" type="number" inputmode="decimal" min="35" max="180" value="60"> kg</label>
+        <label for="act">Activité
+          <select id="act"><option value="sed">Peu active</option><option value="act" selected>Active</option><option value="sport">Sport intense</option></select>
+        </label>
+        <label for="sex">Profil
+          <select id="sex"><option value="f" selected>Femme</option><option value="m">Homme</option></select>
+        </label>
+      </div>
+      <div class="sumtop">
+        <svg class="ring" viewBox="0 0 100 100" aria-hidden="true">
+          <circle class="bgc" cx="50" cy="50" r="42"/>
+          <circle class="fgc" id="arc" cx="50" cy="50" r="42" transform="rotate(-90 50 50)" stroke-dasharray="263.9" stroke-dashoffset="263.9"/>
+          <text id="tot" x="50" y="52" text-anchor="middle">0 g</text>
+          <text class="small" x="50" y="68" text-anchor="middle">protéines</text>
+        </svg>
+        <div class="stats">
+          <b id="left">—</b>
+          <div class="meta" id="goal"></div>
+        </div>
+      </div>
+      <div class="bars" id="bars"></div>
+    </section>
+
+    <section class="card" aria-labelledby="colT">
+      <h2 id="colT">Mon collagène<span id="colScore">0 brique sur 3</span></h2>
+      <div class="bricks">
+        <div class="brick" id="kP"><b>Protéines</b><span id="kPs">—</span></div>
+        <div class="brick" id="kC"><b>Vitamine C</b><span id="kCs">—</span></div>
+        <div class="brick" id="kZ"><b>Zinc</b><span id="kZs">—</span></div>
+      </div>
+      <p class="meta colnote">Le corps fabrique lui-même son collagène, pour la peau, les cheveux et les articulations, avec ces trois briques. Quand les trois sont pleines, il a tout ce qu'il lui faut.</p>
+    </section>
+
+    <section class="card" aria-labelledby="protT">
+      <h2 id="protT">Mes protéines complètes<span id="protScore">0 pièce sur 3</span></h2>
+      <div class="bricks">
+        <div class="brick" id="pL"><b>🫘 Légumineuses</b><span id="pLs">—</span></div>
+        <div class="brick" id="pG"><b>🌾 Céréales &amp; graines</b><span id="pGs">—</span></div>
+        <div class="brick" id="pQ"><b>💪 Quantité</b><span id="pQs">—</span></div>
+      </div>
+      <p class="meta colnote">Une protéine végétale, c'est comme un puzzle : les légumineuses (lentilles, pois chiches, soja) et les céréales ou graines (riz, avoine, quinoa, courge) ont chacune les pièces qui manquent à l'autre. Mange les deux familles dans ta journée, et ton corps reçoit tout ce dont il a besoin. Les protéines végétales arrivent avec leurs trésors : fibres, minéraux, antioxydants, et zéro cholestérol.</p>
+      <details class="how"><summary>Comment ton corps utilise les protéines ?</summary>
+        <div class="chain" aria-hidden="true"><div><span>🥗</span>Tu manges</div><b>→</b><div><span>✂️</span>Ton corps découpe</div><b>→</b><div><span>🧱</span>Il reconstruit</div></div>
+        <ol>
+          <li><b>Tu manges des protéines</b> : lentilles, tofu, quinoa, graines…</li>
+          <li><b>Ta digestion les découpe en petites briques</b>, les acides aminés. Il en existe 20 sortes. Ton corps sait fabriquer 11 d'entre elles, mais <b>9 doivent venir de ton assiette</b> : on les appelle les acides aminés essentiels.</li>
+          <li><b>Avec ces briques, ton corps construit ses propres protéines</b> : tes muscles, ta peau, tes cheveux, tes ongles, ton collagène, tes défenses immunitaires.</li>
+        </ol>
+        <p><b>Pourquoi associer les familles ?</b> Les céréales manquent un peu d'une brique (la lysine), et les légumineuses d'une autre (la méthionine). Ensemble, sur la journée, elles apportent les 9 briques essentielles. Pas besoin de les mettre dans la même assiette : ton corps garde une petite réserve.</p>
+        <p><b>Pourquoi viser un peu plus large ?</b> Dans les plantes, les protéines voyagent avec des fibres, qui nourrissent ton ventre et te donnent une énergie qui dure. Une petite partie des protéines reste avec ces fibres, alors on prévoit une portion un peu généreuse, et le tour est joué. Les champions complets : le soja (tofu, tempeh, edamame), le quinoa et le chanvre.</p>
+      </details>
+    </section>
+
+    <section class="card" aria-labelledby="ferT2">
+      <h2 id="ferT2">Mon fer bien absorbé<span id="ferScore">0 sur 2</span></h2>
+      <div class="bricks two">
+        <div class="brick" id="fF"><b>🩸 Fer</b><span id="fFs">—</span></div>
+        <div class="brick" id="fC"><b>🍊 Vitamine C</b><span id="fCs">—</span></div>
+      </div>
+      <div class="fizz" aria-hidden="true"><span class="pill">💊</span><span class="plus">+</span><span class="glass">🍊</span><span class="plus">=</span><span class="glass">🫧</span></div>
+      <p class="meta colnote">Le fer des plantes, c'est comme un gros comprimé : avalé tel quel, il passe mal et ton corps n'en garde presque rien. Mets-le dans un verre d'eau et il devient effervescent, il se dissout, et là ton corps l'assimile facilement. <b>La vitamine C, c'est ce verre d'eau.</b> Prends-la au même moment que ton fer, dans la même assiette ou avec ton complément : un kiwi, une orange, du poivron, du persil.</p>
+      <div class="alert" role="note"><b>☕ Attention au café</b>Pas de café, de déca ni de thé <b>dans l'heure avant et dans l'heure après</b> ton fer. Ils bloquent son absorption : c'est comme si tu n'avais rien pris.</div>
+    </section>
+
+    <section class="card" aria-labelledby="essT">
+      <h2 id="essT">Mes essentiels du jour<span id="essScore">0 sur 5</span></h2>
+      <div id="essList"></div>
+      <div class="days" id="b12days" aria-label="Vitamine B12 des 7 derniers jours"></div>
+    </section>
+
+    <section class="card" id="ateCard" aria-labelledby="ateT" hidden>
+      <h2 id="ateT">Mangé aujourd'hui<span id="ateN"></span></h2>
+      <div class="ate" id="ate"></div>
+    </section>
+
+    <div class="search">
+      <input id="q" type="search" aria-label="Chercher un aliment" placeholder="Chercher un aliment (ex. tofu, lentilles)" autocomplete="off">
+    </div>
+    <div id="cats"></div>
+    <div class="empty" id="noRes" hidden>Aucun aliment trouvé. Tu peux l'ajouter juste en dessous.</div>
+
+    <section class="card" aria-labelledby="addT">
+      <h2 id="addT">Ajouter un aliment</h2>
+      <form class="add" id="addForm">
+        <label class="wide" for="aName">Nom<input id="aName" required placeholder="ex. Houmous maison"></label>
+        <label class="wide" for="aPort">Portion<input id="aPort" placeholder="ex. 3 c. à soupe"></label>
+        <label for="aP">Protéines (g)<input id="aP" inputmode="decimal" placeholder="0"></label>
+        <label for="aFe">Fer (mg)<input id="aFe" inputmode="decimal" placeholder="0"></label>
+        <label for="aZn">Zinc (mg)<input id="aZn" inputmode="decimal" placeholder="0"></label>
+        <label for="aCa">Calcium (mg)<input id="aCa" inputmode="decimal" placeholder="0"></label>
+        <label for="aC">Vitamine C (mg)<input id="aC" inputmode="decimal" placeholder="0"></label>
+        <label for="aO">Oméga-3 (g)<input id="aO" inputmode="decimal" placeholder="0"></label>
+        <button type="submit">Ajouter à mes aliments</button>
+      </form>
+    </section>
+
+    <button class="reset" id="reset" type="button">Recommencer la journée</button>
+  </div>
+
+  <!-- RECETTES -->
+  <div id="pane-r" class="pane" role="tabpanel" aria-labelledby="tab-r" hidden>
+    <div class="meals" id="meals" role="group" aria-label="Repas"></div>
+    <p class="mnote" id="mnote"></p>
+    <div id="recs" class="pane"></div>
+    <button type="button" class="more" id="more">D'autres idées</button>
+  </div>
+
+  <!-- ESSENTIELS -->
+  <div id="pane-e" class="pane" role="tabpanel" aria-labelledby="tab-e" hidden>
+    <p class="intro">Une alimentation végane bien pensée couvre presque tout. Voici les nutriments à surveiller, pourquoi ils comptent et où les trouver. Un seul est vraiment impossible à trouver dans les plantes : la vitamine B12.</p>
+    <div id="guide" class="pane"></div>
+  </div>
+  </div>
+
+  <footer class="foot">
+    <svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="22" fill="var(--leaf-soft)" stroke="var(--leaf)" stroke-width="2"/><path d="M13 30c0-9 7-16 19-17-1 11-8 18-17 18" fill="var(--leaf)"/><g fill="var(--iron)"><ellipse cx="30" cy="34" rx="3.6" ry="3"/><circle cx="26.4" cy="29.6" r="1.4"/><circle cx="29.2" cy="28.2" r="1.4"/><circle cx="32.4" cy="28.6" r="1.4"/><circle cx="34.6" cy="31" r="1.4"/></g></svg>
+    <div>Créé avec amour par <b>Stéphanie &amp; Georges</b> · <b>Gardien de la Terre®</b></div>
+    <div>© 2026 Stéphanie Dordain – Alessa. Tous droits réservés. Les valeurs nutritionnelles sont des repères moyens et ne remplacent pas l'avis d'un médecin ou d'un diététicien.</div>
+  </footer>
+</div>
+<div class="sheetbg" id="sheetbg" hidden>
+  <div class="sheet" role="dialog" aria-labelledby="sheetT">
+    <h3 id="sheetT"></h3>
+    <div class="meta" id="sheetSub"></div>
+    <div id="missions" style="display:flex;flex-direction:column;gap:10px"></div>
+    <button type="button" class="close" id="sheetClose">Plus tard</button>
+  </div>
+</div>
+<div class="toast" id="toast" role="status" hidden></div>
+
+<script>
+// [id, nom, portion, protéines g, fer mg, zinc mg, calcium mg, vit C mg, oméga-3 (ALA) g]
+const CATS=[
+ {t:"Laits, yaourts et petit-déjeuner",items:[
+  ["laitS","Lait de soja enrichi en calcium","1 verre de 250 ml",8,1,0.5,300,0,0],
+  ["laitA","Lait d'amande enrichi en calcium","1 verre de 250 ml",1,0.3,0.3,300,0,0],
+  ["yaS","Yaourt de soja enrichi","1 pot de 125 g",5,0.5,0.3,150,0,0],
+  ["avoine","Flocons d'avoine","40 g",5.3,1.7,1.6,20,0,0],
+  ["painC","Pain complet","1 tranche, 40 g",3.5,1,0.7,30,0,0],
+  ["cacah","Beurre de cacahuète","2 c. à soupe",8,0.6,0.9,15,0,0],
+  ["pureeA","Purée d'amande","2 c. à soupe",7,1.2,1,85,0,0],
+  ["tahini","Tahini (crème de sésame)","1 c. à soupe",2.6,1.3,0.7,60,0,0]]},
+ {t:"Protéines végétales",items:[
+  ["tofu","Tofu ferme au calcium","100 g",14,2.7,1.5,350,0,0.3],
+  ["tempeh","Tempeh","100 g",19,2.7,1.1,110,0,0],
+  ["tvp","Soja texturé","50 g sec (réhydraté)",25,4.5,1.2,120,0,0],
+  ["lent","Lentilles cuites","1 assiette, 200 g",18,6.6,2.5,38,3,0],
+  ["soupeL","Soupe de lentilles corail","1 bol de 300 ml",9,2.5,1.2,25,2,0],
+  ["pateL","Pâtes de lentilles","80 g sec",20,5.5,2.5,40,0,0],
+  ["poisC","Pois chiches cuits","150 g",13,4.3,2.3,73,2,0],
+  ["haric","Haricots rouges ou blancs cuits","150 g",13,3.3,1.5,60,2,0],
+  ["houmous","Houmous","3 c. à soupe, 50 g",4,1.2,0.9,20,0,0],
+  ["edam","Edamame","100 g",11,2.3,1.4,63,6,0.3],
+  ["petitsP","Petits pois","100 g",5.4,1.5,1.2,27,14,0],
+  ["seitan","Seitan","100 g",25,2,0.6,40,0,0],
+  ["poudre","Protéine végétale pois/riz","1 dose, 30 g",22,4,1,30,0,0]]},
+ {t:"Graines et oléagineux",items:[
+  ["courge","Graines de courge","1 poignée, 30 g",9,2.5,2.3,15,0,0],
+  ["chanvre","Graines de chanvre décortiquées","2 c. à soupe, 20 g",6.3,1.6,2,14,0,1.7],
+  ["chia","Graines de chia","2 c. à soupe, 20 g",3.3,1.5,0.9,126,0,3.6],
+  ["lin","Graines de lin moulues","1 c. à soupe, 10 g",1.8,0.6,0.4,25,0,2.3],
+  ["tourn","Graines de tournesol","30 g",6.2,1.6,1.5,23,0,0],
+  ["sesame","Graines de sésame","1 c. à soupe",1.8,1.5,0.8,98,0,0],
+  ["amande","Amandes","1 poignée, 30 g",6.3,1.1,0.9,80,0,0],
+  ["cajou","Noix de cajou","1 poignée, 30 g",5.5,2,1.7,11,0,0],
+  ["noix","Noix","1 poignée, 30 g",4.6,0.9,0.9,29,0,2.7],
+  ["bresil","Noix du Brésil (sélénium)","2 noix",1.4,0.2,0.4,16,0,0],
+  ["colza","Huile de colza","1 c. à soupe",0,0,0,0,0,1.3]]},
+ {t:"Céréales et féculents",items:[
+  ["quinoa","Quinoa cuit","150 g",6.6,2.2,1.6,25,0,0.1],
+  ["riz","Riz cuit","150 g",4,0.3,0.7,15,0,0],
+  ["sarrasin","Sarrasin cuit","150 g",5,1.2,0.9,10,0,0],
+  ["pates","Pâtes complètes cuites","150 g",8,1.5,1.2,15,0,0],
+  ["patateD","Patate douce","200 g cuite",4,1.4,0.6,60,39,0],
+  ["pdt","Pomme de terre","200 g cuite",4,0.6,0.6,10,20,0]]},
+ {t:"Légumes et algues",items:[
+  ["avocat","Avocat","½ avocat",1.5,0.4,0.5,9,7.5,0.1],
+  ["radis","Radis","1 poignée, 50 g",0.3,0.2,0.1,12,7.5,0],
+  ["carotte","Carottes râpées","100 g",0.9,0.3,0.2,33,6,0],
+  ["epinard","Épinards cuits","150 g",4.5,5.4,1.1,200,15,0.1],
+  ["kale","Chou kale","1 poignée crue, 50 g",1.5,0.8,0.2,75,60,0.1],
+  ["pakchoi","Pak choï (chou chinois)","100 g",1.5,0.8,0.2,105,45,0],
+  ["brocoli","Brocoli","100 g",2.8,0.7,0.4,40,65,0.1],
+  ["chouF","Chou-fleur","100 g",1.9,0.4,0.3,22,48,0],
+  ["poivron","Poivron rouge","½ poivron, 75 g",0.7,0.3,0.2,5,95,0],
+  ["tomate","Tomate","1 tomate",1.1,0.3,0.2,12,16,0],
+  ["courgette","Courgette","150 g",1.8,0.5,0.4,24,20,0],
+  ["betterave","Betterave","100 g",1.7,0.8,0.4,16,4,0],
+  ["champi","Champignons","100 g",3,0.5,0.5,3,2,0],
+  ["salade","Roquette","1 poignée, 50 g",1.3,0.7,0.2,80,7.5,0],
+  ["persil","Persil frais","1 petite poignée, 15 g",0.4,0.9,0.2,21,20,0],
+  ["nori","Algue nori (iode)","2 feuilles, 5 g",1.5,0.9,0.1,15,2,0]]},
+ {t:"Fruits",items:[
+  ["orange","Orange","1 moyenne",1.2,0.1,0.1,50,70,0],
+  ["jusO","Jus d'orange pressé","1 verre de 200 ml",1.4,0.4,0.1,22,80,0],
+  ["kiwi","Kiwi","1 kiwi",0.8,0.2,0.1,25,65,0],
+  ["citron","Citron pressé","jus d'1 citron",0.2,0.1,0,3,18,0],
+  ["grenade","Grenade","½ fruit, en graines",1.3,0.2,0.3,8,8,0],
+  ["raisin","Raisin","1 grappe, 150 g",1.1,0.5,0.1,15,5,0],
+  ["raisinS","Raisins secs","1 poignée, 30 g",0.9,0.6,0.1,15,1,0],
+  ["fraise","Fraises","100 g",0.7,0.4,0.1,16,60,0],
+  ["myrtille","Myrtilles ou fruits rouges","100 g",0.7,0.3,0.2,6,10,0.1],
+  ["papaye","Papaye","150 g",0.7,0.4,0.1,30,90,0],
+  ["mangue","Mangue","150 g",1.2,0.2,0.1,16,55,0],
+  ["ananas","Ananas","150 g",0.8,0.4,0.2,20,70,0],
+  ["banane","Banane","1 banane",1.3,0.3,0.2,6,10,0],
+  ["pomme","Pomme","1 pomme",0.5,0.2,0.1,7,8,0],
+  ["figue","Figues sèches","3 figues, 40 g",1.3,0.8,0.2,65,0,0],
+  ["abricotS","Abricots secs","30 g",1,0.8,0.1,17,0,0],
+  ["datte","Dattes","3 dattes",0.6,0.2,0.1,15,0,0]]},
+ {t:"Petits plus",items:[
+  ["choco","Chocolat noir 70 % et plus","2 carrés, 20 g",1.6,2.4,0.7,15,0,0]]}
+];
+const NUT=[ // clé, index, libellé, unité, couleur
+ ["fe",4,"Fer","mg","--iron"],["zn",5,"Zinc","mg","--zinc"],["ca",6,"Calcium","mg","--ca"],["c",7,"Vitamine C","mg","--vitc"],["o3",8,"Oméga-3","g","--o3"]];
+const ESS=[
+ ["b12","Vitamine B12","Le complément du jour, indispensable"],
+ ["d","Vitamine D","15 min de soleil, bras découverts, ou complément"],
+ ["iode","Iode","Sel iodé ou un peu d'algues"],
+ ["se","Sélénium","1 à 2 noix du Brésil"],
+ ["o3","Oméga-3","Lin, chia, noix ou huile d'algues"]];
+const ACT={sed:[0.9,1.0],act:[1.2,1.3],sport:[1.6,1.8]};
+const ymd=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+const today=ymd(new Date());
+const load=(k,def)=>{try{const v=JSON.parse(localStorage.getItem(k)||"null");return v==null?def:v}catch(e){return def}};
+const store=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
+let prof=Object.assign({kg:60,act:"act",sex:"f"},load("profil",{}));
+let st={day:today,c:{}};const s0=load("jour",null);if(s0&&s0.day===today)st.c=s0.c||{};
+let hist=load("hist",{})||{};if(!hist[today])hist[today]={};
+let custom=load("custom",[])||[];
+const save=()=>store("jour",st),saveH=()=>store("hist",hist),saveP=()=>store("profil",prof);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c]));
+const fmt=x=>x>=10?String(Math.round(x)):String(Math.round(x*10)/10).replace(".",",");
+const norm=s=>s.normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase();
+function goals(){return {fe:prof.sex==="m"?11:18,zn:prof.sex==="m"?14:10,ca:950,c:100,o3:2};}
+function allCats(){return custom.length?[{t:"Mes aliments",custom:true,items:custom}].concat(CATS):CATS;}
+function allFoods(){return allCats().flatMap(c=>c.items);}
+const FOODMAP=()=>Object.fromEntries(allFoods().map(f=>[f[0],f]));
+
+document.getElementById("kg").value=prof.kg;document.getElementById("act").value=prof.act;document.getElementById("sex").value=prof.sex;
+document.getElementById("bars").innerHTML=NUT.map(([k,,l,u,col])=>`<div class="bar"><div class="lab"><b>${l}</b><span id="t-${k}"></span></div><div class="track"><div id="b-${k}" style="background:var(${col})"></div></div></div>`).join("");
+
+function nutHTML(f){
+  return [f[3]?`<span class="p">${fmt(f[3])} g protéines</span>`:"",f[4]?`<span class="f">fer ${fmt(f[4])} mg</span>`:"",f[5]?`<span class="z">zinc ${fmt(f[5])} mg</span>`:"",
+    f[6]?`<span class="k">calcium ${fmt(f[6])} mg</span>`:"",f[7]?`<span class="c">vit C ${fmt(f[7])} mg</span>`:"",f[8]?`<span class="o">oméga-3 ${fmt(f[8])} g</span>`:""].join("");
+}
+function rowHTML(f,isCustom){const [id,n,p]=f;
+  return `<div class="row" id="r-${id}" data-name="${esc(norm(n))}"><div class="info"><div class="name">${esc(n)}</div><div class="meta">${esc(p||"1 portion")}</div><div class="nut">${nutHTML(f)}</div>${isCustom?`<button type="button" class="del" data-del="${id}">Supprimer</button>`:""}</div>
+    <div class="ctr"><button type="button" aria-label="Retirer ${esc(n)}" data-id="${id}" data-d="-1">−</button><span class="n" id="n-${id}">0</span><button type="button" class="plus" aria-label="Ajouter ${esc(n)}" data-id="${id}" data-d="1">+</button></div></div>`;}
+function build(){
+  document.getElementById("cats").innerHTML=allCats().map(c=>`<section class="card cat"><h2>${esc(c.t)}<span>${c.items.length}</span></h2>${c.items.map(i=>rowHTML(i,c.custom)).join("")}</section>`).join("");
+  filter();render();
+}
+function filter(){
+  const q=norm(document.getElementById("q").value.trim());let any=false;
+  document.querySelectorAll(".cat").forEach(sec=>{let vis=0;
+    sec.querySelectorAll(".row").forEach(r=>{const s=!q||r.dataset.name.includes(q);r.hidden=!s;if(s)vis++;});
+    sec.hidden=vis===0;if(vis)any=true;});
+  document.getElementById("noRes").hidden=any;
+}
+document.getElementById("q").addEventListener("input",filter);
+
+document.getElementById("essList").innerHTML=ESS.map(([k,n,d])=>`<label class="ess" for="e-${k}"><input type="checkbox" id="e-${k}" data-ess="${k}"><div class="info"><div class="name">${n}</div><div class="meta">${d}</div></div><span class="auto" id="a-${k}"></span></label>`).join("");
+
+let pendingDel=null;
+document.addEventListener("click",e=>{
+  const b=e.target.closest("button[data-id]");
+  if(b){const id=b.dataset.id;st.c[id]=Math.max(0,(st.c[id]||0)+ +b.dataset.d);if(!st.c[id])delete st.c[id];save();render();return;}
+  const d=e.target.closest("button[data-del]");
+  if(d){const id=d.dataset.del;
+    if(pendingDel!==id){pendingDel=id;d.textContent="Toucher encore pour supprimer";return;}
+    custom=custom.filter(i=>i[0]!==id);delete st.c[id];store("custom",custom);save();pendingDel=null;build();}
+});
+document.getElementById("essList").addEventListener("change",e=>{const k=e.target.dataset.ess;if(!k)return;
+  if(e.target.checked)hist[today][k]=true;else delete hist[today][k];saveH();render();});
+document.getElementById("addForm").addEventListener("submit",e=>{
+  e.preventDefault();const v=id=>parseFloat((document.getElementById(id).value||"0").replace(",","."))||0;
+  const name=document.getElementById("aName").value.trim();if(!name)return;
+  custom.push(["u"+Date.now(),name,document.getElementById("aPort").value.trim(),v("aP"),v("aFe"),v("aZn"),v("aCa"),v("aC"),v("aO")]);
+  store("custom",custom);e.target.reset();build();toast("Aliment ajouté ✓");
+});
+document.getElementById("kg").addEventListener("input",e=>{const v=parseFloat(e.target.value);if(v>=35&&v<=180){prof.kg=v;saveP();render();}});
+document.getElementById("act").addEventListener("change",e=>{prof.act=e.target.value;saveP();render();});
+document.getElementById("sex").addEventListener("change",e=>{prof.sex=e.target.value;saveP();render();});
+document.getElementById("reset").addEventListener("click",()=>{st.c={};hist[today]={};save();saveH();render();toast("Journée remise à zéro");});
+const JOURS=["D","L","M","M","J","V","S"];
+
+function render(){
+  const G=goals(),T={p:0,fe:0,zn:0,ca:0,c:0,o3:0},ate=[];
+  allFoods().forEach(f=>{const k=st.c[f[0]]||0;
+    T.p+=k*f[3];T.fe+=k*f[4];T.zn+=k*f[5];T.ca+=k*f[6];T.c+=k*f[7];T.o3+=k*f[8];
+    const ne=document.getElementById("n-"+f[0]);if(ne)ne.textContent=k;
+    const re=document.getElementById("r-"+f[0]);if(re)re.classList.toggle("on",k>0);
+    if(k)ate.push(`<span class="chip">${k>1?k+" × ":""}${esc(f[1])}</span>`);});
+  const [fl,ft]=ACT[prof.act],lo=Math.round(prof.kg*fl),target=Math.round(prof.kg*ft);
+  document.getElementById("arc").setAttribute("stroke-dashoffset",(263.9*(1-Math.min(1,T.p/target))).toFixed(1));
+  document.getElementById("tot").textContent=Math.round(T.p)+" g";
+  document.getElementById("goal").textContent=`Objectif : environ ${target} g de protéines par jour`;
+  document.getElementById("left").textContent=T.p>=target?"Protéines atteintes 👏":`Encore ${target-Math.round(T.p)} g de protéines`;
+  NUT.forEach(([k,,,u])=>{document.getElementById("b-"+k).style.width=Math.min(100,T[k]/G[k]*100)+"%";
+    document.getElementById("t-"+k).textContent=`${fmt(T[k])} / ${fmt(G[k])} ${u}`;});
+  const brick=(el,s,ok,txt)=>{document.getElementById(el).classList.toggle("ok",ok);document.getElementById(s).textContent=txt;return ok?1:0;};
+  const sc=brick("kP","kPs",T.p>=target,T.p>=target?"Pleine":`encore ${target-Math.round(T.p)} g`)
+    +brick("kC","kCs",T.c>=G.c,T.c>=G.c?"Pleine":`encore ${Math.round(G.c-T.c)} mg`)
+    +brick("kZ","kZs",T.zn>=G.zn,T.zn>=G.zn?"Pleine":`encore ${fmt(G.zn-T.zn)} mg`);
+  document.getElementById("colScore").textContent=`${sc} brique${sc>1?"s":""} sur 3`;
+  // essentiels : sélénium et oméga-3 se cochent tout seuls grâce aux aliments
+  const auto={se:(st.c.bresil||0)>0,o3:T.o3>=G.o3,iode:(st.c.nori||0)>0};let es=0;
+  ESS.forEach(([k])=>{const on=!!hist[today][k]||!!auto[k];document.getElementById("e-"+k).checked=on;
+    document.getElementById("a-"+k).textContent=auto[k]&&!hist[today][k]?"via tes aliments":"";if(on)es++;});
+  document.getElementById("essScore").textContent=`${es} sur 5`;
+  let h=`<span class="lbl">B12</span>`;
+  for(let i=6;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);const k=ymd(d);
+    h+=`<div class="day${i===0?" today":""}"><span class="dot${hist[k]&&hist[k].b12?" on":""}"></span>${i===0?"Auj.":JOURS[d.getDay()]}</div>`;}
+  document.getElementById("b12days").innerHTML=h;
+  document.getElementById("ateCard").hidden=!ate.length;
+  document.getElementById("ate").innerHTML=ate.join("");
+  document.getElementById("ateN").textContent=ate.length?ate.length+" aliment"+(ate.length>1?"s":""):"";
+  // protéines complètes : deux familles + quantité
+  const LEG=["tofu","tempeh","tvp","lent","soupeL","pateL","poisC","haric","houmous","edam","petitsP","poudre","laitS","yaS","cacah"];
+  const CER=["avoine","painC","quinoa","riz","sarrasin","pates","seitan","courge","chanvre","chia","lin","tourn","sesame","amande","cajou","noix","bresil","tahini","pureeA"];
+  const has=L=>L.some(id=>(st.c[id]||0)>0);
+  const pl=has(LEG),pg=has(CER),pq=T.p>=target;
+  const ps=brick("pL","pLs",pl,pl?"Pleine":"lentilles, tofu, pois…")+brick("pG","pGs",pg,pg?"Pleine":"riz, avoine, graines…")+brick("pQ","pQs",pq,pq?"Pleine":`encore ${target-Math.round(T.p)} g`);
+  document.getElementById("protScore").textContent=`${ps} pièce${ps>1?"s":""} sur 3`;
+  const ff=T.fe>=G.fe,fc=T.c>=75;
+  const fs=brick("fF","fFs",ff,ff?"Pleine":`encore ${fmt(G.fe-T.fe)} mg`)+brick("fC","fCs",fc,fc?"Pleine":`encore ${Math.round(75-T.c)} mg`);
+  document.getElementById("ferScore").textContent=`${fs} sur 2`;
+  window.__T=T;if(window.__vivReady)renderExtras();
+}
+build();
+
+// ---------- Recettes ----------
+const REC={
+ matin:{t:"Petit-déj",note:"Pour bien démarrer, avec des protéines dès le matin.",list:[
+  {n:"Bol chia-soja aux fruits rouges",time:"5 min",ing:[["yaS",1,"1 yaourt de soja enrichi"],["chia",1,"2 c. à soupe de graines de chia"],["chanvre",1,"2 c. à soupe de graines de chanvre"],["myrtille",1,"100 g de fruits rouges"]],
+   steps:["La veille, mélange le yaourt et le chia, puis laisse au frais.","Le matin, ajoute les fruits rouges et le chanvre."]},
+  {n:"Porridge cacahuète-banane",time:"10 min",ing:[["avoine",1,"40 g de flocons d'avoine"],["laitS",1,"250 ml de lait de soja enrichi"],["cacah",1,"2 c. à soupe de beurre de cacahuète"],["banane",1,"1 banane"],[null,0,"1 pincée de cannelle"]],
+   steps:["Fais cuire l'avoine dans le lait de soja 5 min à feu doux.","Ajoute la banane en rondelles, le beurre de cacahuète et la cannelle."]},
+  {n:"Tofu brouillé, avocat et tomate",time:"10 min",ing:[["tofu",1,"100 g de tofu ferme"],["avocat",1,"½ avocat"],["tomate",1,"1 tomate"],["sesame",1,"1 c. à soupe de sésame"],[null,0,"Curcuma, sel noir kala namak (goût d'œuf), poivre"]],
+   steps:["Émiette le tofu à la fourchette et fais-le dorer 5 min avec le curcuma.","Sale au kala namak, sers avec l'avocat écrasé et la tomate, parsème de sésame."]},
+  {n:"Smoothie fraise-banane protéiné",time:"5 min",ing:[["poudre",1,"1 dose de protéine de pois"],["laitS",1,"250 ml de lait de soja enrichi"],["banane",1,"1 banane"],["fraise",1,"100 g de fraises"],["lin",1,"1 c. à soupe de lin moulu"]],
+   steps:["Mixe tout avec quelques glaçons."]}]},
+ brunch:{t:"Brunch",note:"Des assiettes riches en fer, avec toujours au moins 75 mg de vitamine C pour bien l'absorber. Évite le café et le thé dans l'heure qui suit.",list:[
+  {n:"Tofu brouillé épinards-poivron, quinoa et kiwi",time:"15 min",ing:[["tofu",1,"100 g de tofu ferme"],["epinard",1,"150 g d'épinards"],["poivron",1,"½ poivron rouge"],["quinoa",1,"150 g de quinoa cuit"],["kiwi",1,"1 kiwi en dessert"],[null,0,"Curcuma, huile d'olive"]],
+   steps:["Fais revenir le poivron émincé 3 min, puis ajoute les épinards jusqu'à ce qu'ils fondent.","Ajoute le tofu émietté et le curcuma, laisse dorer 5 min.","Sers avec le quinoa, et le kiwi en dessert."]},
+  {n:"Bol tiède lentilles, patate douce et orange",time:"25 min",ing:[["lent",1,"200 g de lentilles cuites"],["patateD",1,"200 g de patate douce"],["courge",1,"30 g de graines de courge"],["persil",1,"1 poignée de persil"],["orange",1,"1 orange en quartiers"],[null,0,"Huile d'olive, cumin"]],
+   steps:["Rôtis la patate douce en cubes 20 min à 200 °C avec le cumin.","Mélange avec les lentilles tièdes, le persil et l'orange.","Parsème de graines de courge grillées."]},
+  {n:"Houmous, tempeh doré et crudités",time:"15 min",ing:[["poisC",1,"150 g de pois chiches cuits"],["tahini",1,"1 c. à soupe de tahini"],["citron",1,"Le jus d'1 citron"],["tempeh",1,"100 g de tempeh"],["poivron",1,"½ poivron rouge en bâtonnets"],["carotte",1,"1 carotte en bâtonnets"],[null,0,"1 gousse d'ail, cumin, huile d'olive"]],
+   steps:["Mixe les pois chiches, le tahini, le citron, l'ail et le cumin avec un peu d'eau.","Dore le tempeh en tranches 4 min de chaque côté.","Sers avec les bâtonnets de crudités."]},
+  {n:"Pancakes avoine-banane, fraises et kiwi",time:"15 min",ing:[["avoine",1,"40 g de flocons d'avoine"],["laitS",1,"250 ml de lait de soja enrichi"],["banane",1,"1 banane écrasée"],["lin",1,"1 c. à soupe de lin moulu"],["pureeA",1,"2 c. à soupe de purée d'amande"],["fraise",1,"100 g de fraises"],["kiwi",1,"1 kiwi"],[null,0,"½ c. à café de levure chimique"]],
+   steps:["Mélange le lin avec 3 c. à soupe d'eau et laisse gonfler 5 min.","Mixe avec l'avoine, la banane, la levure et un peu de lait, puis cuis de petits pancakes.","Garnis de purée d'amande, de fraises et de kiwi. Bois le reste du lait à côté."]}]},
+ midi:{t:"Midi",note:"Le repas le plus protéiné de la journée.",list:[
+  {n:"Chili au soja texturé",time:"25 min",ing:[["tvp",1,"50 g de soja texturé"],["haric",1,"150 g de haricots rouges"],["tomate",2,"2 tomates ou 200 g de coulis"],["poivron",1,"½ poivron rouge"],["riz",1,"150 g de riz cuit"],[null,0,"Oignon, ail, cumin, paprika"]],
+   steps:["Réhydrate le soja 10 min dans un bouillon chaud.","Fais revenir l'oignon, l'ail et le poivron, puis ajoute le soja, les haricots, les tomates et les épices.","Laisse mijoter 15 min et sers avec le riz."]},
+  {n:"Salade de quinoa complète",time:"15 min",ing:[["quinoa",1,"150 g de quinoa cuit"],["edam",1,"100 g d'edamame"],["avocat",1,"½ avocat"],["radis",1,"1 poignée de radis"],["carotte",1,"100 g de carottes râpées"],["grenade",1,"½ grenade en graines"],["courge",1,"30 g de graines de courge"],[null,0,"Jus de citron, huile de colza"]],
+   steps:["Mélange tout dans un grand bol.","Assaisonne au citron et à l'huile de colza, riche en oméga-3."]},
+  {n:"Pâtes de lentilles, pesto persil-amande",time:"15 min",ing:[["pateL",1,"80 g de pâtes de lentilles"],["brocoli",1,"100 g de brocoli"],["amande",1,"30 g d'amandes"],["persil",1,"1 poignée de persil"],[null,0,"Ail, jus de citron, huile d'olive"]],
+   steps:["Cuis les pâtes et le brocoli ensemble, dans la même eau.","Mixe le persil, les amandes, l'ail, le citron et l'huile pour le pesto.","Mélange le tout."]},
+  {n:"Curry de lentilles corail et patate douce",time:"30 min",ing:[["lent",1,"200 g de lentilles corail cuites"],["patateD",1,"200 g de patate douce"],["epinard",1,"150 g d'épinards"],["riz",1,"150 g de riz cuit"],[null,0,"10 cl de lait de coco, curry, gingembre"]],
+   steps:["Fais cuire la patate douce en cubes 10 min dans un peu d'eau, avec le curry et le gingembre.","Ajoute les lentilles et le lait de coco, laisse mijoter 10 min.","Ajoute les épinards à la fin et sers avec le riz."]},
+  {n:"Bowl tempeh, sarrasin et betterave",time:"15 min",ing:[["tempeh",1,"100 g de tempeh"],["sarrasin",1,"150 g de sarrasin cuit"],["kale",1,"1 poignée de chou kale"],["betterave",1,"100 g de betterave"],["sesame",1,"1 c. à soupe de sésame"],[null,0,"Sauce : tahini, citron, eau"]],
+   steps:["Dore le tempeh en lamelles à la poêle.","Masse le kale avec un peu de citron pour l'attendrir.","Assemble le tout et nappe de sauce au tahini."]}]},
+ gouter:{t:"Goûter",note:"Vers 16-17 h, pour arriver au dîner sans faim.",list:[
+  {n:"Yaourt soja, graines de courge et fruits rouges",time:"2 min",ing:[["yaS",1,"1 yaourt de soja enrichi"],["courge",1,"30 g de graines de courge"],["myrtille",1,"100 g de fruits rouges"]],steps:["Mélange et déguste."]},
+  {n:"Pomme, beurre de cacahuète et noix du Brésil",time:"2 min",ing:[["pomme",1,"1 pomme en quartiers"],["cacah",1,"2 c. à soupe de beurre de cacahuète"],["bresil",1,"2 noix du Brésil"]],steps:["Trempe les quartiers de pomme dans le beurre de cacahuète, croque les noix du Brésil à côté : ton sélénium du jour est fait."]},
+  {n:"Edamame tièdes et une orange",time:"5 min",ing:[["edam",1,"100 g d'edamame"],["orange",1,"1 orange"],[null,0,"1 pincée de fleur de sel"]],steps:["Réchauffe les edamame 3 min à l'eau bouillante et sale légèrement.","Termine par l'orange."]},
+  {n:"Figues, noix et chocolat noir",time:"2 min",ing:[["figue",1,"3 figues sèches"],["noix",1,"1 poignée de noix"],["choco",1,"2 carrés de chocolat noir"]],steps:["Un goûter riche en calcium, en fer et en oméga-3, à grignoter."]}]},
+ soir:{t:"Dîner",note:"Léger et tôt, idéalement avant 19 h, pour laisser le corps au repos.",list:[
+  {n:"Soupe de lentilles corail et carotte",time:"25 min",ing:[["soupeL",1,"1 bol de lentilles corail"],["carotte",1,"1 carotte"],["persil",1,"1 poignée de persil"],["lin",1,"1 c. à soupe de lin moulu"],[null,0,"Oignon, cumin, gingembre"]],
+   steps:["Fais cuire lentilles, carotte et oignon 20 min dans l'eau avec les épices.","Mixe, puis parsème de persil et de lin."]},
+  {n:"Tofu poêlé aux champignons et roquette",time:"15 min",ing:[["tofu",1,"100 g de tofu ferme"],["champi",1,"100 g de champignons"],["salade",1,"1 poignée de roquette"],["tomate",1,"1 tomate"],[null,0,"Ail, persil, huile d'olive"]],
+   steps:["Dore le tofu en cubes avec l'ail.","Ajoute les champignons 5 min.","Sers sur la roquette avec la tomate."]},
+  {n:"Velouté courgette-petits pois et graines de courge",time:"20 min",ing:[["courgette",1,"1 courgette"],["petitsP",1,"100 g de petits pois"],["courge",1,"30 g de graines de courge"],[null,0,"Menthe fraîche, bouillon de légumes"]],
+   steps:["Fais cuire la courgette et les petits pois 12 min dans le bouillon, puis mixe avec la menthe.","Parsème de graines de courge grillées."]},
+  {n:"Wok de pak choï, tofu et sésame",time:"15 min",ing:[["tofu",1,"100 g de tofu ferme"],["pakchoi",1,"100 g de pak choï"],["brocoli",1,"100 g de brocoli"],["sesame",1,"1 c. à soupe de sésame"],[null,0,"Gingembre, ail, huile de sésame"]],
+   steps:["Fais sauter le tofu en cubes à feu vif jusqu'à ce qu'il dore.","Ajoute le brocoli 4 min, puis le pak choï 2 min avec l'ail et le gingembre.","Parsème de sésame."]},
+  {n:"Poêlée de légumes verts et edamame",time:"15 min",ing:[["edam",1,"100 g d'edamame"],["brocoli",1,"100 g de brocoli"],["chouF",1,"100 g de chou-fleur"],["sesame",1,"1 c. à soupe de sésame"],[null,0,"Gingembre, ail, huile de sésame"]],
+   steps:["Fais sauter le brocoli et le chou-fleur 6 min à feu vif avec l'ail et le gingembre.","Ajoute les edamame 2 min, puis parsème de sésame."]}]}
+};
+const ORDER=["matin","brunch","midi","gouter","soir"];
+const dayNum=Math.floor(new Date(today+"T12:00:00").getTime()/864e5);
+let meal=(()=>{const h=new Date().getHours();return h<9?"matin":h<12?"brunch":h<15?"midi":h<18?"gouter":"soir"})();
+let shift=0;
+function recTotals(r){const M=FOODMAP(),t={p:0,fe:0,ca:0,c:0};
+  r.ing.forEach(([id,q])=>{const f=id&&M[id];if(f){t.p+=q*f[3];t.fe+=q*f[4];t.ca+=q*f[6];t.c+=q*f[7];}});return t;}
+function renderRecipes(){
+  document.getElementById("meals").innerHTML=ORDER.map(k=>`<button type="button" data-meal="${k}" aria-pressed="${k===meal}">${REC[k].t}</button>`).join("");
+  const m=REC[meal];document.getElementById("mnote").textContent=m.note;
+  const L=m.list,start=(dayNum+shift)%L.length,pick=[0,1,2].map(i=>L[(start+i)%L.length]);
+  document.getElementById("recs").innerHTML=pick.map(r=>{const t=recTotals(r),ri=L.indexOf(r);
+    return `<article class="card rec"><div class="rhead"><h3>${r.n}</h3><span class="time">${r.time}</span></div>
+      <div class="nut"><span class="p">${fmt(t.p)} g protéines</span><span class="f">fer ${fmt(t.fe)} mg</span><span class="k">calcium ${fmt(t.ca)} mg</span><span class="c">vit C ${fmt(t.c)} mg</span></div>
+      ${t.fe>=6&&t.c>=75?`<span class="badge">Fer bien absorbé</span>`:""}
+      <h4>Ingrédients</h4><ul>${r.ing.map(i=>`<li>${i[2]}</li>`).join("")}</ul>
+      <h4>Préparation</h4><ol>${r.steps.map(s=>`<li>${s}</li>`).join("")}</ol>
+      <button type="button" class="eat" data-eat="${meal}:${ri}">J'ai mangé ça</button></article>`;}).join("");
+  document.getElementById("more").hidden=L.length<=3;
+}
+let toastT;
+function toast(msg){const t=document.getElementById("toast");t.textContent=msg;t.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>t.hidden=true,2200);}
+document.getElementById("pane-r").addEventListener("click",e=>{
+  const mb=e.target.closest("[data-meal]");if(mb){meal=mb.dataset.meal;shift=0;renderRecipes();return;}
+  const eb=e.target.closest("[data-eat]");if(eb){const [k,i]=eb.dataset.eat.split(":");
+    REC[k].list[+i].ing.forEach(([id,q])=>{if(id)st.c[id]=(st.c[id]||0)+q;});save();render();toast("Ajouté à ton suivi ✓");}
+});
+document.getElementById("more").addEventListener("click",()=>{shift++;renderRecipes();});
+renderRecipes();
+
+// ---------- Les essentiels ----------
+const GUIDE=[
+ ["Vitamine B12","Indispensable","--iron","Elle protège les nerfs et fabrique les globules rouges. Aucune plante n'en contient de façon fiable, même pas les algues ou la spiruline.",
+  "Un complément est obligatoire pour tout végane. Repères courants : 25 à 100 µg par jour, ou 2 000 µg une fois par semaine. Fais valider la dose par ton médecin ou ton pharmacien, et contrôle ton taux une fois par an."],
+ ["Protéines","Chaque jour","--leaf","Elles construisent les muscles, la peau, les cheveux et le collagène. Les besoins vont d'environ 1 g par kilo si tu bouges peu à 1,6-2 g si tu fais du sport intense.",
+  "Tofu, tempeh, soja texturé, seitan, lentilles, pois chiches, haricots, edamame, graines de courge et de chanvre. Associe une légumineuse et une céréale (lentilles et riz) pour des protéines complètes."],
+ ["Fer","À surveiller","--iron","Il transporte l'oxygène. Un manque donne de la fatigue et une chute de cheveux, surtout chez les femmes qui ont des règles. Le fer des plantes s'absorbe moins bien, d'où des besoins un peu plus élevés.",
+  "Lentilles, pois chiches, tofu, soja texturé, graines de courge, épinards, quinoa, chocolat noir. Ajoute toujours de la vitamine C dans la même assiette (poivron, kiwi, orange, persil) et évite café et thé dans l'heure qui suit."],
+ ["Calcium","Chaque jour","--ca","Il garde les os et les dents solides. Environ 950 mg par jour pour un adulte.",
+  "Laits et yaourts végétaux enrichis en calcium, tofu au calcium, eau minérale riche en calcium, chou kale, pak choï, amandes, sésame, figues sèches. Les épinards en contiennent beaucoup, mais il s'absorbe mal."],
+ ["Zinc","À surveiller","--zinc","Il aide l'immunité, la cicatrisation, la peau et le collagène. Comme le fer, il s'absorbe un peu moins bien quand on est végane.",
+  "Graines de courge et de chanvre, noix de cajou, lentilles, pois chiches, avoine, tofu, tempeh. Faire tremper les légumineuses et les graines avant de les cuire aide à mieux l'absorber."],
+ ["Oméga-3","Chaque jour","--o3","Bons pour le cœur, le cerveau et contre l'inflammation. Le corps transforme une petite partie des oméga-3 végétaux en DHA et EPA, les formes actives.",
+  "1 c. à soupe de lin moulu ou 2 de chia par jour, des noix, de l'huile de colza. Pour le DHA et l'EPA directement, il existe des compléments d'huile d'algues, c'est là que les poissons les trouvent."],
+ ["Iode","Chaque jour","--zinc","Il fait fonctionner la thyroïde. Sans poisson ni produits laitiers, il peut vite manquer.",
+  "Utilise du sel iodé pour cuisiner, avec modération. Les algues en apportent aussi : la nori avec mesure, mais évite le kombu en grande quantité, qui en contient beaucoup trop."],
+ ["Vitamine D","Selon la saison","--vitc","Elle aide à fixer le calcium et soutient l'immunité. Le corps la fabrique grâce au soleil.",
+  "10 à 20 minutes de soleil par jour, bras et visage découverts, aux beaux jours. En hiver, ou si tu sors peu, un complément de vitamine D3 végane (issue du lichen) est souvent conseillé : demande à ton médecin."],
+ ["Sélénium","Chaque jour","--leaf","Un antioxydant qui protège les cellules et soutient la thyroïde. Les sols européens en sont pauvres.",
+  "1 à 2 noix du Brésil par jour suffisent à couvrir les besoins. Pas plus : en excès, il devient toxique."]
+];
+document.getElementById("guide").innerHTML=GUIDE.map(([n,tag,col,why,src])=>`<article class="card guide" style="--g:var(${col})"><h3>${n}<span>${tag}</span></h3><p>${why}</p><p class="src">${src}</p></article>`).join("");
+
+// ================= CONTENU À PERSONNALISER =================
+// Mantras : un par jour, dans l'ordre. EXEMPLES PROVISOIRES, à remplacer par les tiens.
+const MANTRAS=[
+ "Je suis vivante, ici et maintenant.",
+ "Je respire, et la vie respire en moi.",
+ "J'accueille ce jour comme un cadeau.",
+ "Je suis reliée à tout ce qui vit.",
+ "Mon corps est mon allié, je l'honore.",
+ "Je choisis ce qui me fait grandir.",
+ "Je suis à ma place, exactement là où je dois être."
+];
+// Le mot de Georges : un message par jour, affiché à la première ouverture. 45 mots, un nouveau chaque jour.
+const GEORGES=[
+ "Au-dessus des nuages, le soleil ne s'arrête jamais de briller. Même aujourd'hui.",
+ "Je ne pense pas à hier, je ne pense pas à demain. Je suis là, avec toi. Viens, on y est bien.",
+ "Tu as une question ? Va dehors. La réponse attend souvent sous un arbre.",
+ "Quand tu doutes, pose tes pieds dans l'herbe. La terre sait des choses que la tête oublie.",
+ "Moi, je t'aime comme tu es. Pas comme tu seras quand tu auras tout réussi. Comme tu es.",
+ "Respire comme moi quand je dors au soleil : lentement, profondément, sans rien demander.",
+ "Tu as besoin de force ? Regarde un arbre. Il ne se presse pas, et pourtant il touche le ciel.",
+ "Aujourd'hui, mange quelque chose de vivant, de coloré, qui a poussé au soleil. Ton corps te dira merci.",
+ "Je ne garde jamais de rancune. Ça prend trop de place dans le cœur.",
+ "Étire-toi en te levant. Moi, je le fais à chaque fois, et je ne me suis jamais senti aussi bien.",
+ "Quand ton corps est fatigué, offre-lui la nature : de l'air, du soleil, de l'eau, du repos.",
+ "Le vent sur ton visage, c'est un câlin du monde. Prends-le.",
+ "Tu n'as pas besoin de tout comprendre pour être heureux. Moi, je ne comprends rien, et je remue la queue.",
+ "Si tu te sens seul, va voir la mer, la forêt ou le ciel. La nature ne laisse jamais personne de côté.",
+ "Les jours de pluie, les flaques sont faites pour sauter dedans. Ton enfant intérieur le sait.",
+ "Je ne t'ai jamais demandé d'être parfait. Je t'ai juste demandé d'être là.",
+ "Ralentis. Les plus belles odeurs se trouvent quand on prend le temps de renifler.",
+ "Ce matin, le soleil s'est levé pour toi aussi. Tu n'as rien eu à faire pour le mériter.",
+ "Écoute les oiseaux une minute. Ils ne chantent pas pour qu'on les applaudisse. Ils chantent parce qu'ils sont vivants.",
+ "Quand tu es triste, je ne dis rien. Je me couche à côté de toi. Parfois, c'est ça la plus grande aide.",
+ "Bois de l'eau, marche un peu, regarde loin. Le reste peut attendre cinq minutes.",
+ "La nature ne se compare à personne. Le petit brin d'herbe ne veut pas être un chêne.",
+ "Tu es déjà assez. Je le sais depuis le premier jour.",
+ "Relâche tes épaules. Desserre ta mâchoire. Voilà. Tu vois, c'était lourd pour rien.",
+ "Chaque animal que tu épargnes avec ton assiette, je le connais. Il te dit merci.",
+ "Les arbres perdent leurs feuilles sans paniquer. Ils savent que le printemps revient.",
+ "Aujourd'hui, fais une chose juste pour le plaisir. Comme moi quand je cours après rien.",
+ "La joie, ce n'est pas compliqué : un rayon de soleil, quelqu'un qu'on aime, une balade. Tu as tout ça à portée de patte.",
+ "Quand la tête fait trop de bruit, va écouter le silence de la forêt.",
+ "Je t'attends toujours avec la même joie. Garde un peu de cette joie pour toi aussi.",
+ "Le ciel est grand. Tes soucis, à côté, sont tout petits.",
+ "Les racines d'un arbre poussent dans le noir. Tes plus beaux changements aussi.",
+ "Prends soin de ce qui est vivant autour de toi. C'est la plus belle façon de prendre soin de toi.",
+ "Si tu ne sais pas quoi faire, sors. Marche. La réponse arrive souvent au retour.",
+ "Un sourire à un inconnu, une main tendue à un petit animal : c'est comme ça qu'on change le monde.",
+ "La lune ne se presse jamais, et pourtant elle fait toutes ses phases. Toi aussi, tu as le droit à ton rythme.",
+ "Je ne sais pas lire l'heure. Je sais seulement que maintenant, c'est le bon moment pour t'aimer.",
+ "Ferme les yeux et sens le soleil sur ta peau. Voilà, tu viens de te recharger.",
+ "La nature guérit doucement, sans faire de bruit. Laisse-lui le temps de te faire du bien.",
+ "Tu as le droit de te reposer. Même les rivières font des pauses dans les lacs.",
+ "Moi, je ne me souviens pas de tes erreurs. Je me souviens de tes caresses.",
+ "Même la plus petite fleur fait tourner la tête des abeilles. Ne te crois jamais insignifiant.",
+ "Ta force n'est pas dans le bruit. Elle est dans le calme, comme celle de la montagne.",
+ "Quand tu ne sais plus qui tu es, va voir la nature. Elle te le rappellera.",
+ "Je suis toujours là, quelque part entre le vent et le soleil. Je veille sur toi."];
+// Ton voyage intérieur immersif Vivant : [titre, description, lien vers la leçon TinyPages où l'audio est hébergé].
+const VOYAGES=[
+ ["Vivant","Ton voyage intérieur immersif",""]];
+// Voyages intérieurs offerts, gratuits sur YouTube : [titre, durée, lien YouTube]. Laisse "" tant que le lien n'existe pas.
+const OFFERTS=[
+ ["Voyage intérieur offert n° 1","YouTube",""],
+ ["Voyage intérieur offert n° 2","YouTube",""]];
+// Annonces de Georges. Deux sortes :
+//  - type "serie" : une nouvelle série. youtube = lien du 1er épisode gratuit, page = page de la série sur le site, coupon = code promo.
+//  - type "video" : une nouvelle vidéo gratuite sur YouTube. youtube = lien de la vidéo.
+// debut / fin : la période où Georges l'affiche sur l'écran Aujourd'hui. Après, elle reste dans « Les annonces de Georges ».
+const NOUVEAUTES=[
+ {id:"lilith",type:"serie",titre:"Lilith",sous:"La vérité cachée sur l'origine de l'humanité · 7 épisodes",debut:"2026-10-18",fin:"2026-11-15",
+  youtube:"",page:"https://www.lamagiedalessa.com/product-page/lilith",coupon:"GARDIENS2026",remise:"−50 %",
+  mot:"Coucou, c'est Georges ! Une nouvelle série vient d'ouvrir ses portes. Le premier épisode est offert : écoute-le, et si tu veux la suite, j'ai un code rien que pour toi."}
+];
+// Méditations et soins : [titre, durée, lien YouTube]. Laisse "" tant que le lien n'existe pas.
+const MATIN=[
+ ["Méditation du matin n° 1","10 min",""],
+ ["Méditation du matin n° 2","10 min",""]];
+const SOIR=[
+ ["Méditation du soir n° 1","15 min",""],
+ ["Méditation du soir n° 2","15 min",""]];
+const LUNES=[
+ ["Méditation de la pleine lune","",""],
+ ["Méditation de la nouvelle lune","",""]];
+const ANIMAUX=[
+ ["Soin énergétique pour les animaux","",""]];
+const SOIN_BULLE=[
+ ["Soin énergétique : la bulle de protection","",""]];
+// Exercice du matin : ancrage et étirement. 5 mouvements de 30 secondes, avec un dessin chacun.
+const EXO_STEPS=[
+ {k:"secoue",t:"Secoue tout ton corps",d:"Saute sur place et laisse tout relâcher : les bras, les épaules, la tête. Secoue la fatigue de la nuit."},
+ {k:"jette",t:"Lève les bras, jette-les vers le bas",d:"Monte les bras vers le ciel en inspirant, puis jette-les vers le sol en soufflant fort."},
+ {k:"balance",t:"Balance les bras de gauche à droite",d:"Tourne le buste d'un côté puis de l'autre et laisse les bras s'enrouler autour de toi."},
+ {k:"ballerine",t:"Squat, puis monte comme une ballerine",d:"Descends en squat, puis remonte jusque sur la pointe des pieds, bras vers le ciel."},
+ {k:"croise",t:"Main vers le pied opposé",d:"Pieds écartés, va toucher le pied droit avec la main gauche, puis le pied gauche avec la main droite. Alterne."}];
+const EXO_SEC=30;
+// L'engagement pour la vie, affiché chaque jour sous la règle du Gardien.
+const ENGAGEMENT_VIE="Je protège la vie et j'épargne des animaux en choisissant mon alimentation, et je nourris la vie en moi.";
+// ============================================================
+
+let vh=load("vivant",{})||{};if(!vh[today])vh[today]={};
+let debut=load("debut",null);if(!debut){debut=today;store("debut",debut);}
+const saveV=()=>store("vivant",vh);
+const dnum=k=>Math.floor(new Date(k+"T12:00:00").getTime()/864e5);
+const jour=dnum(today)-dnum(debut)+1;
+const pickOf=(L,n)=>L[((n%L.length)+L.length)%L.length];
+const REGLES=[
+ "Tout est possible pour moi si je le veux vraiment.",
+ "Je ne fais pas aux autres ce que je ne veux pas qu'on me fasse.",
+ "Avant d'agir, je me mets à la place de l'autre.",
+ "Chacun a un environnement et une place adaptés.",
+ "Tout est interdépendant : mes choix ont un impact sur le reste du monde.",
+ "Plus je donne, plus je reçois.",
+ "Ce n'est pas parce que cela ne se voit pas que cela n'existe pas."];
+const RITS=[
+ ["matin","Le réveil du corps","Exercice d'ancrage et d'étirement, puis une petite méditation ou respiration","exo"],
+ ["marche","Marcher en pleine nature","2 à 3 km, dehors",null],
+ ["action","Une bonne action généreuse","Ramasser 5 à 10 déchets, rendre service, aider un petit animal, offrir un sourire",null],
+ ["joie","Un moment de joie avec moi","Un moment où je m'éclate et où mon enfant intérieur se réveille",null],
+ ["soir","Le soir, je me pose","Une petite méditation ou respiration, puis j'écris mon message intuitif",null]];
+const linkHTML=m=>m&&m[2]?`<a class="go" href="${esc(m[2])}" target="_blank" rel="noopener">Écouter ↗</a>`:`<span class="soon">Lien à venir</span>`;
+const doneCount=k=>{const d=vh[k]||{};return RITS.filter(([r])=>!!d[r]).length;};
+
+function renderDay(){
+  const now=new Date();
+  document.getElementById("dayline").innerHTML=`${now.toLocaleDateString("fr-FR",{weekday:"long",day:"numeric",month:"long"})} · <b>Jour ${jour}</b> de ton voyage Vivant`;
+  document.getElementById("mantra").textContent=pickOf(MANTRAS,jour-1);
+  document.getElementById("regle").textContent=pickOf(REGLES,jour-1);
+  const d=vh[today];
+  document.getElementById("ritList").innerHTML=RITS.map(([k,n,desc,f])=>{const on=!!d[k];
+    return `<label class="rit${on?" done":""}" for="r-${k}"><input type="checkbox" id="r-${k}" data-rit="${k}"${on?" checked":""}>
+      <div class="info"><div class="name">${n}</div><div class="meta">${desc}</div></div>${f==="exo"?`<button type="button" class="go" data-exo="1">Ma fiche</button>`:""}</label>`;}).join("");
+  document.getElementById("vie").textContent=ENGAGEMENT_VIE;
+  const n=doneCount(today);document.getElementById("ritScore").textContent=`${n} sur ${RITS.length}`;
+  // série : jours consécutifs avec au moins 3 rituels
+  let s=0;const c=new Date();if(doneCount(ymd(c))<RITS.length)c.setDate(c.getDate()-1);
+  while(doneCount(ymd(c))>=RITS.length){s++;c.setDate(c.getDate()-1);}
+  document.getElementById("streak").innerHTML=s?`${s} jour${s>1?"s":""} vivant${s>1?"s":""} d'affilée <span>· tes 5 engagements faits</span>`:`Ta série commence aujourd'hui <span>· fais tes 5 engagements</span>`;
+  let h="";for(let i=6;i>=0;i--){const x=new Date();x.setDate(x.getDate()-i);const k=ymd(x);
+    h+=`<div class="day${i===0?" today":""}"><span class="dot${doneCount(k)>=RITS.length?" on":""}"></span>${i===0?"Auj.":JOURS[x.getDay()]}</div>`;}
+  document.getElementById("vivDays").innerHTML=h;
+  const has=k=>(vh[k].msg&&vh[k].msg.trim())||(vh[k].voeu&&vh[k].voeu.trim());
+  const past=Object.keys(vh).filter(has).sort().reverse().slice(0,60);
+  document.getElementById("jEmpty").hidden=!!past.length;
+  document.getElementById("jN").textContent=past.length?past.length+" message"+(past.length>1?"s":""):"";
+  document.getElementById("journal").innerHTML=past.map(k=>`<div class="jr"><div class="meta">${new Date(k+"T12:00:00").toLocaleDateString("fr-FR",{weekday:"long",day:"numeric",month:"long"})}</div>${vh[k].msg&&vh[k].msg.trim()?`<p>${esc(vh[k].msg)}</p>`:""}${vh[k].voeu&&vh[k].voeu.trim()?`<p><b>✨ Mon vœu :</b> ${esc(vh[k].voeu)}</p>`:""}</div>`).join("");
+}
+document.getElementById("ritList").addEventListener("change",e=>{const k=e.target.dataset.rit;if(!k)return;
+  if(e.target.checked)vh[today][k]=true;else delete vh[today][k];saveV();renderDay();
+  if(doneCount(today)===RITS.length)toast("Tous tes rituels sont faits. Belle journée vivante ✨");});
+const msg=document.getElementById("msg");msg.value=vh[today].msg||"";
+const voeu=document.getElementById("voeu");voeu.value=vh[today].voeu||"";
+let voeuT;voeu.addEventListener("input",()=>{vh[today].voeu=voeu.value;saveV();clearTimeout(voeuT);
+  voeuT=setTimeout(()=>{document.getElementById("voeuSaved").textContent="Enregistré ✓";renderDay();},500);});
+let msgT;msg.addEventListener("input",()=>{vh[today].msg=msg.value;saveV();clearTimeout(msgT);
+  msgT=setTimeout(()=>{document.getElementById("msgSaved").textContent="Enregistré ✓";renderDay();},500);});
+// ---------- Écran Aujourd'hui : menus, alimentation, progression ----------
+const MENU_KEYS=[["matin","Petit-déj"],["midi","Midi"],["gouter","Goûter"],["soir","Dîner"]];
+if(!vh[today].meals)vh[today].meals={};
+if(!vh[today].sw)vh[today].sw={};
+const menuPick=k=>{const L=REC[k].list;return L[(dayNum+(vh[today].sw[k]||0))%L.length];};
+function renderExtras(){
+  const d=vh[today],h=new Date().getHours();
+  document.getElementById("hello").textContent=h<18?"Bonjour ✨":"Bonsoir ✨";
+  // menus du jour
+  document.getElementById("menus").innerHTML=MENU_KEYS.map(([k,lab])=>{const r=menuPick(k),t=recTotals(r),on=!!d.meals[k];
+    return `<div class="menu${on?" done":""}"><div class="mtop"><span class="mlabel">${lab}</span>${on?`<span class="dtag">✓ Mangé</span>`:""}</div>
+      <details><summary><b>${r.n}</b><span class="meta">${r.time} · ${fmt(t.p)} g de protéines</span></summary>
+      <div class="rbody"><h4 class="mlabel">Ingrédients</h4><ul>${r.ing.map(i=>`<li>${i[2]}</li>`).join("")}</ul>
+      <h4 class="mlabel">Préparation</h4><ol>${r.steps.map(s=>`<li>${s}</li>`).join("")}</ol></div></details>
+      <div class="mact">${on?`<button type="button" class="undo" data-tundo="${k}">Annuler</button>`:`<button type="button" class="eat2" data-teat="${k}">J'ai mangé ça</button><button type="button" class="swap" data-swap="${k}">Autre idée</button>`}</div></div>`;}).join("");
+  const nm=MENU_KEYS.filter(([k])=>d.meals[k]).length;
+  document.getElementById("menuScore").textContent=`${nm} sur ${MENU_KEYS.length}`;
+  // alimentation en bref
+  const T=window.__T||{p:0,fe:0,ca:0,c:0},G=goals(),target=Math.round(prof.kg*ACT[prof.act][1]);
+  const mb=(l,v,g,u,col)=>`<div class="bar"><div class="lab"><b>${l}</b><span>${fmt(v)} / ${fmt(g)} ${u}</span></div><div class="track"><div style="width:${Math.min(100,v/g*100)}%;background:var(${col})"></div></div></div>`;
+  document.getElementById("miniBars").innerHTML=mb("Protéines",T.p,target,"g","--leaf")+mb("Fer",T.fe,G.fe,"mg","--iron")+mb("Calcium",T.ca,G.ca,"mg","--ca")+mb("Vitamine C",T.c,G.c,"mg","--vitc");
+  // progression du jour : routine + menus
+  const total=RITS.length,done=doneCount(today),p=done/total;
+  document.getElementById("dArc").setAttribute("stroke-dashoffset",(263.9*(1-p)).toFixed(1));
+  document.getElementById("dPct").textContent=Math.round(p*100)+" %";
+  // journal : 28 jours
+  let g="",full=0;for(let i=27;i>=0;i--){const x=new Date();x.setDate(x.getDate()-i);const k=ymd(x),ok=doneCount(k)>=RITS.length;if(ok)full++;
+    g+=`<div class="mday${i===0?" today":""}"><span class="dot${ok?" on":""}"></span>${x.getDate()}</div>`;}
+  document.getElementById("month").innerHTML=g;
+  document.getElementById("moisN").textContent=`${full} jour${full>1?"s":""} vivant${full>1?"s":""}`;
+}
+document.getElementById("menus").addEventListener("click",e=>{
+  const d=vh[today];
+  const eb=e.target.closest("[data-teat]");
+  if(eb){const k=eb.dataset.teat;menuPick(k).ing.forEach(([id,q])=>{if(id)st.c[id]=(st.c[id]||0)+q;});d.meals[k]=true;saveV();save();render();toast("Ajouté à ton assiette ✓");return;}
+  const ub=e.target.closest("[data-tundo]");
+  if(ub){const k=ub.dataset.tundo;menuPick(k).ing.forEach(([id,q])=>{if(id){st.c[id]=Math.max(0,(st.c[id]||0)-q);if(!st.c[id])delete st.c[id];}});delete d.meals[k];saveV();save();render();return;}
+  const sb=e.target.closest("[data-swap]");
+  if(sb){const k=sb.dataset.swap;d.sw[k]=(d.sw[k]||0)+1;saveV();renderExtras();}
+});
+document.getElementById("goA").addEventListener("click",()=>{showTab("a");showSub("s");window.scrollTo(0,0);});
+const _renderDay=renderDay;renderDay=function(){_renderDay();if(window.__vivReady)renderExtras();};
+window.__vivReady=true;
+renderDay();
+
+// ---------- Respirations (breathwork) ----------
+// Une phase : [texte, secondes, taille du cercle (null = ne bouge pas)]
+const IN=1,OUT=.45;
+const rep_=(arr,n)=>Array.from({length:n},()=>arr).flat();
+const BREATHS=[
+ {e:"🟩",n:"La respiration carrée",s:"Pour te recentrer avant un moment important",d:"Inspire 4 secondes, bloque 4, expire 4, bloque 4. Comme si tu dessinais un carré avec ton souffle.",
+  seq:rep_([["Inspire",4,IN],["Bloque",4,null],["Expire",4,OUT],["Bloque",4,null]],6)},
+ {e:"💚",n:"La cohérence cardiaque",s:"Pour calmer le cœur et le stress",d:"Inspire 5 secondes, expire 5 secondes, pendant 3 minutes. Ton cœur se cale sur ton souffle.",
+  seq:rep_([["Inspire",5,IN],["Expire",5,OUT]],18)},
+ {e:"🌙",n:"La respiration 4-7-8",s:"Pour t'endormir et apaiser l'angoisse",d:"Inspire par le nez 4 secondes, bloque 7, expire longuement par la bouche 8 secondes.",
+  seq:rep_([["Inspire",4,IN],["Bloque",7,null],["Expire",8,OUT]],4)},
+ {e:"😮‍💨",n:"Le soupir qui libère",s:"Pour relâcher d'un coup une tension",d:"Une grande inspiration par le nez, une petite deuxième par-dessus pour remplir à fond, puis une longue expiration par la bouche.",
+  seq:rep_([["Inspire",2,.85],["Encore un peu",1,IN],["Expire longuement",6,OUT]],6)},
+ {e:"🔥",n:"Le souffle de feu",s:"Pour réveiller ton énergie",d:"Expire vite et fort par le nez, en rentrant le ventre. L'inspiration vient toute seule. 3 séries de 30 souffles rapides, avec une pause entre chaque.",fast:true,
+  seq:[1,2,3].flatMap(r=>[["Prépare-toi",3,OUT],...rep_([["Inspire",.5,.8],["Expire !",.5,OUT]],30),["Inspire à fond",3,IN],["Bloque",10,null],["Relâche",8,OUT]])},
+ {e:"⚡",n:"La respiration puissance",s:"Pour te sentir vivant, plein d'énergie",d:"30 grandes respirations rapides : inspire à fond, laisse partir. Puis expire et bloque poumons vides tant que c'est confortable. Inspire à fond, bloque 15 secondes. 3 tours.",fast:true,
+  seq:[1,2,3].flatMap(r=>[...rep_([["Inspire",1.5,IN],["Laisse partir",1.5,.55]],30),["Expire et bloque",30,OUT],["Inspire à fond",3,IN],["Bloque",15,null],["Relâche",5,OUT]])},
+];
+function brDur(b){const t=Math.round(b.seq.reduce((a,p)=>a+p[1],0));return t<60?t+" s":Math.round(t/60)+" min";}
+let brI=0,brK=0,brTm=null,brTk=null,brLeft=0;
+function brStop(){clearTimeout(brTm);clearInterval(brTk);brTm=brTk=null;}
+function brOpen(i){brStop();brI=i;brK=0;const b=BREATHS[i];
+  document.getElementById("brT").textContent=b.e+" "+b.n;document.getElementById("brD").textContent=b.d;
+  document.getElementById("brN").textContent="Respiration · "+brDur(b);
+  const w=document.getElementById("brW");w.hidden=!b.fast;w.textContent="Assis ou allongé, jamais en conduisant ni dans l'eau. Si la tête tourne, reprends un souffle normal. Évite cette respiration si tu es enceinte, épileptique ou si tu as un souci cardiaque.";
+  const c=document.getElementById("brC");c.style.transitionDuration="0s";c.style.transform="scale(.45)";
+  document.getElementById("brL").textContent="Prêt ?";document.getElementById("brS").textContent=brDur(b);
+  document.getElementById("brGo").textContent="Commencer";document.getElementById("brGo").hidden=false;
+  document.getElementById("brw").hidden=false;document.body.style.overflow="hidden";}
+function brStep(){const b=BREATHS[brI];
+  if(brK>=b.seq.length){brStop();document.getElementById("brL").textContent="Bravo ✨";document.getElementById("brS").textContent="";
+    const c=document.getElementById("brC");c.style.transitionDuration="3s";c.style.transform="scale(.7)";
+    document.getElementById("brGo").textContent="Recommencer";document.getElementById("brGo").hidden=false;toast("Ton souffle t'a ramené ici. Georges est fier de toi 🐾");return;}
+  const [t,sec,sc]=b.seq[brK];const c=document.getElementById("brC");
+  if(sc!==null){c.style.transitionDuration=sec+"s";c.style.transform="scale("+sc+")";}
+  document.getElementById("brL").textContent=t;
+  const left=b.seq.slice(brK).reduce((a,p)=>a+p[1],0);document.getElementById("brS").textContent=sec>=2?Math.ceil(sec)+"":"";
+  if(sec>=2){brLeft=Math.ceil(sec);clearInterval(brTk);brTk=setInterval(()=>{brLeft--;if(brLeft>0)document.getElementById("brS").textContent=brLeft;},1000);}else{clearInterval(brTk);}
+  brK++;brTm=setTimeout(brStep,sec*1000);}
+function brClose(){brStop();document.getElementById("brw").hidden=true;document.body.style.overflow="";}
+document.getElementById("brGo").addEventListener("click",()=>{brStop();brK=0;document.getElementById("brGo").hidden=true;brStep();});
+document.getElementById("brClose").addEventListener("click",brClose);
+document.addEventListener("click",e=>{const t=e.target.closest("[data-br]");if(t){e.preventDefault();brOpen(+t.dataset.br);}});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!document.getElementById("brw").hidden)brClose();});
+
+function renderMedits(){
+  const sec=(t,L)=>`<section class="card"><h2>${t}<span>${L.length}</span></h2>${L.map(m=>`<div class="med"><div class="info"><div class="name">${esc(m[0])}</div><div class="meta">${esc(m[1])}</div></div>${linkHTML(m)}</div>`).join("")}</section>`;
+  const nv=NOUVEAUTES.filter(n=>n.debut<=today);
+  const nvHTML=nv.length?`<section class="card"><h2>Les annonces de Georges<span>${nv.length}</span></h2>${nv.map(n=>`<div class="med"><div class="info"><div class="name">${esc(n.titre)}</div><div class="meta">${n.type==="serie"?"Nouvelle série":"Vidéo gratuite"} · ${esc(n.sous)}</div></div>
+      ${n.type==="serie"?(n.page?`<a class="go buy" href="${esc(n.page)}" target="_blank" rel="noopener">Découvrir ↗</a>`:`<span class="soon">Lien à venir</span>`):(n.youtube?`<a class="go buy" href="${esc(n.youtube)}" target="_blank" rel="noopener">Regarder ↗</a>`:`<span class="soon">Lien à venir</span>`)}</div>`).join("")}</section>`:"";
+  const exoCard=`<section class="card"><h2>Exercice du matin<span>2 min 30</span></h2><div class="med"><div class="info"><div class="name">Ancrage et étirement</div><div class="meta">5 mouvements de 30 secondes, en images</div></div><button type="button" class="go" data-exo="1">Ouvrir la fiche</button></div></section>`;
+  const brCard=`<section class="card"><h2>Respirations<span>${BREATHS.length}</span></h2>${BREATHS.map((b,i)=>`<div class="med"><div class="info"><div class="name">${b.e} ${esc(b.n)}</div><div class="meta">${esc(b.s)} · ${brDur(b)}</div></div><button type="button" class="go" data-br="${i}">Respirer</button></div>`).join("")}</section>`;
+  document.getElementById("medits").innerHTML=sec("Mon voyage intérieur immersif",VOYAGES)+nvHTML+exoCard+brCard+sec("Méditations du matin",MATIN)+sec("Méditations du soir",SOIR)+sec("Pleine lune et nouvelle lune",LUNES)+sec("Soins énergétiques pour les animaux",ANIMAUX)+sec("Soins énergétiques : bulle de protection",SOIN_BULLE)+sec("Voyages intérieurs offerts",OFFERTS);
+}
+renderMedits();
+
+// ---------- Fiche : exercice du matin ----------
+// Dessins : deux positions par mouvement (1 → 2). Coordonnées d'un personnage centré sur x=0, sol à y=130.
+const P={
+ debout:{h:[0,22],n:[0,34],hip:[0,78],la:[[-7,40],[-14,60],[-15,80]],ra:[[7,40],[14,60],[15,80]],ll:[[-6,78],[-8,104],[-10,130]],rl:[[6,78],[8,104],[10,130]]},
+ saut:{h:[0,10],n:[0,22],hip:[0,66],la:[[-7,28],[-22,40],[-34,50]],ra:[[7,28],[22,40],[34,50]],ll:[[-6,66],[-15,88],[-9,112]],rl:[[6,66],[15,88],[9,112]]},
+ brasHaut:{h:[0,30],n:[0,42],hip:[0,84],la:[[-7,48],[-16,28],[-22,8]],ra:[[7,48],[16,28],[22,8]],ll:[[-6,84],[-8,108],[-10,130]],rl:[[6,84],[8,108],[10,130]]},
+ brasBas:{h:[2,36],n:[1,48],hip:[0,88],la:[[-6,54],[-14,74],[-16,96]],ra:[[8,54],[18,74],[22,94]],ll:[[-6,88],[-12,110],[-10,130]],rl:[[6,88],[12,110],[10,130]]},
+ tourne:{h:[0,22],n:[0,34],hip:[0,78],la:[[-6,42],[-24,44],[-44,44]],ra:[[6,42],[-6,54],[-22,58]],ll:[[-6,78],[-8,104],[-10,130]],rl:[[6,78],[8,104],[10,130]]},
+ squat:{h:[6,56],n:[4,68],hip:[-12,100],la:[[4,74],[20,76],[38,76]],ra:[[4,74],[20,82],[36,84]],ll:[[-12,100],[12,102],[8,130]],rl:[[-12,100],[14,106],[14,130]]},
+ pointes:{h:[0,18],n:[0,30],hip:[0,72],la:[[-7,36],[-16,18],[-22,2]],ra:[[7,36],[16,18],[22,2]],ll:[[-5,72],[-6,98],[-6,122]],rl:[[5,72],[6,98],[6,122]],toes:true},
+ croise:{h:[24,48],n:[16,58],hip:[0,80],la:[[14,62],[24,92],[28,124]],ra:[[14,62],[2,40],[-10,24]],ll:[[-6,80],[-20,106],[-32,130]],rl:[[6,80],[20,106],[32,130]]}};
+const mir=p=>{const m=([x,y])=>[-x,y],L=a=>a.map(m);return{h:m(p.h),n:m(p.n),hip:m(p.hip),la:L(p.ra),ra:L(p.la),ll:L(p.rl),rl:L(p.ll),toes:p.toes};};
+function person(p,dx,op){const t=([x,y])=>`${x+dx},${y}`,pl=a=>`<polyline points="${a.map(t).join(" ")}"/>`;
+  return `<g opacity="${op}" fill="none" stroke="currentColor" stroke-width="8" stroke-linecap="round" stroke-linejoin="round">
+  <line x1="${p.n[0]+dx}" y1="${p.n[1]}" x2="${p.hip[0]+dx}" y2="${p.hip[1]}" stroke-width="10"/>${pl(p.la)}${pl(p.ra)}${pl(p.ll)}${pl(p.rl)}
+  ${p.toes?`<path d="M${p.ll[2][0]+dx} ${p.ll[2][1]}l-1 7M${p.rl[2][0]+dx} ${p.rl[2][1]}l1 7"/>`:""}
+  <circle cx="${p.h[0]+dx}" cy="${p.h[1]}" r="10" fill="currentColor" stroke="none"/></g>`;}
+const arrow=`<g fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" opacity=".55"><path d="M92 70h18M104 63l7 7-7 7"/></g>`;
+const ground=`<path d="M8 133h184" stroke="currentColor" stroke-width="2" opacity=".25"/>`;
+const num=(x,n)=>`<text x="${x}" y="152" text-anchor="middle" font-size="13" font-weight="700" fill="currentColor" opacity=".7">${n}</text>`;
+const pair=(a,b,extra="")=>ground+person(a,50,1)+arrow+person(b,150,1)+extra+num(50,"1")+num(150,"2");
+const FIG={
+ secoue:pair(P.debout,P.saut,`<g stroke="currentColor" stroke-width="3" stroke-linecap="round" opacity=".6"><path d="M112 50l-6-4M112 60l-7 0M188 50l6-4M188 60l7 0M140 126h20"/></g>`),
+ jette:pair(P.brasHaut,P.brasBas,`<path d="M182 18v62M175 72l7 9 7-9" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" opacity=".6"/>`),
+ balance:pair(P.tourne,mir(P.tourne)),
+ ballerine:pair(P.squat,P.pointes,`<path d="M182 112V40M175 48l7-9 7 9" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" opacity=".6"/>`),
+ croise:pair(P.croise,mir(P.croise))};
+let exoI=0,exoLeft=EXO_SEC,exoTimer=null;
+const exoFmt=n=>"0:"+String(n).padStart(2,"0");
+function exoShow(i){exoI=i;clearInterval(exoTimer);exoTimer=null;exoLeft=EXO_SEC;const st=EXO_STEPS[i];
+  document.getElementById("exoN").textContent=`Mouvement ${i+1} sur ${EXO_STEPS.length}`;
+  document.getElementById("exoFig").innerHTML=`<svg viewBox="0 0 200 160" role="img" aria-label="${esc(st.t)}">${FIG[st.k]}</svg>`;
+  document.getElementById("exoT").textContent=st.t;document.getElementById("exoD").textContent=st.d;
+  document.getElementById("exoS").textContent=exoFmt(exoLeft);
+  document.getElementById("exoGo").textContent="Lancer les 30 secondes";
+  document.getElementById("exoNext").textContent=i<EXO_STEPS.length-1?"Mouvement suivant":"J'ai terminé";
+  document.getElementById("exoDots").innerHTML=EXO_STEPS.map((_,j)=>`<i class="${j<=i?"on":""}"></i>`).join("");}
+function exoOpen(){exoShow(0);document.getElementById("exo").hidden=false;}
+function exoClose(){clearInterval(exoTimer);exoTimer=null;document.getElementById("exo").hidden=true;}
+function exoNext(){if(exoI<EXO_STEPS.length-1)exoShow(exoI+1);else{exoClose();toast("Ton corps est réveillé. Place à ta respiration du matin ✨");}}
+document.getElementById("exoGo").addEventListener("click",()=>{
+  if(exoTimer){clearInterval(exoTimer);exoTimer=null;document.getElementById("exoGo").textContent="Reprendre";return;}
+  document.getElementById("exoGo").textContent="Pause";
+  exoTimer=setInterval(()=>{exoLeft--;document.getElementById("exoS").textContent=exoFmt(Math.max(0,exoLeft));if(exoLeft<=0){clearInterval(exoTimer);exoTimer=null;exoNext();}},1000);});
+document.getElementById("exoNext").addEventListener("click",exoNext);
+document.getElementById("exoClose").addEventListener("click",exoClose);
+document.addEventListener("click",e=>{if(e.target.closest("[data-exo]")){e.preventDefault();exoOpen();}});
+document.getElementById("goVie").addEventListener("click",()=>{showTab("a");showSub("d");window.scrollTo(0,0);});
+// ---------- Georges, le compagnon ----------
+function gsvg(mood){const V={happy:`<path d="M50 170c13-17 31-24 50-24s37 7 50 24l12 38H38z" fill="url(#gFur)"/>
+<path d="M86 162c6 8 22 8 28 0l7 46H79z" fill="url(#gMuz)"/>
+<path d="M55 50C38 37 15 41 10 58c-4 15 6 33 23 41 6-12 9-27 22-41z" fill="url(#gEar)"/>
+<path d="M145 50c17-13 40-9 45 8 4 15-6 33-23 41-6-12-9-27-22-41z" fill="url(#gEar)"/>
+<path d="M36 90c0-36 28-58 64-58s64 22 64 58c0 20-5 36-15 50-12 17-29 28-49 28s-37-11-49-28c-10-14-15-30-15-50z" fill="url(#gFur)"/>
+<ellipse cx="52" cy="116" rx="13" ry="22" fill="#8a5a2c" opacity=".2"/><ellipse cx="148" cy="116" rx="13" ry="22" fill="#8a5a2c" opacity=".2"/>
+<path d="M95 33c-2 20-6 38-9 59 5 4 23 4 28 0-3-21-7-39-9-59z" fill="url(#gBlaze)"/>
+<path d="M58 120c0-22 19-32 42-32s42 10 42 32c0 25-19 40-42 40s-42-15-42-40z" fill="url(#gMuz)"/><ellipse cx="100" cy="114" rx="24" ry="13" fill="#6f6863" opacity=".25"/><g fill="#5c5550" opacity=".45"><circle cx="86" cy="122" r="1.1"/><circle cx="91" cy="126" r="1"/><circle cx="114" cy="122" r="1.1"/><circle cx="109" cy="126" r="1"/><circle cx="83" cy="117" r="0.9"/><circle cx="117" cy="117" r="0.9"/></g>
+<path d="M58 80c5-4 14-5 21-2M142 80c-5-4-14-5-21-2" stroke="#8a5a2c" stroke-width="2.4" fill="none" stroke-linecap="round" opacity=".75"/><path d="M58 88c4-7 17-8 23-1-5 6-17 7-23 1z" fill="#2a170b"/><path d="M142 88c-4-7-17-8-23-1 5 6 17 7 23 1z" fill="#2a170b"/>
+<ellipse cx="70" cy="87" rx="5.4" ry="5.2" fill="url(#gIris)"/><ellipse cx="130" cy="87" rx="5.4" ry="5.2" fill="url(#gIris)"/>
+<circle cx="70" cy="87.4" r="2.6" fill="#120a05"/><circle cx="130" cy="87.4" r="2.6" fill="#120a05"/>
+<circle cx="72" cy="85" r="1.5" fill="#fff"/><circle cx="132" cy="85" r="1.5" fill="#fff"/>
+<path d="M85 111c0-9 30-9 30 0 0 8-8 13-15 13s-15-5-15-13z" fill="url(#gNose)"/>
+<ellipse cx="94" cy="107" rx="4.5" ry="2" fill="#fff" opacity=".25"/>
+<path d="M100 124v6" stroke="#1a1210" stroke-width="2" stroke-linecap="round"/>
+<g fill="#b49572" opacity=".6"><circle cx="82" cy="122" r="1"/><circle cx="78" cy="126" r="1"/><circle cx="118" cy="122" r="1"/><circle cx="122" cy="126" r="1"/></g>
+<path d="M76 131c9 12 39 12 48 0-2 17-12 25-24 25s-22-8-24-25z" fill="#3b1a1a"/>
+<path d="M89 139c0 20 5 29 11 29s11-9 11-29c-6 3-16 3-22 0z" fill="url(#gTongue)"/><path d="M100 142v18" stroke="#c8607a" stroke-width="1.6" stroke-linecap="round"/>`,calm:`<path d="M50 170c13-17 31-24 50-24s37 7 50 24l12 38H38z" fill="url(#gFur)"/>
+<path d="M86 162c6 8 22 8 28 0l7 46H79z" fill="url(#gMuz)"/>
+<path d="M55 50C38 37 15 41 10 58c-4 15 6 33 23 41 6-12 9-27 22-41z" fill="url(#gEar)"/>
+<path d="M145 50c17-13 40-9 45 8 4 15-6 33-23 41-6-12-9-27-22-41z" fill="url(#gEar)"/>
+<path d="M36 90c0-36 28-58 64-58s64 22 64 58c0 20-5 36-15 50-12 17-29 28-49 28s-37-11-49-28c-10-14-15-30-15-50z" fill="url(#gFur)"/>
+<ellipse cx="52" cy="116" rx="13" ry="22" fill="#8a5a2c" opacity=".2"/><ellipse cx="148" cy="116" rx="13" ry="22" fill="#8a5a2c" opacity=".2"/>
+<path d="M95 33c-2 20-6 38-9 59 5 4 23 4 28 0-3-21-7-39-9-59z" fill="url(#gBlaze)"/>
+<path d="M58 120c0-22 19-32 42-32s42 10 42 32c0 25-19 40-42 40s-42-15-42-40z" fill="url(#gMuz)"/><ellipse cx="100" cy="114" rx="24" ry="13" fill="#6f6863" opacity=".25"/><g fill="#5c5550" opacity=".45"><circle cx="86" cy="122" r="1.1"/><circle cx="91" cy="126" r="1"/><circle cx="114" cy="122" r="1.1"/><circle cx="109" cy="126" r="1"/><circle cx="83" cy="117" r="0.9"/><circle cx="117" cy="117" r="0.9"/></g>
+<path d="M58 80c5-4 14-5 21-2M142 80c-5-4-14-5-21-2" stroke="#8a5a2c" stroke-width="2.4" fill="none" stroke-linecap="round" opacity=".75"/><path d="M58 88c4-7 17-8 23-1-5 6-17 7-23 1z" fill="#2a170b"/><path d="M142 88c-4-7-17-8-23-1 5 6 17 7 23 1z" fill="#2a170b"/>
+<ellipse cx="70" cy="87" rx="5.4" ry="5.2" fill="url(#gIris)"/><ellipse cx="130" cy="87" rx="5.4" ry="5.2" fill="url(#gIris)"/>
+<circle cx="70" cy="87.4" r="2.6" fill="#120a05"/><circle cx="130" cy="87.4" r="2.6" fill="#120a05"/>
+<circle cx="72" cy="85" r="1.5" fill="#fff"/><circle cx="132" cy="85" r="1.5" fill="#fff"/>
+<path d="M85 111c0-9 30-9 30 0 0 8-8 13-15 13s-15-5-15-13z" fill="url(#gNose)"/>
+<ellipse cx="94" cy="107" rx="4.5" ry="2" fill="#fff" opacity=".25"/>
+<path d="M100 124v6" stroke="#1a1210" stroke-width="2" stroke-linecap="round"/>
+<g fill="#b49572" opacity=".6"><circle cx="82" cy="122" r="1"/><circle cx="78" cy="126" r="1"/><circle cx="118" cy="122" r="1"/><circle cx="122" cy="126" r="1"/></g>
+<path d="M84 130c7 7 25 7 32 0" stroke="#1a1210" stroke-width="2.4" fill="none" stroke-linecap="round"/>`,hungry:`<path d="M50 170c13-17 31-24 50-24s37 7 50 24l12 38H38z" fill="url(#gFur)"/>
+<path d="M86 162c6 8 22 8 28 0l7 46H79z" fill="url(#gMuz)"/>
+<path d="M55 50C38 37 15 41 10 58c-4 15 6 33 23 41 6-12 9-27 22-41z" fill="url(#gEar)"/>
+<path d="M145 50c17-13 40-9 45 8 4 15-6 33-23 41-6-12-9-27-22-41z" fill="url(#gEar)"/>
+<path d="M36 90c0-36 28-58 64-58s64 22 64 58c0 20-5 36-15 50-12 17-29 28-49 28s-37-11-49-28c-10-14-15-30-15-50z" fill="url(#gFur)"/>
+<ellipse cx="52" cy="116" rx="13" ry="22" fill="#8a5a2c" opacity=".2"/><ellipse cx="148" cy="116" rx="13" ry="22" fill="#8a5a2c" opacity=".2"/>
+<path d="M95 33c-2 20-6 38-9 59 5 4 23 4 28 0-3-21-7-39-9-59z" fill="url(#gBlaze)"/>
+<path d="M58 120c0-22 19-32 42-32s42 10 42 32c0 25-19 40-42 40s-42-15-42-40z" fill="url(#gMuz)"/><ellipse cx="100" cy="114" rx="24" ry="13" fill="#6f6863" opacity=".25"/><g fill="#5c5550" opacity=".45"><circle cx="86" cy="122" r="1.1"/><circle cx="91" cy="126" r="1"/><circle cx="114" cy="122" r="1.1"/><circle cx="109" cy="126" r="1"/><circle cx="83" cy="117" r="0.9"/><circle cx="117" cy="117" r="0.9"/></g>
+<path d="M58 77c5-6 14-7 21-3M142 77c-5-6-14-7-21-3" stroke="#8a5a2c" stroke-width="2.4" fill="none" stroke-linecap="round" opacity=".75"/><path d="M58 88c4-7 17-8 23-1-5 6-17 7-23 1z" fill="#2a170b"/><path d="M142 88c-4-7-17-8-23-1 5 6 17 7 23 1z" fill="#2a170b"/>
+<ellipse cx="70" cy="87" rx="5.4" ry="6.2" fill="url(#gIris)"/><ellipse cx="130" cy="87" rx="5.4" ry="6.2" fill="url(#gIris)"/>
+<circle cx="70" cy="87.4" r="2.6" fill="#120a05"/><circle cx="130" cy="87.4" r="2.6" fill="#120a05"/>
+<circle cx="72" cy="85" r="1.5" fill="#fff"/><circle cx="132" cy="85" r="1.5" fill="#fff"/>
+<path d="M85 111c0-9 30-9 30 0 0 8-8 13-15 13s-15-5-15-13z" fill="url(#gNose)"/>
+<ellipse cx="94" cy="107" rx="4.5" ry="2" fill="#fff" opacity=".25"/>
+<path d="M100 124v6" stroke="#1a1210" stroke-width="2" stroke-linecap="round"/>
+<g fill="#b49572" opacity=".6"><circle cx="82" cy="122" r="1"/><circle cx="78" cy="126" r="1"/><circle cx="118" cy="122" r="1"/><circle cx="122" cy="126" r="1"/></g>
+<ellipse cx="100" cy="137" rx="7" ry="8" fill="#3b1a1a"/>`,sleep:`<path d="M50 170c13-17 31-24 50-24s37 7 50 24l12 38H38z" fill="url(#gFur)"/>
+<path d="M86 162c6 8 22 8 28 0l7 46H79z" fill="url(#gMuz)"/>
+<path d="M55 50C38 37 15 41 10 58c-4 15 6 33 23 41 6-12 9-27 22-41z" fill="url(#gEar)"/>
+<path d="M145 50c17-13 40-9 45 8 4 15-6 33-23 41-6-12-9-27-22-41z" fill="url(#gEar)"/>
+<path d="M36 90c0-36 28-58 64-58s64 22 64 58c0 20-5 36-15 50-12 17-29 28-49 28s-37-11-49-28c-10-14-15-30-15-50z" fill="url(#gFur)"/>
+<ellipse cx="52" cy="116" rx="13" ry="22" fill="#8a5a2c" opacity=".2"/><ellipse cx="148" cy="116" rx="13" ry="22" fill="#8a5a2c" opacity=".2"/>
+<path d="M95 33c-2 20-6 38-9 59 5 4 23 4 28 0-3-21-7-39-9-59z" fill="url(#gBlaze)"/>
+<path d="M58 120c0-22 19-32 42-32s42 10 42 32c0 25-19 40-42 40s-42-15-42-40z" fill="url(#gMuz)"/><ellipse cx="100" cy="114" rx="24" ry="13" fill="#6f6863" opacity=".25"/><g fill="#5c5550" opacity=".45"><circle cx="86" cy="122" r="1.1"/><circle cx="91" cy="126" r="1"/><circle cx="114" cy="122" r="1.1"/><circle cx="109" cy="126" r="1"/><circle cx="83" cy="117" r="0.9"/><circle cx="117" cy="117" r="0.9"/></g>
+<path d="M58 80c5-4 14-5 21-2M142 80c-5-4-14-5-21-2" stroke="#8a5a2c" stroke-width="2.4" fill="none" stroke-linecap="round" opacity=".75"/><path d="M60 89c5 5 15 5 20 0M120 89c5 5 15 5 20 0" stroke="#3a2212" stroke-width="3" fill="none" stroke-linecap="round"/>
+<path d="M85 111c0-9 30-9 30 0 0 8-8 13-15 13s-15-5-15-13z" fill="url(#gNose)"/>
+<ellipse cx="94" cy="107" rx="4.5" ry="2" fill="#fff" opacity=".25"/>
+<path d="M100 124v6" stroke="#1a1210" stroke-width="2" stroke-linecap="round"/>
+<g fill="#b49572" opacity=".6"><circle cx="82" cy="122" r="1"/><circle cx="78" cy="126" r="1"/><circle cx="118" cy="122" r="1"/><circle cx="122" cy="126" r="1"/></g>
+<path d="M84 130c7 7 25 7 32 0" stroke="#1a1210" stroke-width="2.4" fill="none" stroke-linecap="round"/>`};return U(`<svg viewBox="0 0 200 200" aria-hidden="true"><defs>
+<radialGradient id="gFur" cx="50%" cy="38%" r="65%"><stop offset="0" stop-color="#efd8b4"/><stop offset=".6" stop-color="#dcb98a"/><stop offset="1" stop-color="#b98f5d"/></radialGradient>
+<linearGradient id="gEar" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#b48c62"/><stop offset="1" stop-color="#6e553d"/></linearGradient>
+<radialGradient id="gMuz" cx="50%" cy="30%" r="75%"><stop offset="0" stop-color="#fffaf2"/><stop offset=".75" stop-color="#f1e3cc"/><stop offset="1" stop-color="#dcc5a2"/></radialGradient>
+<linearGradient id="gBlaze" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".55"/><stop offset=".5" stop-color="#fffaf2" stop-opacity=".95"/><stop offset="1" stop-color="#fffaf2"/></linearGradient>
+<radialGradient id="gNose" cx="40%" cy="30%" r="70%"><stop offset="0" stop-color="#4a423d"/><stop offset="1" stop-color="#0f0d0c"/></radialGradient>
+<linearGradient id="gTongue" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e2788e"/><stop offset="1" stop-color="#f4a5b4"/></linearGradient>
+<radialGradient id="gIris" cx="50%" cy="45%" r="55%"><stop offset="0" stop-color="#9a5a26"/><stop offset="1" stop-color="#4a2a12"/></radialGradient>
+<radialGradient id="gHalo" cx="50%" cy="48%" r="52%"><stop offset="0" stop-color="#7ff3d6" stop-opacity=".55"/><stop offset=".55" stop-color="#1aa59a" stop-opacity=".25"/><stop offset="1" stop-color="#062b2a" stop-opacity="0"/></radialGradient>
+<linearGradient id="gBg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#05302a"/><stop offset=".55" stop-color="#0a6b72"/><stop offset="1" stop-color="#173a78"/></linearGradient>
+<clipPath id="gClip"><circle cx="100" cy="100" r="97"/></clipPath>
+</defs><circle cx="100" cy="100" r="90" fill="url(#gHalo)"/>`+(V[mood]||V.calm)+`</svg>`);}
+
+// ---------- Contenu (exemples à réécrire) ----------
+const MISSIONS={
+ nourrir:{t:"Nourris Georges 🍃",sub:"Georges se nourrit de tes bonnes actions pour la nature. Choisis-en une, fais-la pour de vrai, puis reviens cocher.",g:"n",list:[
+  ["🗑️","Ramasse 3 déchets dehors","dans la rue, au parc, à la plage"],
+  ["🌱","Arrose une plante ou plante une graine","même dans un petit pot"],
+  ["🐦","Pose une coupelle d'eau pour les oiseaux","sur un balcon ou un rebord"],
+  ["🚿","Prends une douche plus courte","2 minutes de moins"],
+  ["💡","Éteins les lumières des pièces vides","toute la soirée"],
+  ["🥕","Mange un repas 100 % végétal","et dis-le à quelqu'un"],
+  ["🧺","Utilise ta gourde aujourd'hui","zéro bouteille plastique"],
+  ["🐜","Laisse vivre un petit insecte","observe-le une minute"]]},
+ jouer:{t:"Joue avec Georges 🐾",sub:"Georges adore quand tu bouges, quand tu ris, quand ton enfant intérieur sort jouer.",g:"j",list:[
+  ["🌳","Fais une balade dans la nature","au moins 20 minutes"],
+  ["🦶","Marche pieds nus dans l'herbe ou le sable","sens la Terre"],
+  ["💃","Danse sur ta chanson préférée","comme si personne ne regardait"],
+  ["🎨","Dessine un animal que tu aimes","même mal, surtout mal"],
+  ["☁️","Allonge-toi et regarde les nuages","trouve 3 formes"],
+  ["🧗","Grimpe, saute, roule dans l'herbe","comme quand tu étais petit"],
+  ["📸","Photographie une beauté du vivant","une fleur, un oiseau, une lumière"],
+  ["😂","Fais rire quelqu'un","une blague, une grimace"]]},
+ confiance:{t:"Donne confiance à Georges ✨",sub:"Quand tu crois en toi, Georges brille. Choisis un petit défi.",g:"c",list:[
+  ["🪞","Dis-toi une qualité devant le miroir","à voix haute"],
+  ["🙋","Ose dire ce que tu penses une fois aujourd'hui","calmement, sincèrement"],
+  ["📝","Écris 3 choses que tu as réussies","même minuscules"],
+  ["🙏","Dis merci à quelqu'un, en le regardant","vraiment"],
+  ["🌟","Répète « Tout est possible pour moi si je le veux vraiment »","3 fois, en respirant"],
+  ["🤝","Aide quelqu'un sans qu'on te le demande","un petit geste suffit"],
+  ["🎯","Fais une chose qui te fait un peu peur","un petit pas"],
+  ["💌","Écris un mot gentil à toi-même","comme à un ami"]]}
+};
+const NIVEAUX=["Gardien apprenti","Gardien des jardins","Gardien des rivières","Gardien de la forêt","Gardien des océans","Gardien des étoiles","Grand Gardien"];
+const SEUILS=[0,60,150,270,420,600,820];
+const CONSEILS=[
+ "Une abeille visite jusqu'à 5 000 fleurs par jour. Laisse quelques fleurs sauvages pousser, elle te dira merci.",
+ "Un arbre adulte peut abriter des centaines d'espèces. Quand tu passes devant, salue-le.",
+ "Les déchets plastiques mettent des centaines d'années à disparaître. Chaque déchet ramassé compte.",
+ "Marcher pieds nus sur la terre, ça calme. Essaie, et dis-moi si j'ai raison.",
+ "Les oiseaux ont soif aussi, surtout en été. Une petite coupelle d'eau suffit.",
+ "Tout est relié : l'eau que tu économises ici, c'est de l'eau pour la vie ailleurs."];
+const BULLES={
+ happy:["Je suis tellement content que tu sois là !","On fait une bonne équipe, toi et moi.","Tu sens ? La Terre te dit merci."],
+ calm:["Coucou ! On fait quelque chose de beau aujourd'hui ?","Je t'attendais. Qu'est-ce qu'on fait ?","Touche un bouton, je te suis."],
+ hungry:["J'ai faim… de bonnes actions ! Tu me nourris ?","Mon ventre gargouille. Une bonne action pour la nature ?"],
+ sleep:["Zzz… je fais une sieste. Réveille-moi avec une bonne action."]};
+
+// ---------- État ----------
+let S=Object.assign({n:55,j:55,c:55,xp:0,t:Date.now(),done:{},day:today},load("georges_tama",{}));
+if(S.day!==today){S.done={};S.day=today;}
+// Les jauges descendent doucement avec le temps (jamais en dessous de 10 : Georges s'endort, il ne meurt jamais)
+const hrsT=(Date.now()-S.t)/36e5;
+["n","j","c"].forEach(k=>S[k]=Math.max(10,S[k]-hrsT*2));
+S.t=Date.now();store("georges_tama",S);
+const pick=L=>L[Math.floor(Math.random()*L.length)];
+const level=()=>{let l=0;SEUILS.forEach((s,i)=>{if(S.xp>=s)l=i;});return l;};
+const mood=()=>{const m=(S.n+S.j+S.c)/3;return m<25?"sleep":S.n<35?"hungry":m>70?"happy":"calm";};
+
+function renderT(say){
+  const m=mood(),dog=document.getElementById("dog");
+  dog.innerHTML=gsvg(m)+(m==="sleep"?"":"");
+  dog.classList.toggle("sleep",m==="sleep");
+  document.querySelector(".zzz")?.remove();
+  if(m==="sleep"){const z=document.createElement("div");z.className="zzz";z.textContent="z z z";dog.parentNode.appendChild(z);}
+  document.getElementById("bubble").textContent=say||pick(BULLES[m]);
+  document.getElementById("moodT").textContent={happy:"Georges est heureux",calm:"Georges est serein",hungry:"Georges a faim",sleep:"Georges fait la sieste"}[m];
+  [["n","N"],["j","J"],["c","C"]].forEach(([k,K])=>{document.getElementById("g"+K).style.width=S[k]+"%";document.getElementById("v"+K).textContent=Math.round(S[k])+" %";});
+  const l=level(),next=SEUILS[l+1];
+  document.getElementById("lvl").textContent=NIVEAUX[l];
+  document.getElementById("xpN").textContent=S.xp+" pts";
+  document.getElementById("gX").style.width=(next?Math.min(100,(S.xp-SEUILS[l])/(next-SEUILS[l])*100):100)+"%";
+  document.getElementById("xpNext").textContent=next?`Encore ${next-S.xp} points pour devenir ${NIVEAUX[l+1]} et débloquer une nouvelle règle.`:"Tu es un Grand Gardien. Georges est fier de toi.";
+  document.getElementById("rN").textContent=`${l+1} sur 7`;
+  document.getElementById("rules").innerHTML=REGLES.map((r,i)=>i<=l?`<li><b>${i+1}.</b>${r}</li>`:`<li class="lock"><b>🔒</b>Règle ${i+1} · à débloquer en devenant ${NIVEAUX[i]}</li>`).join("");
+}
+document.getElementById("tip").textContent=pick(CONSEILS);
+
+// ---------- Missions ----------
+let cat=null;
+function openSheet(c){
+  cat=c;const M=MISSIONS[c];
+  document.getElementById("sheetT").textContent=M.t;document.getElementById("sheetSub").textContent=M.sub;
+  // 3 missions du jour par catégorie, toujours les mêmes dans la journée
+  const seed=[...today].reduce((a,ch)=>a+ch.charCodeAt(0),0)+c.length*7;
+  const L=M.list,idx=[0,1,2].map(i=>(seed+i*3)%L.length);
+  document.getElementById("missions").innerHTML=idx.map(i=>{const [ic,tx,sm]=L[i],id=c+i,d=!!S.done[id];
+    return `<div class="mis${d?" done":""}"><div class="ic">${ic}</div><div class="tx">${tx}<small>${sm}</small></div><button type="button" data-mis="${id}" ${d?"disabled":""}>${d?"Fait ✓":"C'est fait !"}</button></div>`;}).join("");
+  document.getElementById("sheetbg").hidden=false;
+}
+function closeSheet(){document.getElementById("sheetbg").hidden=true;}
+function hearts(ic){const h=document.getElementById("hearts");for(let i=0;i<5;i++){const s=document.createElement("span");s.textContent=ic;s.style.left=(30+Math.random()*40)+"%";s.style.animationDelay=(i*.12)+"s";h.appendChild(s);setTimeout(()=>s.remove(),1800);}}
+document.querySelectorAll(".act").forEach(b=>b.addEventListener("click",()=>openSheet(b.dataset.cat)));
+document.getElementById("sheetClose").addEventListener("click",closeSheet);
+document.getElementById("sheetbg").addEventListener("click",e=>{if(e.target.id==="sheetbg")closeSheet();});
+document.getElementById("missions").addEventListener("click",e=>{
+  const b=e.target.closest("[data-mis]");if(!b||b.disabled)return;
+  const M=MISSIONS[cat],before=level();
+  S.done[b.dataset.mis]=true;S[M.g]=Math.min(100,S[M.g]+25);S.xp+=20;S.t=Date.now();store("georges_tama",S);
+  closeSheet();
+  const merci={nourrir:"Miam ! Merci pour la Terre, je me sens plein d'énergie.",jouer:"Waouh, c'était trop bien ! On recommence quand tu veux.",confiance:"Tu vois que tu en es capable ! Je brille grâce à toi."}[cat];
+  const lv=level();
+  renderT(lv>before?`Tu deviens ${NIVEAUX[lv]} ! Nouvelle règle débloquée : « ${REGLES[lv]} »`:merci);
+  const dog=document.getElementById("dog");dog.classList.remove("joy");void dog.offsetWidth;dog.classList.add("joy");
+  hearts({nourrir:"🍃",jouer:"🐾",confiance:"✨"}[cat]);
+});
+// Caresser Georges
+document.getElementById("dog").addEventListener("click",()=>{const m=mood();
+  renderT(m==="sleep"?"Mmh… une caresse ? Je dors encore un peu. Une bonne action me réveillera !":pick(["Encore ! J'adore les caresses.","Tu es mon humain préféré.","Grrr de bonheur 🐾"]));
+  hearts("💚");});
+renderT();
+
+// ---------- Sauvegarde ----------
+function bkExport(){const o={};try{for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);o[k]=localStorage.getItem(k);}}catch(e){}
+  return "GEORGES-"+btoa(unescape(encodeURIComponent(JSON.stringify({v:1,d:today,s:o}))));}
+document.getElementById("bkMake").addEventListener("click",async()=>{
+  const code=bkExport(),ta=document.getElementById("bkCode");ta.value=code;ta.hidden=false;
+  try{await navigator.clipboard.writeText(code);document.getElementById("bkMsg").textContent="Code copié ✓ Colle-le dans un mail à toi-même, avec pour objet « Sauvegarde Georges ».";}
+  catch(e){ta.focus();ta.select();document.getElementById("bkMsg").textContent="Sélectionne le code et copie-le, puis envoie-le-toi par mail.";}
+});
+document.getElementById("bkLoad").addEventListener("click",()=>{
+  const err=document.getElementById("bkErr");
+  try{const raw=document.getElementById("bkIn").value.trim().replace(/^GEORGES-/,"");
+    const data=JSON.parse(decodeURIComponent(escape(atob(raw))));if(!data||!data.s)throw 0;
+    Object.entries(data.s).forEach(([k,v])=>localStorage.setItem(k,v));
+    err.textContent="Progression restaurée ✓ L'appli redémarre…";setTimeout(()=>location.reload(),900);}
+  catch(e){err.textContent="Ce code ne fonctionne pas. Vérifie que tu l'as copié en entier, depuis « GEORGES- » jusqu'à la fin.";}
+});
+
+// ---------- Onglets ----------
+const SUBS={g:"",j:"",d:"Tes menus végétaux du jour. Touche « Autre idée » si une recette ne te tente pas.",
+  m:"Ton voyage Vivant, tes méditations, tes soins énergétiques et ta fiche du matin.",
+  n:"Ton chemin, jour après jour : tes journées vivantes et tes messages intuitifs.",
+  s:"Note ce que tu manges : protéines, fer, calcium, zinc, vitamine C et oméga-3 se calculent tout seuls.",
+  r:"Des idées de repas 100 % végétales pour chaque moment de la journée. Touche « J'ai mangé ça » pour remplir ton suivi.",
+  e:"Les nutriments qui comptent quand on mange végane, et où les trouver."};
+let sub=load("sub3","s");
+function showTab(t){
+  ["g","j","m","a","n"].forEach(k=>{document.getElementById("pane-"+k).hidden=k!==t;document.getElementById("tab-"+k).setAttribute("aria-selected",k===t);});
+  if(t==="a")showSub(sub,true);else document.getElementById("sub").textContent=SUBS[t];
+  store("tab2",t);
+}
+function showSub(s,keep){
+  sub=s;["d","s","r","e"].forEach(k=>{document.getElementById("pane-"+k).hidden=k!==s;document.getElementById("tab-"+k).setAttribute("aria-pressed",k===s);});
+  document.getElementById("sub").textContent=SUBS[s];store("sub3",s);
+}
+["g","j","m","a","n"].forEach(k=>document.getElementById("tab-"+k).addEventListener("click",()=>{showTab(k);window.scrollTo(0,0);}));
+["d","s","r","e"].forEach(k=>document.getElementById("tab-"+k).addEventListener("click",()=>showSub(k)));
+// ---------- Georges, le gardien ----------
+// Portrait de Georges, dessiné d'après sa photo
+const GEORGES_SVG=`<svg viewBox="0 0 200 200" aria-hidden="true"><defs>
+<radialGradient id="gFur" cx="50%" cy="38%" r="65%"><stop offset="0" stop-color="#efd8b4"/><stop offset=".6" stop-color="#dcb98a"/><stop offset="1" stop-color="#b98f5d"/></radialGradient>
+<linearGradient id="gEar" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#b48c62"/><stop offset="1" stop-color="#6e553d"/></linearGradient>
+<radialGradient id="gMuz" cx="50%" cy="30%" r="75%"><stop offset="0" stop-color="#fffaf2"/><stop offset=".75" stop-color="#f1e3cc"/><stop offset="1" stop-color="#dcc5a2"/></radialGradient>
+<linearGradient id="gBlaze" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".55"/><stop offset=".5" stop-color="#fffaf2" stop-opacity=".95"/><stop offset="1" stop-color="#fffaf2"/></linearGradient>
+<radialGradient id="gNose" cx="40%" cy="30%" r="70%"><stop offset="0" stop-color="#4a423d"/><stop offset="1" stop-color="#0f0d0c"/></radialGradient>
+<linearGradient id="gTongue" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e2788e"/><stop offset="1" stop-color="#f4a5b4"/></linearGradient>
+<radialGradient id="gIris" cx="50%" cy="45%" r="55%"><stop offset="0" stop-color="#9a5a26"/><stop offset="1" stop-color="#4a2a12"/></radialGradient>
+<radialGradient id="gHalo" cx="50%" cy="48%" r="52%"><stop offset="0" stop-color="#7ff3d6" stop-opacity=".55"/><stop offset=".55" stop-color="#1aa59a" stop-opacity=".25"/><stop offset="1" stop-color="#062b2a" stop-opacity="0"/></radialGradient>
+<linearGradient id="gBg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#05302a"/><stop offset=".55" stop-color="#0a6b72"/><stop offset="1" stop-color="#173a78"/></linearGradient>
+<clipPath id="gClip"><circle cx="100" cy="100" r="97"/></clipPath>
+</defs><g clip-path="url(#gClip)"><rect width="200" height="200" fill="url(#gBg)"/><circle cx="100" cy="96" r="95" fill="url(#gHalo)"/><g fill="#fff"><circle cx="30" cy="40" r="1.1"/><circle cx="168" cy="34" r="1.4"/><circle cx="176" cy="96" r="1"/><circle cx="22" cy="118" r="1.2"/><circle cx="150" cy="18" r=".9"/><circle cx="48" cy="20" r=".8"/></g><path d="M30 40L48 20M168 34L150 18" stroke="#bff5ff" stroke-width=".5" opacity=".6"/><path d="M50 170c13-17 31-24 50-24s37 7 50 24l12 38H38z" fill="url(#gFur)"/>
+<path d="M86 162c6 8 22 8 28 0l7 46H79z" fill="url(#gMuz)"/>
+<path d="M55 50C38 37 15 41 10 58c-4 15 6 33 23 41 6-12 9-27 22-41z" fill="url(#gEar)"/>
+<path d="M145 50c17-13 40-9 45 8 4 15-6 33-23 41-6-12-9-27-22-41z" fill="url(#gEar)"/>
+<path d="M36 90c0-36 28-58 64-58s64 22 64 58c0 20-5 36-15 50-12 17-29 28-49 28s-37-11-49-28c-10-14-15-30-15-50z" fill="url(#gFur)"/>
+<ellipse cx="52" cy="116" rx="13" ry="22" fill="#8a5a2c" opacity=".2"/><ellipse cx="148" cy="116" rx="13" ry="22" fill="#8a5a2c" opacity=".2"/>
+<path d="M95 33c-2 20-6 38-9 59 5 4 23 4 28 0-3-21-7-39-9-59z" fill="url(#gBlaze)"/>
+<path d="M58 120c0-22 19-32 42-32s42 10 42 32c0 25-19 40-42 40s-42-15-42-40z" fill="url(#gMuz)"/><ellipse cx="100" cy="114" rx="24" ry="13" fill="#6f6863" opacity=".25"/>
+<path d="M58 80c5-4 14-5 21-2M142 80c-5-4-14-5-21-2" stroke="#8a5a2c" stroke-width="2.4" fill="none" stroke-linecap="round" opacity=".75"/><path d="M58 88c4-7 17-8 23-1-5 6-17 7-23 1z" fill="#2a170b"/><path d="M142 88c-4-7-17-8-23-1 5 6 17 7 23 1z" fill="#2a170b"/>
+<ellipse cx="70" cy="87" rx="5.4" ry="5.2" fill="url(#gIris)"/><ellipse cx="130" cy="87" rx="5.4" ry="5.2" fill="url(#gIris)"/>
+<circle cx="70" cy="87.4" r="2.6" fill="#120a05"/><circle cx="130" cy="87.4" r="2.6" fill="#120a05"/>
+<circle cx="72" cy="85" r="1.5" fill="#fff"/><circle cx="132" cy="85" r="1.5" fill="#fff"/>
+<path d="M85 111c0-9 30-9 30 0 0 8-8 13-15 13s-15-5-15-13z" fill="url(#gNose)"/>
+<ellipse cx="94" cy="107" rx="4.5" ry="2" fill="#fff" opacity=".25"/>
+<path d="M100 124v6" stroke="#1a1210" stroke-width="2" stroke-linecap="round"/>
+<g fill="#b49572" opacity=".6"><circle cx="82" cy="122" r="1"/><circle cx="78" cy="126" r="1"/><circle cx="118" cy="122" r="1"/><circle cx="122" cy="126" r="1"/></g>
+<path d="M76 131c9 12 39 12 48 0-2 17-12 25-24 25s-22-8-24-25z" fill="#3b1a1a"/>
+<path d="M89 139c0 20 5 29 11 29s11-9 11-29c-6 3-16 3-22 0z" fill="url(#gTongue)"/><path d="M100 142v18" stroke="#c8607a" stroke-width="1.6" stroke-linecap="round"/></g><circle cx="100" cy="100" r="97" fill="none" stroke="#e9c77a" stroke-width="3"/></svg>`;
+function U(v){U.n=(U.n||0)+1;const n="_"+U.n;return v.replace(/id="(g[A-Za-z]+)"/g,'id="$1'+n+'"').replace(/url\(#(g[A-Za-z]+)\)/g,"url(#$1"+n+")");}
+document.querySelectorAll(".gport").forEach(el=>el.innerHTML=U(GEORGES_SVG));
+// 30 messages de secours, dans la voix de Georges (brouillon à réécrire avec tes mots)
+const SECOURS=[
+ "Viens là. Pose ta main sur ton cœur. Je suis juste à côté.",
+ "Tu n'as pas besoin d'aller bien tout de suite. Moi, je reste.",
+ "Respire comme quand je dormais contre toi : lentement, profondément.",
+ "Ce que tu ressens est une vague. Elle monte, puis elle redescend. Toujours.",
+ "Bois un grand verre d'eau. Ça paraît tout bête, fais-le pour moi.",
+ "Sors cinq minutes et regarde le ciel. Il est là pour toi aussi.",
+ "Tu as déjà traversé des jours difficiles. Tu es encore là. C'est ça, la force.",
+ "Pleure si tu en as besoin. Les larmes, c'est de l'eau qui lave le cœur.",
+ "Appelle quelqu'un qui t'aime. Juste pour entendre sa voix.",
+ "Pose tes pieds bien à plat sur le sol. Sens la Terre qui te porte.",
+ "Tu n'es pas seule. Même quand le silence est grand, je veille.",
+ "Fais une seule petite chose aujourd'hui. Une seule. C'est assez.",
+ "Mets une musique douce et ferme les yeux trois minutes.",
+ "Ce n'est pas toi qui es trop. C'est le moment qui est lourd.",
+ "Enroule-toi dans une couverture. Prends soin de toi comme tu prenais soin de moi.",
+ "Nomme trois choses que tu vois, deux que tu entends, une que tu touches. Reviens ici, avec moi.",
+ "Je t'ai aimée chaque jour, même les jours gris. Fais pareil avec toi.",
+ "Ralentis. Tu n'as rien à prouver à personne aujourd'hui.",
+ "Va toucher un arbre, une plante, une pierre. Le vivant te répond.",
+ "Écris ce qui te pèse sur un papier. Puis laisse-le là, ce n'est plus à toi de le porter.",
+ "Souffle longtemps, comme pour éteindre une bougie très doucement. Recommence.",
+ "La nuit finit toujours par passer. Je l'ai vue passer avec toi.",
+ "Tu as le droit de dire non, de te reposer, de ne pas répondre.",
+ "Trouve une toute petite beauté : une fleur, un oiseau, une tasse chaude.",
+ "Tu es plus douce avec les autres qu'avec toi. Inverse, juste un instant.",
+ "Marche un peu, même dans la maison. Le corps aide le cœur à bouger.",
+ "Ce que tu vis compte. Tu comptes.",
+ "Passe un peu d'eau fraîche sur ton visage, et recommence la journée à partir de maintenant.",
+ "Je suis ton gardien. Là où tu vas, je marche à côté de toi.",
+ "Aujourd'hui n'est pas fini. Il reste de la place pour quelque chose de doux."
+];
+// 30 gestes pour la planète, pour les jours de joie
+const PLANETE=[
+ "Ramasse trois déchets pendant ta marche.",
+ "Remplis une gourde au lieu d'acheter une bouteille.",
+ "Cuisine un repas 100 % végétal pour quelqu'un que tu aimes.",
+ "Éteins ton téléphone une heure et va dehors.",
+ "Pose une coupelle d'eau dehors pour les oiseaux et les insectes.",
+ "Partage une recette végane avec une amie.",
+ "Coupe l'eau pendant que tu te brosses les dents.",
+ "Fais tes courses avec tes propres sacs.",
+ "Achète un fruit ou un légume de saison, au marché.",
+ "Débranche les appareils qui dorment en veille.",
+ "Plante une graine, même dans un petit pot.",
+ "Donne un vêtement que tu ne portes plus.",
+ "Dis merci à un arbre. Oui, à voix haute.",
+ "Fais un trajet court à pied ou à vélo.",
+ "Désabonne-toi de trois newsletters que tu ne lis jamais.",
+ "Laisse un coin de jardin ou de balcon sauvage pour les insectes.",
+ "Envoie un message de soutien à quelqu'un qui se bat pour les animaux.",
+ "Fais un don, même petit, à un refuge.",
+ "Remplace un produit ménager par du bicarbonate et du vinaigre blanc.",
+ "Prends une douche plus courte de deux minutes.",
+ "Ramasse un déchet sur la plage ou en forêt, et partage la photo pour inspirer.",
+ "Répare un objet au lieu de le jeter.",
+ "Offre une plante à quelqu'un.",
+ "Apprends le nom d'un oiseau de ton quartier.",
+ "Cuisine tes restes au lieu de les jeter.",
+ "Parle de Gardien de la Terre® à un enfant autour de toi.",
+ "Choisis un produit sans emballage.",
+ "Éteins la lumière d'une pièce vide.",
+ "Ouvre ta fenêtre et écoute le vivant pendant une minute.",
+ "Fais sourire un inconnu. La joie aussi, ça se partage."
+];
+const gToday=pickOf(GEORGES,jour-1);
+document.getElementById("gshort").textContent="« "+gToday+" »";
+const rnd=L=>L[Math.floor(Math.random()*L.length)];
+let breathT=null;
+function stopBreath(){if(breathT){clearInterval(breathT);breathT=null;}}
+function startBreath(){
+  let n=0;const bl=document.getElementById("bl"),bc=document.getElementById("bc");
+  setTimeout(()=>bc.classList.add("in"),60);
+  breathT=setInterval(()=>{n++;const inh=n%2===0;bc.classList.toggle("in",inh);bl.textContent=inh?"Inspire…":"Expire…";
+    if(n>=12){stopBreath();document.getElementById("gtext").textContent="Voilà. Ton souffle s'est posé, ton cœur aussi. Je suis fier de toi.";
+      bl.textContent="🐾";document.getElementById("gbtns").innerHTML=`<button type="button" class="gbig" data-g="close">Merci Georges</button>`;}},5000);
+}
+let gMode="";
+function openG(mode){
+  gMode=mode;
+  stopBreath();
+  const k=document.getElementById("gkicker"),t=document.getElementById("gtext"),x=document.getElementById("gextra"),b=document.getElementById("gbtns");
+  x.innerHTML="";
+  if(mode==="jour"){k.textContent="Le mot de Georges";t.textContent=gToday;const ln=launchNow().length;
+    b.innerHTML=`<button type="button" class="gbig" data-g="close">Merci Georges 🐾</button>`+(ln?`<button type="button" class="gsoft" data-g="launch">🎁 Voir l\'annonce de Georges</button>`:"");}
+  else if(mode==="secours"){k.textContent="Georges est là";t.textContent=rnd(SECOURS);
+    x.innerHTML=`<p class="ghelp">Si tu traverses un moment vraiment difficile, ne reste pas seule : parles-en à un proche, ou appelle le <b>3114</b> en France ou le <b>024</b> en Espagne, gratuits, jour et nuit.</p>`;
+    b.innerHTML=`<button type="button" class="gbig" data-g="respire">Respirer avec Georges</button><button type="button" class="gsoft" data-g="parler">J'ai besoin de parler à quelqu'un</button><button type="button" class="gsoft" data-g="secours">Un autre message</button><button type="button" class="gsoft" data-g="close">Ça va un peu mieux</button>`;}
+  else if(mode==="parler"){k.textContent="Georges est avec toi";t.textContent="Demander de l'aide, c'est du courage. Georges est là, et des humains aussi.";
+    const ad=load("adulte","");
+    x.innerHTML=`<div class="talk">
+      <p class="tq">Est-ce que tu as besoin de parler à quelqu'un ?<br>Est-ce que tu as besoin d'un adulte de confiance ?<br>Est-ce que tu ne te sens pas en sécurité ?</p>
+      <label for="adulte" class="tl">Mon adulte de confiance</label>
+      <input id="adulte" placeholder="Un parent, une prof, une tante, un voisin…" value="${esc(ad)}">
+      <p class="tn">Va le voir ou envoie-lui juste : « J'ai besoin de te parler. » C'est suffisant pour commencer.</p>
+      <div class="tlines"><div class="tc">🇫🇷 France</div>
+        <div><b>Fil Santé Jeunes</b> · 0 800 235 236 <span>gratuit, anonyme, pour les 12-25 ans</span></div>
+        <div><b>119</b> · Allô Enfance en Danger <span>si tu ne te sens pas en sécurité, 24 h/24</span></div>
+        <div><b>3114</b> · si tu as des idées noires <span>24 h/24</span></div>
+        <div class="tc">🇪🇸 España</div>
+        <div><b>Fundación ANAR</b> · 900 20 20 10 <span>gratuito, niños y adolescentes, 24 h</span></div>
+        <div><b>024</b> · si tienes pensamientos de hacerte daño <span>24 h</span></div>
+        <div class="tc">En danger immédiat</div>
+        <div><b>112</b> <span>urgences, partout en Europe</span></div></div>
+    </div>`;
+    document.getElementById("adulte").addEventListener("input",e=>store("adulte",e.target.value));
+    b.innerHTML=`<button type="button" class="gbig" data-g="respire">Respirer avec Georges</button><button type="button" class="gsoft" data-g="close">Merci Georges</button>`;}
+  else if(mode==="joie"){k.textContent="Ta joie, offre-la à la Terre";t.textContent=rnd(PLANETE);
+    b.innerHTML=`<button type="button" class="gbig" data-g="fait">Je le fais 🌍</button><button type="button" class="gsoft" data-g="joie">Un autre geste</button>`;}
+  else if(mode==="respire"){k.textContent="Respire avec Georges";t.textContent="Choisis ta respiration. Georges respire avec toi.";
+    x.innerHTML=`<div class="brlist"><button type="button" class="gsoft" data-g="respire1"><b>🐾 La minute de Georges</b><span>La plus douce · 1 min</span></button>${BREATHS.map((r,i)=>`<button type="button" class="gsoft" data-brg="${i}"><b>${r.e} ${esc(r.n)}</b><span>${esc(r.s)} · ${brDur(r)}</span></button>`).join("")}</div>`;
+    b.innerHTML=`<button type="button" class="gsoft" data-g="close">Plus tard</button>`;}
+  else if(mode==="respire1"){k.textContent="Respire avec Georges";t.textContent="Suis le cercle. Une minute, rien de plus.";
+    x.innerHTML=`<div class="breath"><div class="bcircle" id="bc"></div><div class="blabel" id="bl">Inspire…</div></div>`;
+    b.innerHTML=`<button type="button" class="gsoft" data-g="close">Arrêter</button>`;startBreath();}
+  document.getElementById("gmsg").hidden=false;
+}
+function showGeorges(){openG("jour");}
+// ---------- Nouveauté de la semaine ----------
+const launchNow=()=>NOUVEAUTES.filter(n=>n.debut<=today&&today<=n.fin&&load("later_"+n.id,"")!==today);
+function renderLaunch(){
+  const L=launchNow(),slot=document.getElementById("launchSlot");
+  if(!L.length){slot.innerHTML="";return;}
+  slot.innerHTML=L.map(n=>{
+    const serie=n.type==="serie";
+    const ep=n.youtube?`<a class="gbig" href="${esc(n.youtube)}" target="_blank" rel="noopener">${serie?"Écouter l'épisode 1 offert":"Regarder la vidéo"}</a>`:`<span class="gbig" style="opacity:.6">${serie?"Épisode 1 bientôt en ligne":"Bientôt en ligne"}</span>`;
+    const coupon=serie&&n.coupon?`<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:4px"><span class="meta">${esc(n.remise||"")} avec le code</span><button type="button" class="gsoft" data-copy="${esc(n.coupon)}" style="font-weight:700;letter-spacing:1px">${esc(n.coupon)}</button></div>`:"";
+    return `<section class="card launch" aria-label="Annonce de Georges">
+    <div class="gdtop"><div class="gport sm">${U(GEORGES_SVG)}</div><div class="info"><div class="ltype">${serie?"Nouvelle série":"Nouvelle vidéo"}</div><p class="lmot">${esc(n.mot)}</p></div></div>
+    <div><div class="meta">${esc(n.sous)}</div><div class="ltitle">${esc(n.titre)}</div></div>
+    <div class="lact">${ep}${serie&&n.page?`<a class="gsoft" href="${esc(n.page)}" target="_blank" rel="noopener" style="text-decoration:none">Découvrir la série</a>`:""}
+      <button type="button" class="gsoft" data-later="${n.id}">Plus tard</button></div>${coupon}
+  </section>`;}).join("");
+}
+document.addEventListener("click",e=>{
+  const l=e.target.closest("[data-later]");if(l){store("later_"+l.dataset.later,today);renderLaunch();return;}
+  const c=e.target.closest("[data-copy]");if(c){const v=c.dataset.copy;const done=()=>{const t=c.textContent;c.textContent="Code copié ✓";setTimeout(()=>c.textContent=t,1600);};
+    try{navigator.clipboard.writeText(v).then(done,done);}catch(_){done();}}
+});
+renderLaunch();
+document.addEventListener("click",e=>{const r=e.target.closest("[data-brg]");if(r){stopBreath();document.getElementById("gmsg").hidden=true;brOpen(+r.dataset.brg);}});
+document.addEventListener("click",e=>{const g=e.target.closest("[data-g]");if(!g)return;const m=g.dataset.g;
+  if(m==="close"){if(gMode==="jour")store("georges_vu",today);stopBreath();document.getElementById("gmsg").hidden=true;}
+  else if(m==="launch"){store("georges_vu",today);document.getElementById("gmsg").hidden=true;NOUVEAUTES.forEach(n=>store("later_"+n.id,""));renderLaunch();showTab("j");
+    setTimeout(()=>document.getElementById("launchSlot").scrollIntoView({behavior:"smooth",block:"center"}),50);}
+  else if(m==="fait"){document.getElementById("gmsg").hidden=true;toast("Merci pour la Terre 🌍 Georges est fier de toi");}
+  else openG(m);
+});
+
+// ---------- Code d'accès ----------
+// Empreintes (SHA-256) des codes valides. Code provisoire : VIVANT.
+// Pour changer de code, ajoute la nouvelle empreinte : les anciens codes restent valables tant qu'ils sont dans la liste.
+const CODES=["2d873b69f6f83437e6b016046b87dd8e13a49cd5d8931a4fefa38d8378ed8209"];
+async function sha(s){const b=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(s));return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,"0")).join("");}
+const gate=document.getElementById("gate");
+if(true){gate.hidden=true;if(load("georges_vu","")!==today)showGeorges();}
+else{setTimeout(()=>document.getElementById("gcode").focus(),50);}
+document.getElementById("gateForm").addEventListener("submit",async e=>{
+  e.preventDefault();const v=document.getElementById("gcode").value.trim().toUpperCase();if(!v)return;
+  const h=await sha(v);
+  if(CODES.includes(h)){store("acces",h);gate.hidden=true;window.scrollTo(0,0);showGeorges();}
+  else document.getElementById("gerr").textContent="Ce code ne fonctionne pas. Vérifie le mail reçu après ton achat.";
+});
+// L'appli s'ouvre toujours sur « Aujourd'hui », sauf lien direct
+const H=location.hash.slice(1);
+showTab(H==="mediter"?"m":H==="assiette"?"a":H==="journal"?"n":H==="aujourdhui"?"j":"g");
+</script>
+
+</html>

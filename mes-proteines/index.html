@@ -1,0 +1,489 @@
+<!doctype html><html><head><meta charset=utf8><meta name="robots" content="noindex"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Protéines"><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Mes protéines du jour</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700&family=Figtree:wght@400;500;600&display=swap">
+<style>
+/* Layout: one narrow column. Summary (protein ring + iron / vit C / zinc bars), collagen bricks, iron supplement strip, then a sticky search over food categories with +/- counters */
+:root{
+  --bg:#f3f5ef; --card:#ffffff; --fg:#1f2a22; --muted:#5d6b60; --line:#dde3d8;
+  --leaf:#2f6b45; --leaf-soft:#e3eee5; --iron:#a8472f; --vitc:#d4900c; --zinc:#4f6796; --ok:#2f6b45;
+  --display:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif;
+  --body:"Figtree",ui-sans-serif,system-ui,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#141a16; --card:#1c241f; --fg:#e8eee8; --muted:#9aa89d; --line:#2c3730;
+  --leaf:#7cc495; --leaf-soft:#22342a; --iron:#e08a6f; --vitc:#f2b63a; --zinc:#93a9d6; --ok:#7cc495; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#141a16; --card:#1c241f; --fg:#e8eee8; --muted:#9aa89d; --line:#2c3730;
+  --leaf:#7cc495; --leaf-soft:#22342a; --iron:#e08a6f; --vitc:#f2b63a; --zinc:#93a9d6; --ok:#7cc495; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font:15px/1.5 var(--body);
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 40px}
+.wrap{max-width:560px;margin:0 auto;display:flex;flex-direction:column;gap:16px}
+h1{font:700 1.7rem/1.1 var(--display);margin:0;text-wrap:balance}
+.sub{color:var(--muted);margin:4px 0 0}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.card h2{font:700 1.05rem var(--display);margin:0;padding:12px 14px;display:flex;justify-content:space-between;gap:8px;border-bottom:1px solid var(--line)}
+.card h2 span{font-variant-numeric:tabular-nums;color:var(--muted);font-weight:500;font-family:var(--body);font-size:.9rem}
+.sumtop{display:flex;gap:16px;align-items:center;padding:14px}
+.ring{width:96px;height:96px;flex:none}
+.ring circle{fill:none;stroke-width:10}
+.ring .bgc{stroke:var(--line)} .ring .fgc{stroke:var(--leaf);stroke-linecap:round;transition:stroke-dashoffset .4s}
+.ring text{fill:var(--fg);font:700 20px var(--display)} .ring .small{font:500 10px var(--body);fill:var(--muted)}
+.stats{display:flex;flex-direction:column;gap:6px;min-width:0}
+.stats b{font:700 1.15rem var(--display)}
+.weight{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:.9rem}
+.weight input{width:64px;padding:6px 8px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--fg);font:600 1rem var(--body)}
+.bars{display:flex;flex-direction:column;gap:10px;padding:0 14px 14px}
+.bar .lab{display:flex;justify-content:space-between;font-size:.88rem}
+.bar .lab b{font-weight:600}
+.bar .lab span{color:var(--muted);font-variant-numeric:tabular-nums}
+.track{height:8px;border-radius:4px;background:var(--line);overflow:hidden;margin-top:4px}
+.track div{height:100%;width:0;border-radius:4px;transition:width .4s}
+#bFe{background:var(--iron)} #bC{background:var(--vitc)} #bZn{background:var(--zinc)}
+.meta{color:var(--muted);font-size:.85rem}
+.bricks{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;padding:12px 14px}
+.brick{border:1.5px dashed var(--line);border-radius:10px;padding:8px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.brick b{font-size:.88rem}
+.brick span{font-size:.78rem;color:var(--muted)}
+.brick.ok{border-style:solid;border-color:var(--ok);background:var(--leaf-soft)}
+.brick.ok span{color:var(--ok)}
+.colnote{padding:0 14px 12px}
+.ferline{display:flex;align-items:center;gap:12px;padding:12px 14px}
+.info{flex:1;min-width:0}
+.name{font-weight:600}
+.fbtn{flex:none;padding:9px 14px;border-radius:20px;border:1.5px solid var(--iron);background:var(--card);color:var(--iron);font:600 .9rem var(--body);cursor:pointer}
+.fbtn[aria-pressed="true"]{background:var(--iron);color:var(--bg)}
+.days{display:flex;justify-content:space-between;gap:4px;padding:0 14px 12px}
+.day{display:flex;flex-direction:column;align-items:center;gap:4px;font:inherit;font-size:.75rem;color:var(--muted);flex:1;background:none;border:0;padding:2px 0;cursor:pointer}
+.day:focus-visible{outline:2px solid var(--vitc);outline-offset:2px;border-radius:8px}
+.dot{width:22px;height:22px;border-radius:50%;border:1.5px solid var(--line)}
+.dot.on{background:var(--iron);border-color:var(--iron)}
+.day.today{color:var(--fg);font-weight:600}
+.day.today .dot{border-color:var(--fg)}
+.day.today .dot.on{border-color:var(--iron)}
+.ate{display:flex;flex-wrap:wrap;gap:6px;padding:12px 14px}
+.chip{background:var(--leaf-soft);border-radius:14px;padding:3px 10px;font-size:.85rem}
+.search{position:sticky;top:env(safe-area-inset-top,0px);z-index:2;background:var(--bg);padding-block:8px}
+.search input{width:100%;padding:11px 14px;border:1px solid var(--line);border-radius:12px;background:var(--card);color:var(--fg);font:500 1rem var(--body)}
+#cats{display:flex;flex-direction:column;gap:14px}
+.row{display:flex;align-items:center;gap:10px;padding:10px 14px;border-top:1px solid var(--line)}
+.card h2 + .row{border-top:0}
+.row.on{background:var(--leaf-soft)}
+.nut{display:flex;flex-wrap:wrap;gap:4px 10px;font-size:.8rem;margin-top:2px;font-variant-numeric:tabular-nums}
+.nut .p{color:var(--leaf)} .nut .f{color:var(--iron)} .nut .c{color:var(--vitc)} .nut .z{color:var(--zinc)}
+.ctr{display:flex;align-items:center;gap:6px;flex:none}
+.ctr button{width:34px;height:34px;border-radius:50%;border:1px solid var(--line);background:var(--card);color:var(--fg);font:600 1.1rem var(--body);cursor:pointer}
+.ctr button.plus{background:var(--leaf);border-color:var(--leaf);color:var(--bg)}
+.ctr .n{min-width:18px;text-align:center;font-variant-numeric:tabular-nums;font-weight:600}
+button:focus-visible,input:focus-visible{outline:2px solid var(--vitc);outline-offset:2px}
+.del{background:none;border:0;color:var(--iron);font:500 .8rem var(--body);cursor:pointer;padding:2px 0;margin-top:2px}
+form.add{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;padding:12px 14px}
+form.add label{display:flex;flex-direction:column;gap:3px;font-size:.82rem;color:var(--muted);min-width:0}
+form.add label.wide{grid-column:1/-1}
+form.add input{padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--fg);font:500 .95rem var(--body);width:100%}
+form.add button{grid-column:1/-1;padding:10px;border-radius:10px;border:0;background:var(--leaf);color:var(--bg);font:600 .95rem var(--body);cursor:pointer}
+.empty{padding:14px;color:var(--muted)}
+.tips{background:var(--leaf-soft);border-radius:14px;padding:14px 16px;display:flex;flex-direction:column;gap:8px}
+.tips h3{font:700 1rem var(--display);margin:0}
+.tips p{margin:0}
+.reset{align-self:center;background:none;border:1px solid var(--line);color:var(--muted);padding:8px 16px;border-radius:20px;font:500 .9rem var(--body);cursor:pointer}
+.tabs{display:grid;grid-template-columns:1fr 1fr;gap:4px;background:var(--line);padding:4px;border-radius:12px}
+.tabs button{padding:10px;border:0;border-radius:9px;background:transparent;color:var(--muted);font:600 .95rem var(--body);cursor:pointer}
+.tabs button[aria-selected="true"]{background:var(--card);color:var(--fg);box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.pane{display:flex;flex-direction:column;gap:16px}
+.meals{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}
+.meals button{flex:none;padding:8px 14px;border-radius:18px;border:1px solid var(--line);background:var(--card);color:var(--fg);font:600 .9rem var(--body);cursor:pointer}
+.meals button[aria-pressed="true"]{background:var(--leaf);border-color:var(--leaf);color:var(--bg)}
+.mnote{margin:0;color:var(--muted)}
+.rec{padding:14px;display:flex;flex-direction:column;gap:10px}
+.rec h3{font:700 1.15rem/1.2 var(--display);margin:0;text-wrap:balance}
+.rhead{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.time{flex:none;font-size:.8rem;color:var(--muted);border:1px solid var(--line);border-radius:10px;padding:2px 8px}
+.rec ul,.rec ol{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:3px}
+.rec h4{margin:0;font:700 .78rem var(--body);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.badge{align-self:flex-start;font-size:.8rem;font-weight:600;color:var(--iron);background:var(--card);border:1.5px solid var(--iron);border-radius:12px;padding:2px 10px}
+.eat{align-self:stretch;padding:11px;border-radius:10px;border:0;background:var(--leaf);color:var(--bg);font:600 .95rem var(--body);cursor:pointer}
+.more{align-self:center;background:var(--card);border:1px solid var(--line);color:var(--fg);padding:9px 18px;border-radius:20px;font:600 .9rem var(--body);cursor:pointer}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--fg);color:var(--bg);padding:10px 18px;border-radius:20px;font-weight:600;font-size:.9rem;max-width:calc(100% - 32px);text-align:center;z-index:5}
+.brand{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.brand svg{width:40px;height:40px;flex:none}
+.brand .bt{display:flex;flex-direction:column;line-height:1.2}
+.brand .bt b{font:700 .95rem var(--display);color:var(--leaf)}
+.brand .bt span{font-size:.8rem;color:var(--muted)}
+.foot{display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;padding-top:18px;border-top:1px solid var(--line);color:var(--muted);font-size:.8rem}
+.foot svg{width:30px;height:30px}
+.foot b{color:var(--fg);font-weight:600}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="wrap">
+  <div>
+    <div class="brand">
+      <svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="22" fill="var(--leaf-soft)" stroke="var(--leaf)" stroke-width="2"/><path d="M13 30c0-9 7-16 19-17-1 11-8 18-17 18" fill="var(--leaf)"/><path d="M15 31c4-5 8-9 13-13" stroke="var(--leaf-soft)" stroke-width="1.6" fill="none" stroke-linecap="round"/><g fill="var(--iron)"><ellipse cx="30" cy="34" rx="3.6" ry="3"/><circle cx="26.4" cy="29.6" r="1.4"/><circle cx="29.2" cy="28.2" r="1.4"/><circle cx="32.4" cy="28.6" r="1.4"/><circle cx="34.6" cy="31" r="1.4"/></g></svg>
+      <div class="bt"><b>Gardien de la Terre®</b><span>par Stéphanie &amp; Georges</span></div>
+    </div>
+    <h1>Mes protéines du jour</h1>
+    <p class="sub">Végane avec les œufs de ta poule. Touche + à chaque portion mangée : protéines, fer, vitamine C et zinc se calculent tout seuls.</p>
+  </div>
+
+  <nav class="tabs" role="tablist" aria-label="Pages">
+    <button type="button" role="tab" id="tabT" aria-selected="true" aria-controls="paneT">Mon tracker</button>
+    <button type="button" role="tab" id="tabR" aria-selected="false" aria-controls="paneR">Recettes du jour</button>
+  </nav>
+
+  <div id="paneT" class="pane" role="tabpanel" aria-labelledby="tabT">
+  <section class="card" aria-label="Résumé du jour">
+    <div class="sumtop">
+      <svg class="ring" viewBox="0 0 100 100" aria-hidden="true">
+        <circle class="bgc" cx="50" cy="50" r="42"/>
+        <circle class="fgc" id="arc" cx="50" cy="50" r="42" transform="rotate(-90 50 50)" stroke-dasharray="263.9" stroke-dashoffset="263.9"/>
+        <text id="tot" x="50" y="52" text-anchor="middle">0 g</text>
+        <text class="small" id="pct" x="50" y="68" text-anchor="middle">protéines</text>
+      </svg>
+      <div class="stats">
+        <b id="left">—</b>
+        <label class="weight" for="kg">Ton poids
+          <input id="kg" type="number" inputmode="decimal" min="35" max="150" value="58"> kg
+        </label>
+        <div class="meta" id="goal"></div>
+      </div>
+    </div>
+    <div class="bars">
+      <div class="bar"><div class="lab"><b>Fer des aliments</b><span id="tFe">0 / 18 mg</span></div><div class="track"><div id="bFe"></div></div></div>
+      <div class="bar"><div class="lab"><b>Vitamine C</b><span id="tC">0 / 100 mg</span></div><div class="track"><div id="bC"></div></div></div>
+      <div class="bar"><div class="lab"><b>Zinc</b><span id="tZn">0 / 10 mg</span></div><div class="track"><div id="bZn"></div></div></div>
+    </div>
+  </section>
+
+  <section class="card" aria-labelledby="colT">
+    <h2 id="colT">Ton collagène<span id="colScore">0 brique sur 3</span></h2>
+    <div class="bricks">
+      <div class="brick" id="kP"><b>Protéines</b><span id="kPs">—</span></div>
+      <div class="brick" id="kC"><b>Vitamine C</b><span id="kCs">—</span></div>
+      <div class="brick" id="kZ"><b>Zinc</b><span id="kZs">—</span></div>
+    </div>
+    <p class="meta colnote">Le collagène n'existe pas en version végane : ton corps le fabrique lui-même avec ces trois briques. Quand les trois sont pleines, il a tout ce qu'il lui faut.</p>
+  </section>
+
+  <section class="card" aria-labelledby="feT">
+    <h2 id="feT">Complément de fer<span>un jour sur deux</span></h2>
+    <div class="ferline">
+      <div class="info">
+        <div class="name" id="ferMsg">Jour de fer</div>
+        <div class="meta">Avec le brunch après le sport et au moins 75 mg de vitamine C. Pas de café ni de déca 1 h avant et 2 h après.</div>
+      </div>
+      <button type="button" id="ferBtn" class="fbtn" aria-pressed="false">Fer pris</button>
+    </div>
+    <div class="days" id="days" aria-label="Fer des 7 derniers jours"></div>
+    <p class="meta" style="padding:0 14px 12px;margin:0">Oublié de noter ? Touche le rond du jour pour corriger.</p>
+  </section>
+
+  <section class="card" id="ateCard" aria-labelledby="ateT" hidden>
+    <h2 id="ateT">Mangé aujourd'hui<span id="ateN"></span></h2>
+    <div class="ate" id="ate"></div>
+  </section>
+
+  <div class="search">
+    <label for="q" class="meta" hidden>Chercher un aliment</label>
+    <input id="q" type="search" placeholder="Chercher un aliment (ex. avocat, grenade)" autocomplete="off">
+  </div>
+  <div id="cats"></div>
+  <div class="empty" id="noRes" hidden>Aucun aliment trouvé. Tu peux l'ajouter juste en dessous.</div>
+
+  <section class="card" aria-labelledby="addT">
+    <h2 id="addT">Ajouter un aliment</h2>
+    <form class="add" id="addForm">
+      <label class="wide" for="aName">Nom<input id="aName" required placeholder="ex. Houmous maison"></label>
+      <label class="wide" for="aPort">Portion<input id="aPort" placeholder="ex. 3 c. à soupe"></label>
+      <label for="aP">Protéines (g)<input id="aP" inputmode="decimal" placeholder="0"></label>
+      <label for="aFe">Fer (mg)<input id="aFe" inputmode="decimal" placeholder="0"></label>
+      <label for="aC">Vitamine C (mg)<input id="aC" inputmode="decimal" placeholder="0"></label>
+      <label for="aZn">Zinc (mg)<input id="aZn" inputmode="decimal" placeholder="0"></label>
+      <button type="submit">Ajouter à mes aliments</button>
+    </form>
+  </section>
+
+  <div class="tips">
+    <h3>Les règles qui comptent</h3>
+    <p><b>Protéines :</b> mets le gros le matin et le midi, puis un goûter protéiné. Tu arrives au dîner sans faim et tu manges léger avant 19 h.</p>
+    <p><b>Fer :</b> le fer des plantes s'absorbe mal seul. Mets toujours une source de vitamine C dans la même assiette (poivron, kiwi, orange, persil). Évite le café, le déca, le thé et le yaourt enrichi en calcium autour des repas riches en fer.</p>
+    <p><b>Associe une céréale et une légumineuse</b> (riz et lentilles, quinoa et pois chiches) pour des protéines complètes.</p>
+    <p><b>Zinc :</b> graines de courge, chanvre, cajou, lentilles et avoine sont tes meilleures sources. Faire tremper les légumineuses et les graines aide à mieux l'absorber.</p>
+    <p><b>Repères :</b> les valeurs sont des moyennes par portion, pour te guider, pas au milligramme près. Le complément de fer ne compte pas dans la barre « Fer des aliments ».</p>
+  </div>
+
+  <button class="reset" id="reset" type="button">Recommencer la journée</button>
+  </div>
+
+  <div id="paneR" class="pane" role="tabpanel" aria-labelledby="tabR" hidden>
+    <div class="meals" id="meals" role="group" aria-label="Repas"></div>
+    <p class="mnote" id="mnote"></p>
+    <div id="recs" class="pane"></div>
+    <button type="button" class="more" id="more">D'autres idées</button>
+  </div>
+
+  <footer class="foot">
+    <svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="22" fill="var(--leaf-soft)" stroke="var(--leaf)" stroke-width="2"/><path d="M13 30c0-9 7-16 19-17-1 11-8 18-17 18" fill="var(--leaf)"/><g fill="var(--iron)"><ellipse cx="30" cy="34" rx="3.6" ry="3"/><circle cx="26.4" cy="29.6" r="1.4"/><circle cx="29.2" cy="28.2" r="1.4"/><circle cx="32.4" cy="28.6" r="1.4"/><circle cx="34.6" cy="31" r="1.4"/></g></svg>
+    <div>Créé avec amour par <b>Stéphanie &amp; Georges</b> · <b>Gardien de la Terre®</b></div>
+    <div>© 2026 Stéphanie Dordain – Alessa. Tous droits réservés. Les valeurs nutritionnelles sont des repères et ne remplacent pas un avis médical.</div>
+  </footer>
+</div>
+<div class="toast" id="toast" role="status" hidden></div>
+
+<script>
+// [id, nom, portion, protéines g, fer mg, vit C mg, zinc mg]
+const CATS=[
+ {t:"Œufs, laits et petit-déjeuner",items:[
+  ["oeuf","Œuf de ta poule","1 œuf",6.3,0.9,0,0.6],
+  ["yaS","Yaourt de soja","1 pot de 125 g",5,0.5,0,0.3],
+  ["yaC","Yaourt coco","1 pot de 125 g",1,0.3,0,0.1],
+  ["laitS","Lait de soja","1 verre de 250 ml",8,1,0,0.5],
+  ["avoine","Flocons d'avoine","40 g",5.3,1.7,0,1.6],
+  ["painC","Pain complet","1 tranche, 40 g",3.5,1,0,0.7],
+  ["cacah","Beurre de cacahuète","2 c. à soupe",8,0.6,0,0.9],
+  ["pureeA","Purée d'amande","2 c. à soupe",7,1.2,0,1],
+  ["tahini","Tahini (crème de sésame)","1 c. à soupe",2.6,1.3,0,0.7]]},
+ {t:"Protéines végétales",items:[
+  ["tvp","Soja texturé","50 g sec (réhydraté)",25,4.5,0,1.2],
+  ["lent","Lentilles cuites","1 assiette, 200 g",18,6.6,3,2.5],
+  ["soupeL","Soupe de lentilles corail","1 bol de 300 ml",9,2.5,2,1.2],
+  ["pateL","Pâtes de lentilles","80 g sec",20,5.5,0,2.5],
+  ["poisC","Pois chiches cuits","150 g",13,4.3,2,2.3],
+  ["haric","Haricots rouges ou blancs cuits","150 g",13,3.3,2,1.5],
+  ["edam","Edamame","100 g",11,2.3,6,1.4],
+  ["petitsP","Petits pois","100 g",5.4,1.5,14,1.2],
+  ["seitan","Seitan (non fermenté)","100 g",25,2,0,0.6],
+  ["tofu","Tofu nature (non fermenté)","100 g",12,2.5,0,1.2],
+  ["poudre","Protéine végétale pois/riz","1 dose, 30 g",22,4,0,1]]},
+ {t:"Graines et oléagineux",items:[
+  ["courge","Graines de courge","1 poignée, 30 g",9,2.5,0,2.3],
+  ["chanvre","Graines de chanvre décortiquées","2 c. à soupe, 20 g",6.3,1.6,0,2],
+  ["chia","Graines de chia","2 c. à soupe, 20 g",3.3,1.5,0,0.9],
+  ["lin","Graines de lin moulues","1 c. à soupe",1.8,0.6,0,0.4],
+  ["tourn","Graines de tournesol","30 g",6.2,1.6,0,1.5],
+  ["sesame","Graines de sésame","1 c. à soupe",1.8,1.5,0,0.8],
+  ["amande","Amandes","1 poignée, 30 g",6.3,1.1,0,0.9],
+  ["cajou","Noix de cajou","1 poignée, 30 g",5.5,2,0,1.7],
+  ["noix","Noix","1 poignée, 30 g",4.6,0.9,0,0.9]]},
+ {t:"Céréales et féculents",items:[
+  ["quinoa","Quinoa cuit","150 g",6.6,2.2,0,1.6],
+  ["riz","Riz cuit","150 g",4,0.3,0,0.7],
+  ["sarrasin","Sarrasin cuit","150 g",5,1.2,0,0.9],
+  ["pates","Pâtes complètes cuites","150 g",8,1.5,0,1.2],
+  ["patateD","Patate douce","200 g cuite",4,1.4,39,0.6],
+  ["pdt","Pomme de terre","200 g cuite",4,0.6,20,0.6]]},
+ {t:"Légumes",items:[
+  ["avocat","Avocat","½ avocat",1.5,0.4,7.5,0.5],
+  ["radis","Radis","1 poignée, 50 g",0.3,0.2,7.5,0.1],
+  ["carotte","Carottes râpées","100 g",0.9,0.3,6,0.2],
+  ["epinard","Épinards cuits","150 g",4.5,5.4,15,1.1],
+  ["kale","Chou kale","1 poignée crue, 50 g",1.5,0.8,60,0.2],
+  ["brocoli","Brocoli","100 g",2.8,0.7,65,0.4],
+  ["chouF","Chou-fleur","100 g",1.9,0.4,48,0.3],
+  ["poivron","Poivron rouge","½ poivron, 75 g",0.7,0.3,95,0.2],
+  ["tomate","Tomate","1 tomate",1.1,0.3,16,0.2],
+  ["courgette","Courgette","150 g",1.8,0.5,20,0.4],
+  ["betterave","Betterave","100 g",1.7,0.8,4,0.4],
+  ["champi","Champignons","100 g",3,0.5,2,0.5],
+  ["salade","Roquette ou salade verte","1 poignée, 50 g",1,0.6,7.5,0.2],
+  ["persil","Persil frais","1 petite poignée, 15 g",0.4,0.9,20,0.2]]},
+ {t:"Fruits",items:[
+  ["orange","Orange","1 moyenne",1.2,0.1,70,0.1],
+  ["jusO","Jus d'orange pressé","1 verre de 200 ml",1.4,0.4,80,0.1],
+  ["kiwi","Kiwi","1 kiwi",0.8,0.2,65,0.1],
+  ["citron","Citron pressé","jus d'1 citron entier",0.2,0.1,18,0],
+  ["grenade","Grenade","½ fruit, en graines",1.3,0.2,8,0.3],
+  ["raisin","Raisin","1 grappe, 150 g",1.1,0.5,5,0.1],
+  ["raisinS","Raisins secs","1 poignée, 30 g",0.9,0.6,1,0.1],
+  ["fraise","Fraises","100 g",0.7,0.4,60,0.1],
+  ["myrtille","Myrtilles ou fruits rouges","100 g",0.7,0.3,10,0.2],
+  ["papaye","Papaye","150 g",0.7,0.4,90,0.1],
+  ["mangue","Mangue","150 g",1.2,0.2,55,0.1],
+  ["ananas","Ananas","150 g",0.8,0.4,70,0.2],
+  ["banane","Banane","1 banane",1.3,0.3,10,0.2],
+  ["pomme","Pomme","1 pomme",0.5,0.2,8,0.1],
+  ["abricotS","Abricots secs","30 g",1,0.8,0,0.1],
+  ["datte","Dattes","3 dattes",0.6,0.2,0,0.1]]},
+ {t:"Petits plus",items:[
+  ["choco","Chocolat noir 70 % et plus","2 carrés, 20 g",1.6,2.4,0,0.7]]}
+];
+const GOAL={fe:18,c:100,zn:10};
+const ymd=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+const today=ymd(new Date());
+const load=(k,def)=>{try{const v=JSON.parse(localStorage.getItem(k)||"null");return v==null?def:v}catch(e){return def}};
+const store=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
+let st={day:today,c:{},kg:58};
+const s0=load("prot",null);if(s0){st.kg=s0.kg||58;if(s0.day===today)st.c=s0.c||{};}
+let fer=load("fer",{})||{};
+let custom=load("custom",[])||[];
+const save=()=>store("prot",st);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c]));
+const fmt=x=>x>=10?String(Math.round(x)):String(Math.round(x*10)/10).replace(".",",");
+const norm=s=>s.normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase();
+const kg=document.getElementById("kg");kg.value=st.kg;
+
+function allCats(){return custom.length?[{t:"Mes aliments",custom:true,items:custom}].concat(CATS):CATS;}
+function allFoods(){return allCats().flatMap(c=>c.items);}
+
+function rowHTML([id,n,p,P,Fe,C,Zn],isCustom){
+  const nut=[P?`<span class="p">${fmt(P)} g protéines</span>`:"",Fe?`<span class="f">fer ${fmt(Fe)} mg</span>`:"",C?`<span class="c">vit C ${fmt(C)} mg</span>`:"",Zn?`<span class="z">zinc ${fmt(Zn)} mg</span>`:""].join("");
+  return `<div class="row" id="r-${id}" data-name="${esc(norm(n))}"><div class="info"><div class="name">${esc(n)}</div><div class="meta">${esc(p||"1 portion")}</div><div class="nut">${nut}</div>${isCustom?`<button type="button" class="del" data-del="${id}">Supprimer</button>`:""}</div>
+    <div class="ctr"><button type="button" aria-label="Retirer ${esc(n)}" data-id="${id}" data-d="-1">−</button><span class="n" id="n-${id}">0</span><button type="button" class="plus" aria-label="Ajouter ${esc(n)}" data-id="${id}" data-d="1">+</button></div></div>`;
+}
+function build(){
+  document.getElementById("cats").innerHTML=allCats().map(c=>`<section class="card cat"><h2>${esc(c.t)}<span>${c.items.length}</span></h2>${c.items.map(i=>rowHTML(i,c.custom)).join("")}</section>`).join("");
+  filter();render();
+}
+function filter(){
+  const q=norm(document.getElementById("q").value.trim());let any=false;
+  document.querySelectorAll(".cat").forEach(sec=>{let vis=0;
+    sec.querySelectorAll(".row").forEach(r=>{const show=!q||r.dataset.name.includes(q);r.hidden=!show;if(show)vis++;});
+    sec.hidden=vis===0;if(vis)any=true;});
+  document.getElementById("noRes").hidden=any;
+}
+document.getElementById("q").addEventListener("input",filter);
+
+let pendingDel=null;
+document.addEventListener("click",e=>{
+  const b=e.target.closest("button[data-id]");
+  if(b){const id=b.dataset.id;st.c[id]=Math.max(0,(st.c[id]||0)+ +b.dataset.d);if(!st.c[id])delete st.c[id];save();render();return;}
+  const d=e.target.closest("button[data-del]");
+  if(d){const id=d.dataset.del;
+    if(pendingDel!==id){pendingDel=id;d.textContent="Toucher encore pour supprimer";return;}
+    custom=custom.filter(i=>i[0]!==id);delete st.c[id];store("custom",custom);save();pendingDel=null;build();}
+});
+document.getElementById("addForm").addEventListener("submit",e=>{
+  e.preventDefault();const v=id=>parseFloat((document.getElementById(id).value||"0").replace(",","."))||0;
+  const name=document.getElementById("aName").value.trim();if(!name)return;
+  custom.push(["u"+Date.now(),name,document.getElementById("aPort").value.trim(),v("aP"),v("aFe"),v("aC"),v("aZn")]);
+  store("custom",custom);e.target.reset();build();
+});
+document.getElementById("ferBtn").addEventListener("click",()=>{if(fer[today])delete fer[today];else fer[today]=true;store("fer",fer);render();});
+document.getElementById("days").addEventListener("click",e=>{const b=e.target.closest("[data-fd]");if(!b)return;const k=b.dataset.fd;if(fer[k])delete fer[k];else fer[k]=true;store("fer",fer);render();});
+kg.addEventListener("input",()=>{const v=parseFloat(kg.value);if(v>=35&&v<=150){st.kg=v;save();render();}});
+document.getElementById("reset").addEventListener("click",()=>{st.c={};save();render();});
+const JOURS=["D","L","M","M","J","V","S"];
+
+function render(){
+  let P=0,Fe=0,C=0,Zn=0;const ate=[];
+  allFoods().forEach(([id,n,,p,f,c,z])=>{const k=st.c[id]||0;
+    P+=k*p;Fe+=k*f;C+=k*c;Zn+=k*z;
+    const ne=document.getElementById("n-"+id);if(ne)ne.textContent=k;
+    const re=document.getElementById("r-"+id);if(re)re.classList.toggle("on",k>0);
+    if(k)ate.push(`<span class="chip">${k>1?k+" × ":""}${esc(n)}</span>`);});
+  const lo=Math.round(st.kg*1.6),hi=Math.round(st.kg*2),target=Math.round(st.kg*1.8);
+  document.getElementById("arc").setAttribute("stroke-dashoffset",(263.9*(1-Math.min(1,P/target))).toFixed(1));
+  document.getElementById("tot").textContent=Math.round(P)+" g";
+  document.getElementById("goal").textContent=`Objectif muscu : ${target} g de protéines par jour (repère de ${lo} à ${hi} g)`;
+  document.getElementById("left").textContent=P>=target?"Protéines atteintes 👏":`Encore ${target-Math.round(P)} g de protéines`;
+  const bar=(b,t,v,g)=>{document.getElementById(b).style.width=Math.min(100,v/g*100)+"%";document.getElementById(t).textContent=`${fmt(v)} / ${g} mg`;};
+  bar("bFe","tFe",Fe,GOAL.fe);bar("bC","tC",C,GOAL.c);bar("bZn","tZn",Zn,GOAL.zn);
+  const brick=(el,s,ok,txt)=>{document.getElementById(el).classList.toggle("ok",ok);document.getElementById(s).textContent=txt;return ok?1:0;};
+  const score=brick("kP","kPs",P>=target,P>=target?"Pleine":`encore ${target-Math.round(P)} g`)
+    +brick("kC","kCs",C>=GOAL.c,C>=GOAL.c?"Pleine":`encore ${Math.round(GOAL.c-C)} mg`)
+    +brick("kZ","kZs",Zn>=GOAL.zn,Zn>=GOAL.zn?"Pleine":`encore ${fmt(GOAL.zn-Zn)} mg`);
+  document.getElementById("colScore").textContent=`${score} brique${score>1?"s":""} sur 3`;
+  document.getElementById("ateCard").hidden=!ate.length;
+  document.getElementById("ate").innerHTML=ate.join("");
+  document.getElementById("ateN").textContent=ate.length?ate.length+" aliment"+(ate.length>1?"s":""):"";
+
+  const y=new Date();y.setDate(y.getDate()-1);
+  const tk=!!fer[today],ty=!!fer[ymd(y)];
+  const btn=document.getElementById("ferBtn");
+  btn.setAttribute("aria-pressed",tk);btn.textContent=tk?"Fer pris ✓":"Fer pris";
+  document.getElementById("ferMsg").textContent=tk?"Fer pris aujourd'hui":ty?"Jour sans fer (pris hier)":"Jour de fer";
+  let h="";
+  for(let i=6;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);const k=ymd(d);
+    h+=`<button type="button" class="day${i===0?" today":""}" data-fd="${k}" aria-pressed="${!!fer[k]}" aria-label="Fer le ${d.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric'})}"><span class="dot${fer[k]?" on":""}"></span>${i===0?"Auj.":JOURS[d.getDay()]}</button>`;}
+  document.getElementById("days").innerHTML=h;
+}
+build();
+
+// ---------- Recettes ----------
+// ing: [id de l'aliment du tracker (ou null), portions, texte affiché]
+const REC={
+ matin:{t:"Petit-déj",note:"Pour les jours sans sport, ou quand tu as faim tôt.",list:[
+  {n:"Bol chia-soja aux fruits rouges",time:"5 min",ing:[["yaS",1,"1 yaourt de soja"],["chia",1,"2 c. à soupe de graines de chia"],["chanvre",1,"2 c. à soupe de graines de chanvre"],["myrtille",1,"100 g de fruits rouges"]],
+   steps:["La veille, mélange le yaourt et le chia, puis laisse au frais.","Le matin, ajoute les fruits rouges et le chanvre."]},
+  {n:"Porridge cacahuète-banane",time:"10 min",ing:[["avoine",1,"40 g de flocons d'avoine"],["laitS",1,"250 ml de lait de soja"],["cacah",1,"2 c. à soupe de beurre de cacahuète"],["banane",1,"1 banane"],[null,0,"1 pincée de cannelle"]],
+   steps:["Fais cuire l'avoine dans le lait de soja 5 min à feu doux.","Ajoute la banane en rondelles, le beurre de cacahuète et la cannelle."]},
+  {n:"Œufs brouillés, avocat et tomate",time:"10 min",ing:[["oeuf",2,"2 œufs de ta poule"],["avocat",1,"½ avocat"],["tomate",1,"1 tomate"],["sesame",1,"1 c. à soupe de sésame"],[null,0,"Sel, poivre, piment doux"]],
+   steps:["Brouille les œufs à feu doux en remuant sans arrêt.","Sers avec l'avocat écrasé et la tomate en tranches, parsème de sésame."]},
+  {n:"Smoothie fraise-banane protéiné",time:"5 min",ing:[["poudre",1,"1 dose de protéine de pois"],["laitS",1,"250 ml de lait de soja"],["banane",1,"1 banane"],["fraise",1,"100 g de fraises"],["lin",1,"1 c. à soupe de lin moulu"]],
+   steps:["Mixe tout avec quelques glaçons."]}]},
+ brunch:{t:"Brunch",note:"Après le sport, avec ton fer. Chaque brunch apporte au moins 75 mg de vitamine C. Pas de café ni de déca 1 h avant et 2 h après.",list:[
+  {n:"Omelette épinards-poivron, quinoa et kiwi",time:"15 min",ing:[["oeuf",2,"2 œufs de ta poule"],["epinard",1,"150 g d'épinards"],["poivron",1,"½ poivron rouge"],["quinoa",1,"150 g de quinoa cuit"],["kiwi",1,"1 kiwi en dessert"],[null,0,"1 c. à café d'huile d'olive"]],
+   steps:["Fais revenir le poivron émincé 3 min, puis ajoute les épinards jusqu'à ce qu'ils fondent.","Verse les œufs battus et laisse cuire à feu doux.","Sers avec le quinoa, et le kiwi en dessert."]},
+  {n:"Bol tiède lentilles, patate douce et orange",time:"25 min",ing:[["lent",1,"200 g de lentilles cuites"],["patateD",1,"200 g de patate douce"],["courge",1,"30 g de graines de courge"],["persil",1,"1 poignée de persil"],["orange",1,"1 orange en quartiers"],[null,0,"Huile d'olive, cumin"]],
+   steps:["Rôtis la patate douce en cubes 20 min à 200 °C avec le cumin.","Mélange avec les lentilles tièdes, le persil et l'orange.","Parsème de graines de courge grillées."]},
+  {n:"Houmous maison, œuf dur et crudités",time:"10 min",ing:[["poisC",1,"150 g de pois chiches cuits"],["tahini",1,"1 c. à soupe de tahini"],["citron",1,"Le jus d'1 citron"],["oeuf",1,"1 œuf dur"],["poivron",1,"½ poivron rouge en bâtonnets"],["carotte",1,"1 carotte en bâtonnets"],[null,0,"1 gousse d'ail, cumin, huile d'olive"]],
+   steps:["Mixe les pois chiches, le tahini, le citron, l'ail et le cumin avec un peu d'eau.","Trempe les bâtonnets dedans, avec l'œuf dur à côté."]},
+  {n:"Pancakes avoine, fraises et kiwi",time:"15 min",ing:[["avoine",1,"40 g de flocons d'avoine"],["oeuf",2,"2 œufs de ta poule"],["pureeA",1,"2 c. à soupe de purée d'amande"],["fraise",1,"100 g de fraises"],["kiwi",1,"1 kiwi"],[null,0,"½ c. à café de levure chimique"]],
+   steps:["Mixe l'avoine, les œufs et la levure, puis laisse reposer 5 min.","Cuis de petits pancakes à la poêle.","Garnis de purée d'amande, de fraises et de kiwi."]}]},
+ midi:{t:"Midi",note:"Le gros repas protéiné de ta journée.",list:[
+  {n:"Chili au soja texturé",time:"25 min",ing:[["tvp",1,"50 g de soja texturé"],["haric",1,"150 g de haricots rouges"],["tomate",2,"2 tomates ou 200 g de coulis"],["poivron",1,"½ poivron rouge"],["riz",1,"150 g de riz cuit"],[null,0,"Oignon, ail, cumin, paprika"]],
+   steps:["Réhydrate le soja 10 min dans un bouillon chaud.","Fais revenir l'oignon, l'ail et le poivron, puis ajoute le soja, les haricots, les tomates et les épices.","Laisse mijoter 15 min et sers avec le riz."]},
+  {n:"Ta salade de quinoa complète",time:"15 min",ing:[["quinoa",1,"150 g de quinoa cuit"],["edam",1,"100 g d'edamame"],["avocat",1,"½ avocat"],["radis",1,"1 poignée de radis"],["carotte",1,"100 g de carottes râpées"],["grenade",1,"½ grenade en graines"],["courge",1,"30 g de graines de courge"],[null,0,"Jus de citron, huile d'olive"]],
+   steps:["Mélange tout dans un grand bol.","Assaisonne au citron et à l'huile d'olive. Les edamame et les graines de courge font monter les protéines."]},
+  {n:"Pâtes de lentilles, pesto persil-amande",time:"15 min",ing:[["pateL",1,"80 g de pâtes de lentilles"],["brocoli",1,"100 g de brocoli"],["amande",1,"30 g d'amandes"],["persil",1,"1 poignée de persil"],[null,0,"Ail, jus de citron, huile d'olive"]],
+   steps:["Cuis les pâtes et le brocoli ensemble, dans la même eau.","Mixe le persil, les amandes, l'ail, le citron et l'huile pour le pesto.","Mélange le tout."]},
+  {n:"Curry de lentilles corail et patate douce",time:"30 min",ing:[["lent",1,"200 g de lentilles corail cuites"],["patateD",1,"200 g de patate douce"],["epinard",1,"150 g d'épinards"],["riz",1,"150 g de riz cuit"],[null,0,"10 cl de lait de coco, curry, gingembre"]],
+   steps:["Fais cuire la patate douce en cubes 10 min dans un peu d'eau, avec le curry et le gingembre.","Ajoute les lentilles et le lait de coco, laisse mijoter 10 min.","Ajoute les épinards à la fin et sers avec le riz."]},
+  {n:"Bowl seitan, sarrasin et betterave",time:"15 min",ing:[["seitan",1,"100 g de seitan"],["sarrasin",1,"150 g de sarrasin cuit"],["kale",1,"1 poignée de chou kale"],["betterave",1,"100 g de betterave"],["sesame",1,"1 c. à soupe de sésame"],[null,0,"Sauce : tahini, citron, eau"]],
+   steps:["Dore le seitan en lamelles à la poêle.","Masse le kale avec un peu de citron pour l'attendrir.","Assemble le tout et nappe de sauce au tahini."]}]},
+ gouter:{t:"Goûter",note:"Vers 16-17 h, pour arriver au dîner sans faim.",list:[
+  {n:"Yaourt soja, graines de courge et fruits rouges",time:"2 min",ing:[["yaS",1,"1 yaourt de soja"],["courge",1,"30 g de graines de courge"],["myrtille",1,"100 g de fruits rouges"]],steps:["Mélange et déguste."]},
+  {n:"Pomme et beurre de cacahuète",time:"2 min",ing:[["pomme",1,"1 pomme en quartiers"],["cacah",1,"2 c. à soupe de beurre de cacahuète"]],steps:["Trempe les quartiers de pomme dans le beurre de cacahuète."]},
+  {n:"Edamame tièdes et une orange",time:"5 min",ing:[["edam",1,"100 g d'edamame"],["orange",1,"1 orange"],[null,0,"1 pincée de fleur de sel"]],steps:["Réchauffe les edamame 3 min à l'eau bouillante et sale légèrement.","Termine par l'orange."]},
+  {n:"Dattes fourrées amande-chocolat",time:"5 min",ing:[["datte",1,"3 dattes"],["pureeA",1,"2 c. à soupe de purée d'amande"],["choco",1,"2 carrés de chocolat noir"]],steps:["Ouvre les dattes, garnis-les de purée d'amande et d'un éclat de chocolat."]}]},
+ soir:{t:"Dîner",note:"Léger et avant 19 h, pour laisser ton corps au repos.",list:[
+  {n:"Soupe de lentilles corail et carotte",time:"25 min",ing:[["soupeL",1,"1 bol de lentilles corail"],["carotte",1,"1 carotte"],["persil",1,"1 poignée de persil"],["lin",1,"1 c. à soupe de lin moulu"],[null,0,"Oignon, cumin, gingembre"]],
+   steps:["Fais cuire lentilles, carotte et oignon 20 min dans l'eau avec les épices.","Mixe, puis parsème de persil et de lin."]},
+  {n:"Omelette aux champignons et salade",time:"15 min",ing:[["oeuf",2,"2 œufs de ta poule"],["champi",1,"100 g de champignons"],["salade",1,"1 poignée de roquette"],["tomate",1,"1 tomate"],[null,0,"Ail, persil, huile d'olive"]],
+   steps:["Fais dorer les champignons avec l'ail.","Verse les œufs battus et cuis à feu doux.","Sers avec la roquette et la tomate."]},
+  {n:"Velouté courgette-petits pois et œuf mollet",time:"20 min",ing:[["courgette",1,"1 courgette"],["petitsP",1,"100 g de petits pois"],["oeuf",1,"1 œuf mollet"],[null,0,"Menthe fraîche, bouillon de légumes"]],
+   steps:["Fais cuire la courgette et les petits pois 12 min dans le bouillon, puis mixe avec la menthe.","Cuis l'œuf 6 min dans l'eau bouillante et pose-le sur le velouté."]},
+  {n:"Poêlée de légumes verts et edamame",time:"15 min",ing:[["edam",1,"100 g d'edamame"],["brocoli",1,"100 g de brocoli"],["chouF",1,"100 g de chou-fleur"],["sesame",1,"1 c. à soupe de sésame"],[null,0,"Gingembre, ail, huile de sésame"]],
+   steps:["Fais sauter le brocoli et le chou-fleur 6 min à feu vif avec l'ail et le gingembre.","Ajoute les edamame 2 min, puis parsème de sésame."]}]}
+};
+const MEALS_ORDER=["matin","brunch","midi","gouter","soir"];
+const dayNum=Math.floor(new Date(today+"T12:00:00").getTime()/864e5);
+let meal=(()=>{const h=new Date().getHours();return h<9?"matin":h<12?"brunch":h<15?"midi":h<18?"gouter":"soir"})();
+let shift=0;
+const FOODMAP=()=>Object.fromEntries(allFoods().map(f=>[f[0],f]));
+function recTotals(r){const M=FOODMAP();let P=0,Fe=0,C=0,Zn=0;
+  r.ing.forEach(([id,q])=>{const f=id&&M[id];if(f){P+=q*f[3];Fe+=q*f[4];C+=q*f[5];Zn+=q*f[6];}});return {P,Fe,C,Zn};}
+function renderRecipes(){
+  document.getElementById("meals").innerHTML=MEALS_ORDER.map(k=>`<button type="button" data-meal="${k}" aria-pressed="${k===meal}">${REC[k].t}</button>`).join("");
+  const m=REC[meal];document.getElementById("mnote").textContent=m.note;
+  const L=m.list,start=(dayNum+shift)%L.length,pick=[0,1,2].map(i=>L[(start+i)%L.length]);
+  document.getElementById("recs").innerHTML=pick.map(r=>{const t=recTotals(r),ri=L.indexOf(r);
+    return `<article class="card rec"><div class="rhead"><h3>${r.n}</h3><span class="time">${r.time}</span></div>
+      <div class="nut"><span class="p">${fmt(t.P)} g protéines</span><span class="f">fer ${fmt(t.Fe)} mg</span><span class="c">vit C ${fmt(t.C)} mg</span><span class="z">zinc ${fmt(t.Zn)} mg</span></div>
+      ${meal==="brunch"&&t.C>=75?`<span class="badge">Idéal avec ton fer</span>`:""}
+      <h4>Ingrédients</h4><ul>${r.ing.map(i=>`<li>${i[2]}</li>`).join("")}</ul>
+      <h4>Préparation</h4><ol>${r.steps.map(s=>`<li>${s}</li>`).join("")}</ol>
+      <button type="button" class="eat" data-eat="${meal}:${ri}">J'ai mangé ça</button></article>`;}).join("");
+  document.getElementById("more").hidden=L.length<=3;
+}
+let toastT;
+function toast(msg){const t=document.getElementById("toast");t.textContent=msg;t.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>t.hidden=true,2200);}
+document.getElementById("paneR").addEventListener("click",e=>{
+  const mb=e.target.closest("[data-meal]");if(mb){meal=mb.dataset.meal;shift=0;renderRecipes();return;}
+  const eb=e.target.closest("[data-eat]");if(eb){const [k,i]=eb.dataset.eat.split(":");
+    REC[k].list[+i].ing.forEach(([id,q])=>{if(id)st.c[id]=(st.c[id]||0)+q;});save();render();toast("Ajouté à ton tracker ✓");}
+});
+document.getElementById("more").addEventListener("click",()=>{shift++;renderRecipes();});
+function showTab(r){
+  document.getElementById("paneT").hidden=r;document.getElementById("paneR").hidden=!r;
+  document.getElementById("tabT").setAttribute("aria-selected",!r);document.getElementById("tabR").setAttribute("aria-selected",r);
+  document.querySelector(".sub").textContent=r?"Des idées de repas végane avec les œufs de ta poule, sans aliments fermentés. Touche « J'ai mangé ça » pour remplir ton tracker.":"Végane avec les œufs de ta poule. Touche + à chaque portion mangée : protéines, fer, vitamine C et zinc se calculent tout seuls.";
+  store("tab",r?"r":"t");window.scrollTo(0,0);
+}
+document.getElementById("tabT").addEventListener("click",()=>showTab(false));
+document.getElementById("tabR").addEventListener("click",()=>showTab(true));
+renderRecipes();
+showTab(location.hash==="#recettes"||load("tab","t")==="r");
+</script>
+
+</body></html>
