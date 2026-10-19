@@ -6,8 +6,8 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="theme-color" content="#0a8379">
 <meta name="robots" content="noindex">
-<link rel="apple-touch-icon" sizes="180x180" href="icon.png?v=3">
-<link rel="icon" href="icon-512.png?v=3">
+<link rel="apple-touch-icon" sizes="180x180" href="icon.png?v=4">
+<link rel="icon" href="icon-512.png?v=4">
 <link rel="manifest" href="manifest.json">
 <style>.gate{display:none!important}[hidden]{display:none!important}</style>
 <title>Georges</title>
@@ -1431,7 +1431,19 @@ const MISSIONS={
   ["💡","Éteins les lumières des pièces vides","toute la soirée"],
   ["🥕","Mange un repas 100 % végétal","et dis-le à quelqu'un"],
   ["🧺","Utilise ta gourde aujourd'hui","zéro bouteille plastique"],
-  ["🐜","Laisse vivre un petit insecte","observe-le une minute"]]},
+  ["🐜","Laisse vivre un petit insecte","observe-le une minute"],
+  ["🛍️","Fais tes courses avec un sac réutilisable","et refuse les sachets"],
+  ["🔌","Débranche les appareils en veille","box, chargeurs, télé"],
+  ["🌼","Laisse un coin d'herbe pousser librement","pour les abeilles et les papillons"],
+  ["🍎","Offre un fruit ou un repas à quelqu'un","un voisin, un ami, une personne dans la rue"],
+  ["🚲","Fais un trajet à pied ou à vélo","au lieu de la voiture"],
+  ["🍂","Mets tes épluchures au compost","ou commence un petit compost"],
+  ["📵","Passe une heure sans écran dehors","juste toi et le vivant"],
+  ["🐝","Offre une fleur aux abeilles","lavande, romarin ou tournesol"],
+  ["💧","Arrose avec l'eau de cuisson","une fois refroidie"],
+  ["🧴","Remplace un produit chimique par un naturel","vinaigre blanc, savon noir ou bicarbonate"],
+  ["🤝","Parle d'un geste pour la Terre à quelqu'un","et donne-lui envie de le faire"],
+  ["👕","Donne un vêtement que tu ne portes plus","à une association ou à une amie"]]},
  jouer:{t:"Joue avec Georges 🐾",sub:"Georges adore quand tu bouges, quand tu ris, quand ton enfant intérieur sort jouer.",g:"j",list:[
   ["🌳","Fais une balade dans la nature","au moins 20 minutes"],
   ["🦶","Marche pieds nus dans l'herbe ou le sable","sens la Terre"],
@@ -1502,7 +1514,7 @@ function openSheet(c){
   cat=c;const M=MISSIONS[c];
   document.getElementById("sheetT").textContent=M.t;document.getElementById("sheetSub").textContent=M.sub;
   // 3 missions du jour par catégorie, toujours les mêmes dans la journée
-  const seed=[...today].reduce((a,ch)=>a+ch.charCodeAt(0),0)+c.length*7;
+  const seed=Math.floor(Date.parse(today)/864e5)+c.length*7;
   const L=M.list,idx=[0,1,2].map(i=>(seed+i*3)%L.length);
   document.getElementById("missions").innerHTML=idx.map(i=>{const [ic,tx,sm]=L[i],id=c+i,d=!!S.done[id];
     return `<div class="mis${d?" done":""}"><div class="ic">${ic}</div><div class="tx">${tx}<small>${sm}</small></div><button type="button" data-mis="${id}" ${d?"disabled":""}>${d?"Fait ✓":"C'est fait !"}</button></div>`;}).join("");
