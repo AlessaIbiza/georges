@@ -742,7 +742,8 @@ const CATS=[
   ["colza","Huile de colza","1 c. à soupe",0,0,0,0,0,1.3]]},
  {t:"Céréales et féculents",items:[
   ["quinoa","Quinoa cuit","150 g",6.6,2.2,1.6,25,0,0.1],
-  ["riz","Riz cuit","150 g",4,0.3,0.7,15,0,0],
+  ["riz","Riz blanc cuit","150 g",4,0.3,0.7,15,0,0],
+  ["rizC","Riz complet cuit","150 g",4,0.6,1.1,15,0,0],
   ["sarrasin","Sarrasin cuit","150 g",5,1.2,0.9,10,0,0],
   ["pates","Pâtes complètes cuites","150 g",8,1.5,1.2,15,0,0],
   ["patateD","Patate douce","200 g cuite",4,1.4,0.6,60,39,0],
@@ -788,7 +789,7 @@ const CATS=[
 const NUT=[ // clé, index, libellé, unité, couleur
  ["fe",4,"Fer","mg","--iron"],["zn",5,"Zinc","mg","--zinc"],["ca",6,"Calcium","mg","--ca"],["c",7,"Vitamine C","mg","--vitc"],["o3",8,"Oméga-3","g","--o3"]];
 const ESS=[
- ["b12","Vitamine B12","Le complément du jour, indispensable"],
+ ["b12","Vitamine B12","Ton complément ou des aliments enrichis, la dose ajustée à tes analyses"],
  ["d","Vitamine D","15 min de soleil, bras découverts, ou complément"],
  ["iode","Iode","Sel iodé ou un peu d'algues"],
  ["se","Sélénium","1 à 2 noix du Brésil"],
@@ -893,7 +894,7 @@ function render(){
   document.getElementById("ateN").textContent=ate.length?ate.length+" aliment"+(ate.length>1?"s":""):"";
   // protéines complètes : deux familles + quantité
   const LEG=["tofu","tempeh","tvp","lent","soupeL","pateL","poisC","haric","houmous","edam","petitsP","poudre","laitS","yaS","cacah"];
-  const CER=["avoine","painC","quinoa","riz","sarrasin","pates","seitan","courge","chanvre","chia","lin","tourn","sesame","amande","cajou","noix","bresil","tahini","pureeA"];
+  const CER=["avoine","painC","quinoa","riz","rizC","sarrasin","pates","seitan","courge","chanvre","chia","lin","tourn","sesame","amande","cajou","noix","bresil","tahini","pureeA"];
   const has=L=>L.some(id=>(st.c[id]||0)>0);
   const pl=has(LEG),pg=has(CER),pq=T.p>=target;
   const ps=brick("pL","pLs",pl,pl?"Pleine":"lentilles, tofu, pois…")+brick("pG","pGs",pg,pg?"Pleine":"riz, avoine, graines…")+brick("pQ","pQs",pq,pq?"Pleine":`encore ${target-Math.round(T.p)} g`);
@@ -926,13 +927,13 @@ const REC={
   {n:"Pancakes avoine-banane, fraises et kiwi",time:"15 min",ing:[["avoine",1,"40 g de flocons d'avoine"],["laitS",1,"250 ml de lait de soja enrichi"],["banane",1,"1 banane écrasée"],["lin",1,"1 c. à soupe de lin moulu"],["pureeA",1,"2 c. à soupe de purée d'amande"],["fraise",1,"100 g de fraises"],["kiwi",1,"1 kiwi"],[null,0,"½ c. à café de levure chimique"]],
    steps:["Mélange le lin avec 3 c. à soupe d'eau et laisse gonfler 5 min.","Mixe avec l'avoine, la banane, la levure et un peu de lait, puis cuis de petits pancakes.","Garnis de purée d'amande, de fraises et de kiwi. Bois le reste du lait à côté."]}]},
  midi:{t:"Midi",note:"Le repas le plus protéiné de la journée.",list:[
-  {n:"Chili au soja texturé",time:"25 min",ing:[["tvp",1,"50 g de soja texturé"],["haric",1,"150 g de haricots rouges"],["tomate",2,"2 tomates ou 200 g de coulis"],["poivron",1,"½ poivron rouge"],["riz",1,"150 g de riz cuit"],[null,0,"Oignon, ail, cumin, paprika"]],
+  {n:"Chili au soja texturé",time:"25 min",ing:[["tvp",1,"50 g de soja texturé"],["haric",1,"150 g de haricots rouges"],["tomate",2,"2 tomates ou 200 g de coulis"],["poivron",1,"½ poivron rouge"],["rizC",1,"150 g de riz complet cuit"],[null,0,"Oignon, ail, cumin, paprika"]],
    steps:["Réhydrate le soja 10 min dans un bouillon chaud.","Fais revenir l'oignon, l'ail et le poivron, puis ajoute le soja, les haricots, les tomates et les épices.","Laisse mijoter 15 min et sers avec le riz."]},
   {n:"Salade de quinoa complète",time:"15 min",ing:[["quinoa",1,"150 g de quinoa cuit"],["edam",1,"100 g d'edamame"],["avocat",1,"½ avocat"],["radis",1,"1 poignée de radis"],["carotte",1,"100 g de carottes râpées"],["grenade",1,"½ grenade en graines"],["courge",1,"30 g de graines de courge"],[null,0,"Jus de citron, huile de colza"]],
    steps:["Mélange tout dans un grand bol.","Assaisonne au citron et à l'huile de colza, riche en oméga-3."]},
   {n:"Pâtes de lentilles, pesto persil-amande",time:"15 min",ing:[["pateL",1,"80 g de pâtes de lentilles"],["brocoli",1,"100 g de brocoli"],["amande",1,"30 g d'amandes"],["persil",1,"1 poignée de persil"],[null,0,"Ail, jus de citron, huile d'olive"]],
    steps:["Cuis les pâtes et le brocoli ensemble, dans la même eau.","Mixe le persil, les amandes, l'ail, le citron et l'huile pour le pesto.","Mélange le tout."]},
-  {n:"Curry de lentilles corail et patate douce",time:"30 min",ing:[["lent",1,"200 g de lentilles corail cuites"],["patateD",1,"200 g de patate douce"],["epinard",1,"150 g d'épinards"],["riz",1,"150 g de riz cuit"],[null,0,"10 cl de lait de coco, curry, gingembre"]],
+  {n:"Curry de lentilles corail et patate douce",time:"30 min",ing:[["lent",1,"200 g de lentilles corail cuites"],["patateD",1,"200 g de patate douce"],["epinard",1,"150 g d'épinards"],["rizC",1,"150 g de riz complet cuit"],[null,0,"10 cl de lait de coco, curry, gingembre"]],
    steps:["Fais cuire la patate douce en cubes 10 min dans un peu d'eau, avec le curry et le gingembre.","Ajoute les lentilles et le lait de coco, laisse mijoter 10 min.","Ajoute les épinards à la fin et sers avec le riz."]},
   {n:"Bowl tempeh, sarrasin et betterave",time:"15 min",ing:[["tempeh",1,"100 g de tempeh"],["sarrasin",1,"150 g de sarrasin cuit"],["kale",1,"1 poignée de chou kale"],["betterave",1,"100 g de betterave"],["sesame",1,"1 c. à soupe de sésame"],[null,0,"Sauce : tahini, citron, eau"]],
    steps:["Dore le tempeh en lamelles à la poêle.","Masse le kale avec un peu de citron pour l'attendrir.","Assemble le tout et nappe de sauce au tahini."]}]},
