@@ -11,7 +11,7 @@
 <link rel="manifest" href="manifest.json">
 <meta http-equiv="Cache-Control" content="no-cache">
 <style>.gate{display:none!important}[hidden]{display:none!important}</style>
-<script>(function(){var B="1792437477";function chk(){try{fetch("version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.json()}).then(function(j){if(j&&j.v&&j.v!==B){var k="gv-reload";try{if(sessionStorage.getItem(k)===j.v)return;sessionStorage.setItem(k,j.v)}catch(e){}location.replace(location.pathname+"?v="+j.v)}}).catch(function(){})}catch(e){}}chk();document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible")chk()});})();</script>
+<script>(function(){var B="1792437565";function chk(){try{fetch("version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.json()}).then(function(j){if(j&&j.v&&j.v!==B){var k="gv-reload";try{if(sessionStorage.getItem(k)===j.v)return;sessionStorage.setItem(k,j.v)}catch(e){}location.replace(location.pathname+"?v="+j.v)}}).catch(function(){})}catch(e){}}chk();document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible")chk()});})();</script>
 <title>Georges</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700&family=Figtree:wght@400;500;600&display=swap">
 <style>
@@ -89,7 +89,8 @@ h1{font:700 1.7rem/1.1 var(--display);margin:0;text-wrap:balance}
 .ess:first-of-type{border-top:0}
 .ess input{width:22px;height:22px;accent-color:var(--leaf);flex:none;margin:0}
 .ess .auto{font-size:.75rem;color:var(--ok);font-weight:600}
-.info{flex:1;min-width:0}
+.info{flex:1 1 200px;min-width:0}
+.med > a.go,.med > button.go,.med > .soon{flex:0 0 auto}
 .name{font-weight:600}
 .days{display:flex;justify-content:space-between;gap:4px;padding:10px 14px 12px;border-top:1px solid var(--line)}
 .days .lbl{font-size:.75rem;color:var(--muted);align-self:center;flex:none;margin-right:6px}
@@ -1116,6 +1117,20 @@ const NOUVEAUTES=[
   mot:"Coucou, c'est Georges ! Tu veux aller plus loin ? 30 jours pour trouver le sens de ta vie, te souvenir de qui tu es et œuvrer pour le monde. Crois-moi, ça fera toute la différence."}
 ];
 // Méditations et soins : [titre, durée, lien YouTube]. Laisse "" tant que le lien n'existe pas.
+// Mes méditations (sur YouTube) : [titre, sous-titre, lien]. Laisse "" tant que le lien n'existe pas.
+const MEDITS=[
+ ["Méditation du matin","Pour bien commencer ta journée",""],
+ ["Méditation du soir","Pour t'apaiser avant de dormir",""],
+ ["Méditation de la lune","Pleine lune et nouvelle lune",""],
+ ["Soin énergétique : alignement et manifestation","Sur YouTube","https://www.youtube.com/watch?v=eqF4-QK3p3I"],
+ ["Qui je suis","Ta séance pour te retrouver",""],
+ ["Soin énergétique : la bulle de protection","",""],
+ ["Soin énergétique pour les animaux","",""],
+ ["Enfants calmes","Pour apaiser les plus petits",""]];
+// Playlists YouTube : [titre, sous-titre, lien].
+const PLAYLISTS=[
+ ["Tous les épisodes audio immersifs","La playlist complète de mes Fictions audio immersives®",""],
+ ["Pour les enfants","Les histoires et voyages pour les plus petits",""]];
 const MATIN=[
  ["Méditation du matin n° 1","10 min",""],
  ["Méditation du matin n° 2","10 min",""]];
@@ -1295,7 +1310,7 @@ function renderMedits(){
       ${n.type==="serie"?(n.youtube?`<a class="go" href="${esc(n.youtube)}" target="_blank" rel="noopener">Épisode 1 offert ↗</a>`:"")+(n.page?`<a class="go buy" href="${esc(n.page)}" target="_blank" rel="noopener">Découvrir ↗</a>`:(n.youtube?"":`<span class="soon">Lien à venir</span>`)):(n.youtube?`<a class="go buy" href="${esc(n.youtube)}" target="_blank" rel="noopener">Regarder ↗</a>`:`<span class="soon">Lien à venir</span>`)}</div>`).join("")}</section>`:"";
   const exoCard=`<section class="card"><h2>Exercice du matin<span>2 min 30</span></h2><div class="med"><div class="info"><div class="name">Ancrage et étirement</div><div class="meta">5 mouvements de 30 secondes, en images</div></div><button type="button" class="go" data-exo="1">Ouvrir la fiche</button></div></section>`;
   const brCard=`<section class="card"><h2>Respirations<span>${BREATHS.length}</span></h2>${BREATHS.map((b,i)=>`<div class="med"><div class="info"><div class="name">${b.e} ${esc(b.n)}</div><div class="meta">${esc(b.s)} · ${brDur(b)}</div></div><button type="button" class="go" data-br="${i}">Respirer</button></div>`).join("")}</section>`;
-  document.getElementById("medits").innerHTML=sec("Mon voyage intérieur immersif",VOYAGES)+nvHTML+sec("Méditations du matin",MATIN)+sec("Méditations du soir",SOIR)+sec("Pleine lune et nouvelle lune",LUNES)+sec("Soins énergétiques pour les animaux",ANIMAUX)+sec("Soins énergétiques",SOIN_BULLE)+sec("Voyages intérieurs offerts",OFFERTS);
+  document.getElementById("medits").innerHTML=sec("Mon voyage intérieur immersif",VOYAGES)+nvHTML+sec("Mes méditations",MEDITS)+sec("Mes playlists YouTube",PLAYLISTS);
 }
 renderMedits();
 
