@@ -11,7 +11,7 @@
 <link rel="manifest" href="manifest.json">
 <meta http-equiv="Cache-Control" content="no-cache">
 <style>.gate{display:none!important}[hidden]{display:none!important}</style>
-<script>(function(){var B="1792438508";function chk(){try{fetch("version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.json()}).then(function(j){if(j&&j.v&&j.v!==B){var k="gv-reload";try{if(sessionStorage.getItem(k)===j.v)return;sessionStorage.setItem(k,j.v)}catch(e){}location.replace(location.pathname+"?v="+j.v)}}).catch(function(){})}catch(e){}}chk();document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible")chk()});})();</script>
+<script>(function(){var B="1792438759";function chk(){try{fetch("version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.json()}).then(function(j){if(j&&j.v&&j.v!==B){var k="gv-reload";try{if(sessionStorage.getItem(k)===j.v)return;sessionStorage.setItem(k,j.v)}catch(e){}location.replace(location.pathname+"?v="+j.v)}}).catch(function(){})}catch(e){}}chk();document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible")chk()});})();</script>
 <title>Georges</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700&family=Figtree:wght@400;500;600&display=swap">
 <style>
@@ -335,6 +335,7 @@ form.add button{grid-column:1/-1;padding:10px;border-radius:10px;border:0;backgr
 .pad .rules{margin-top:2px}
 .stitle{font:700 .75rem var(--body);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:4px 2px -6px}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+.ytbox{position:relative;width:100%;aspect-ratio:16/9;border-radius:14px;overflow:hidden;background:#000;margin:12px 0}.ytbox iframe{position:absolute;inset:0;width:100%;height:100%;border:0}.ytnote{font-size:13px;opacity:.8;text-align:center}.ytnote a{color:inherit}
 .exo{position:fixed;inset:0;z-index:9;background:var(--bg);overflow:auto;display:flex;justify-content:center;
   padding:calc(16px + env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) calc(16px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
 .exobox{width:100%;max-width:440px;display:flex;flex-direction:column;gap:14px;align-items:center;text-align:center}
@@ -365,6 +366,14 @@ form.add button{grid-column:1/-1;padding:10px;border-radius:10px;border:0;backgr
     <div class="gerr" id="gerr" role="alert"></div>
     <div class="gnote">Tu ne le saisis qu'une fois : ton téléphone s'en souvient.</div>
   </form>
+</div>
+<div class="exo" id="ytw" role="dialog" aria-modal="true" aria-labelledby="ytT" hidden>
+  <div class="exobox">
+    <div class="exotop"><span class="tagx">Écoute avec Georges</span><button type="button" class="gsoft" id="ytClose">Fermer</button></div>
+    <h3 id="ytT"></h3>
+    <div class="ytbox"><iframe id="ytF" title="Vidéo" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe></div>
+    <p class="ytnote">Garde l'écran allumé pendant l'écoute. <a id="ytO" href="#" target="_blank" rel="noopener">Ouvrir dans YouTube ↗</a></p>
+  </div>
 </div>
 <div class="exo" id="exo" role="dialog" aria-modal="true" aria-labelledby="exoT" hidden>
   <div class="exobox">
@@ -1180,7 +1189,15 @@ const RITS=[
  ["action","Une bonne action généreuse","Ramasser 5 à 10 déchets, rendre service, aider un petit animal, offrir un sourire",null],
  ["joie","Un moment de joie avec moi","Un moment où je m'éclate et où mon enfant intérieur se réveille",null],
  ["soir","Le soir, je me pose","Une petite méditation ou respiration, puis j'écris mon message intuitif",null]];
-const linkHTML=m=>m&&m[2]?`<a class="go" href="${esc(m[2])}" target="_blank" rel="noopener">Écouter ↗</a>`:`<span class="soon">Lien à venir</span>`;
+function ytEmbed(u){try{const x=new URL(u);const list=x.searchParams.get("list");let id=x.hostname.includes("youtu.be")?x.pathname.slice(1):x.searchParams.get("v");
+  if(id)return "https://www.youtube-nocookie.com/embed/"+encodeURIComponent(id)+"?autoplay=1&playsinline=1&rel=0";
+  if(list)return "https://www.youtube-nocookie.com/embed/videoseries?list="+encodeURIComponent(list)+"&autoplay=1&playsinline=1&rel=0";}catch(e){}return "";}
+const ytBtn=(u,t,label,cls)=>ytEmbed(u)?`<button type="button" class="go${cls||""}" data-yt="${esc(u)}" data-ytt="${esc(t)}">${label}</button>`:`<a class="go${cls||""}" href="${esc(u)}" target="_blank" rel="noopener">${label} ↗</a>`;
+const linkHTML=m=>m&&m[2]?ytBtn(m[2],m[0],"▶ Écouter"):`<span class="soon">Lien à venir</span>`;
+function ytOpen(u,t){document.getElementById("ytT").textContent=t;document.getElementById("ytO").href=u;document.getElementById("ytF").src=ytEmbed(u);document.getElementById("ytw").hidden=false;}
+function ytClose(){document.getElementById("ytF").src="about:blank";document.getElementById("ytw").hidden=true;}
+document.addEventListener("click",e=>{const b=e.target.closest("[data-yt]");if(b){e.preventDefault();ytOpen(b.dataset.yt,b.dataset.ytt);}});
+document.getElementById("ytClose").addEventListener("click",ytClose);
 const doneCount=k=>{const d=vh[k]||{};return RITS.filter(([r])=>!!d[r]).length;};
 
 function renderDay(){
@@ -1310,7 +1327,7 @@ function renderMedits(){
   const sec=(t,L)=>`<section class="card"><h2>${t}<span>${L.length}</span></h2>${L.map(m=>`<div class="med"><div class="info"><div class="name">${esc(m[0])}</div><div class="meta">${esc(m[1])}</div></div>${linkHTML(m)}</div>`).join("")}</section>`;
   const nv=NOUVEAUTES.filter(n=>n.debut<=today);
   const nvHTML=nv.length?`<section class="card"><h2>Les annonces de Georges<span>${nv.length}</span></h2>${nv.map(n=>`<div class="med"><div class="info"><div class="name">${esc(n.titre)}</div><div class="meta">${n.type==="serie"?"La série du moment":"Vidéo gratuite"} · ${esc(n.sous)}${n.episode?` · Épisode 1 offert : « ${esc(n.episode)} »`:""}</div></div>
-      ${n.type==="serie"?(n.youtube?`<a class="go" href="${esc(n.youtube)}" target="_blank" rel="noopener">Épisode 1 offert ↗</a>`:"")+(n.page?`<a class="go buy" href="${esc(n.page)}" target="_blank" rel="noopener">Découvrir ↗</a>`:(n.youtube?"":`<span class="soon">Lien à venir</span>`)):(n.youtube?`<a class="go buy" href="${esc(n.youtube)}" target="_blank" rel="noopener">Regarder ↗</a>`:`<span class="soon">Lien à venir</span>`)}</div>`).join("")}</section>`:"";
+      ${n.type==="serie"?(n.youtube?ytBtn(n.youtube,n.titre+" · Épisode 1","▶ Épisode 1 offert"):"")+(n.page?`<a class="go buy" href="${esc(n.page)}" target="_blank" rel="noopener">Découvrir ↗</a>`:(n.youtube?"":`<span class="soon">Lien à venir</span>`)):(n.youtube?ytBtn(n.youtube,n.titre,"▶ Regarder"," buy"):`<span class="soon">Lien à venir</span>`)}</div>`).join("")}</section>`:"";
   const exoCard=`<section class="card"><h2>Exercice du matin<span>2 min 30</span></h2><div class="med"><div class="info"><div class="name">Ancrage et étirement</div><div class="meta">5 mouvements de 30 secondes, en images</div></div><button type="button" class="go" data-exo="1">Ouvrir la fiche</button></div></section>`;
   const brCard=`<section class="card"><h2>Respirations<span>${BREATHS.length}</span></h2>${BREATHS.map((b,i)=>`<div class="med"><div class="info"><div class="name">${b.e} ${esc(b.n)}</div><div class="meta">${esc(b.s)} · ${brDur(b)}</div></div><button type="button" class="go" data-br="${i}">Respirer</button></div>`).join("")}</section>`;
   document.getElementById("medits").innerHTML=sec("Mon voyage intérieur immersif",VOYAGES)+nvHTML+sec("Mes méditations",MEDITS)+sec("Mes playlists YouTube",PLAYLISTS);
