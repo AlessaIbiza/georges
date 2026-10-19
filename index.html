@@ -135,6 +135,8 @@ form.add button{grid-column:1/-1;padding:10px;border-radius:10px;border:0;backgr
 .guide h3{font:700 1.1rem var(--display);margin:0;display:flex;justify-content:space-between;gap:8px;align-items:baseline}
 .guide h3 span{font:600 .78rem var(--body);color:var(--g,var(--leaf));text-transform:uppercase;letter-spacing:.05em;flex:none}
 .guide p{margin:0}
+.guide .grec{font-size:.92rem;color:var(--muted,inherit);display:flex;flex-direction:column;gap:2px}
+.guide .grec b{color:var(--g,var(--leaf))}
 .guide .src{color:var(--muted);font-size:.9rem}
 .intro{background:var(--leaf-soft);border-radius:14px;padding:14px 16px;margin:0}
 .toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--fg);color:var(--bg);padding:10px 18px;border-radius:20px;font-weight:600;font-size:.9rem;max-width:calc(100% - 32px);text-align:center;z-index:5}
@@ -986,25 +988,57 @@ renderRecipes();
 // ---------- Les essentiels ----------
 const GUIDE=[
  ["Vitamine B12","Indispensable","--iron","Elle protège les nerfs et fabrique les globules rouges. Aucune plante n'en contient de façon fiable, même pas les algues ou la spiruline.",
-  "Un complément est obligatoire pour tout végane. Repères courants : 25 à 100 µg par jour, ou 2 000 µg une fois par semaine. Fais valider la dose par ton médecin ou ton pharmacien, et contrôle ton taux une fois par an."],
+  "Un complément est obligatoire pour tout végane. Repères courants : 25 à 100 µg par jour, ou 2 000 µg une fois par semaine. Fais valider la dose par ton médecin ou ton pharmacien, et contrôle ton taux une fois par an.",
+  "Les laits et yaourts de soja enrichis en apportent un peu (Bol chia-soja aux fruits rouges, Porridge cacahuète-banane), mais ils ne remplacent pas le complément."],
  ["Protéines","Chaque jour","--leaf","Elles construisent les muscles, la peau, les cheveux et le collagène. Les besoins vont d'environ 1 g par kilo si tu bouges peu à 1,6-2 g si tu fais du sport intense.",
-  "Tofu, tempeh, soja texturé, seitan, lentilles, pois chiches, haricots, edamame, graines de courge et de chanvre. Associe une légumineuse et une céréale (lentilles et riz) pour des protéines complètes."],
+  "Tofu, tempeh, soja texturé, seitan, lentilles, pois chiches, haricots, edamame, graines de courge et de chanvre. Associe une légumineuse et une céréale (lentilles et riz) pour des protéines complètes.",
+  "Chili au soja texturé · Bowl tempeh, sarrasin et betterave · Tofu brouillé épinards-poivron, quinoa et kiwi"],
  ["Fer","À surveiller","--iron","Il transporte l'oxygène. Un manque donne de la fatigue et une chute de cheveux, surtout chez les femmes qui ont des règles. Le fer des plantes s'absorbe moins bien, d'où des besoins un peu plus élevés.",
-  "Lentilles, pois chiches, tofu, soja texturé, graines de courge, épinards, quinoa, chocolat noir. Ajoute toujours de la vitamine C dans la même assiette (poivron, kiwi, orange, persil) et évite café et thé dans l'heure qui suit."],
+  "Lentilles, pois chiches, tofu, soja texturé, graines de courge, épinards, quinoa, chocolat noir. Ajoute toujours de la vitamine C dans la même assiette (poivron, kiwi, orange, persil) et évite café et thé dans l'heure qui suit.",
+  "Bol tiède lentilles, patate douce et orange · Tofu brouillé épinards-poivron, quinoa et kiwi · Curry de lentilles corail et patate douce"],
  ["Calcium","Chaque jour","--ca","Il garde les os et les dents solides. Environ 950 mg par jour pour un adulte.",
-  "Laits et yaourts végétaux enrichis en calcium, tofu au calcium, eau minérale riche en calcium, chou kale, pak choï, amandes, sésame, figues sèches. Les épinards en contiennent beaucoup, mais il s'absorbe mal."],
+  "Laits et yaourts végétaux enrichis en calcium, tofu au calcium, eau minérale riche en calcium, chou kale, pak choï, amandes, sésame, figues sèches. Les épinards en contiennent beaucoup, mais il s'absorbe mal.",
+  "Wok de pak choï, tofu et sésame · Figues, noix et chocolat noir · Pâtes de lentilles, pesto persil-amande"],
  ["Zinc","À surveiller","--zinc","Il aide l'immunité, la cicatrisation, la peau et le collagène. Comme le fer, il s'absorbe un peu moins bien quand on est végane.",
-  "Graines de courge et de chanvre, noix de cajou, lentilles, pois chiches, avoine, tofu, tempeh. Faire tremper les légumineuses et les graines avant de les cuire aide à mieux l'absorber."],
+  "Graines de courge et de chanvre, noix de cajou, lentilles, pois chiches, avoine, tofu, tempeh. Faire tremper les légumineuses et les graines avant de les cuire aide à mieux l'absorber.",
+  "Yaourt soja, graines de courge et fruits rouges · Velouté courgette-petits pois et graines de courge · Houmous, tempeh doré et crudités"],
  ["Oméga-3","Chaque jour","--o3","Bons pour le cœur, le cerveau et contre l'inflammation. Le corps transforme une petite partie des oméga-3 végétaux en DHA et EPA, les formes actives.",
-  "1 c. à soupe de lin moulu ou 2 de chia par jour, des noix, de l'huile de colza. Pour le DHA et l'EPA directement, il existe des compléments d'huile d'algues, c'est là que les poissons les trouvent."],
+  "1 c. à soupe de lin moulu ou 2 de chia par jour, des noix, de l'huile de colza. Pour le DHA et l'EPA directement, il existe des compléments d'huile d'algues, c'est là que les poissons les trouvent.",
+  "Bol chia-soja aux fruits rouges · Smoothie fraise-banane protéiné · Soupe de lentilles corail et carotte · Figues, noix et chocolat noir"],
  ["Iode","Chaque jour","--zinc","Il fait fonctionner la thyroïde. Sans poisson ni produits laitiers, il peut vite manquer.",
-  "Utilise du sel iodé pour cuisiner, avec modération. Les algues en apportent aussi : la nori avec mesure, mais évite le kombu en grande quantité, qui en contient beaucoup trop."],
+  "Utilise du sel iodé pour cuisiner, avec modération. Les algues en apportent aussi : la nori avec mesure, mais évite le kombu en grande quantité, qui en contient beaucoup trop.",
+  "Pas dans les recettes : pense au sel iodé pour cuisiner."],
  ["Vitamine D","Selon la saison","--vitc","Elle aide à fixer le calcium et soutient l'immunité. Le corps la fabrique grâce au soleil.",
-  "10 à 20 minutes de soleil par jour, bras et visage découverts, aux beaux jours. En hiver, ou si tu sors peu, un complément de vitamine D3 végane (issue du lichen) est souvent conseillé : demande à ton médecin."],
+  "10 à 20 minutes de soleil par jour, bras et visage découverts, aux beaux jours. En hiver, ou si tu sors peu, un complément de vitamine D3 végane (issue du lichen) est souvent conseillé : demande à ton médecin.",
+  "Pas dans les recettes : c'est le soleil ou ton complément."],
  ["Sélénium","Chaque jour","--leaf","Un antioxydant qui protège les cellules et soutient la thyroïde. Les sols européens en sont pauvres.",
-  "1 à 2 noix du Brésil par jour suffisent à couvrir les besoins. Pas plus : en excès, il devient toxique."]
-];
-document.getElementById("guide").innerHTML=GUIDE.map(([n,tag,col,why,src])=>`<article class="card guide" style="--g:var(${col})"><h3>${n}<span>${tag}</span></h3><p>${why}</p><p class="src">${src}</p></article>`).join("");
+  "1 à 2 noix du Brésil par jour suffisent à couvrir les besoins. Pas plus : en excès, il devient toxique.",
+  "Pomme, beurre de cacahuète et noix du Brésil"],
+ ["Vitamine C","Chaque jour","--vitc","Elle renforce l'immunité, aide à fabriquer le collagène et fait absorber le fer des plantes. Environ 110 mg par jour.",
+  "Poivron, kiwi, agrumes, fraises, persil, brocoli, chou. Mange-les crus ou peu cuits : la chaleur en détruit une partie.",
+  "Tofu brouillé épinards-poivron, quinoa et kiwi · Pancakes avoine-banane, fraises et kiwi · Edamame tièdes et une orange"],
+ ["Vitamine A","Chaque jour","--vitc","Elle protège la vue, la peau et l'immunité. Les plantes apportent du bêta-carotène, que ton corps transforme en vitamine A selon ses besoins.",
+  "Carotte, patate douce, courge, épinards, chou kale, mangue, abricot. Un filet d'huile dans l'assiette aide à mieux l'absorber.",
+  "Bol tiède lentilles, patate douce et orange · Curry de lentilles corail et patate douce · Soupe de lentilles corail et carotte"],
+ ["Vitamine E","Chaque jour","--leaf","Un antioxydant qui protège tes cellules et ta peau. Environ 10 mg par jour.",
+  "Graines de tournesol, amandes, noisettes, avocat, huile de colza ou d'olive, épinards.",
+  "Pâtes de lentilles, pesto persil-amande · Tofu brouillé, avocat et tomate · Salade de quinoa complète"],
+ ["Vitamines B6, B8 et B9","Chaque jour","--leaf","Elles donnent de l'énergie, soutiennent les nerfs, la peau, les cheveux et le renouvellement des cellules. La B9 (folates) est précieuse avant et pendant une grossesse.",
+  "B6 : pois chiches, banane, avoine, graines de tournesol. B8 (biotine) : avoine, cacahuètes, champignons, sarrasin. B9 : légumineuses, épinards, brocoli, edamame, avocat.",
+  "Houmous, tempeh doré et crudités · Porridge cacahuète-banane · Poêlée de légumes verts et edamame · Bowl tempeh, sarrasin et betterave"],
+ ["Magnésium","Chaque jour","--zinc","Il détend les muscles et les nerfs, aide le sommeil et l'énergie. Environ 300 à 400 mg par jour.",
+  "Chocolat noir, amandes, graines de courge, légumineuses, céréales complètes, bananes. Une bonne nouvelle : l'alimentation végétale en est riche.",
+  "Figues, noix et chocolat noir · Yaourt soja, graines de courge et fruits rouges · Chili au soja texturé"],
+ ["Cuivre","Chaque jour","--iron","Il aide à utiliser le fer, à fabriquer le collagène et à protéger les nerfs. Environ 1 mg par jour.",
+  "Noix de cajou, sésame et tahini, chocolat noir, lentilles, champignons, graines de tournesol.",
+  "Houmous, tempeh doré et crudités · Figues, noix et chocolat noir · Tofu poêlé aux champignons et roquette"],
+ ["Choline","Chaque jour","--ca","Elle nourrit le cerveau, la mémoire et le foie. Elle peut être un peu juste quand on est végane.",
+  "Soja (tofu, tempeh, edamame, lait de soja), quinoa, brocoli, choux, cacahuètes, pois chiches.",
+  "Tofu brouillé épinards-poivron, quinoa et kiwi · Wok de pak choï, tofu et sésame · Porridge cacahuète-banane"],
+ ["Bonnes graisses","Chaque jour","--o3","Elles nourrissent le cerveau, les hormones et la peau, et aident à absorber les vitamines A, D, E et K.",
+  "Avocat, noix, amandes, graines, huile d'olive et de colza. Plutôt les graisses des plantes entières que les produits ultra-transformés.",
+  "Tofu brouillé, avocat et tomate · Salade de quinoa complète · Figues, noix et chocolat noir"]];
+document.getElementById("guide").innerHTML=GUIDE.map(([n,tag,col,why,src,rec])=>`<article class="card guide" style="--g:var(${col})"><h3>${n}<span>${tag}</span></h3><p>${why}</p><p class="src">${src}</p>${rec?`<p class="grec"><b>🍽️ Dans tes recettes</b>${rec}</p>`:""}</article>`).join("");
 
 // ================= CONTENU À PERSONNALISER =================
 // Mantras : un par jour, dans l'ordre. EXEMPLES PROVISOIRES, à remplacer par les tiens.
