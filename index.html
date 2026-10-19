@@ -1127,6 +1127,7 @@ const LUNES=[
 const ANIMAUX=[
  ["Soin énergétique pour les animaux","",""]];
 const SOIN_BULLE=[
+ ["Soin énergétique : alignement et manifestation","Sur YouTube","https://www.youtube.com/watch?v=eqF4-QK3p3I"],
  ["Soin énergétique : la bulle de protection","",""]];
 // Exercice du matin : ancrage et étirement. 5 mouvements de 30 secondes, avec un dessin chacun.
 const EXO_STEPS=[
@@ -1293,7 +1294,7 @@ function renderMedits(){
       ${n.type==="serie"?(n.youtube?`<a class="go" href="${esc(n.youtube)}" target="_blank" rel="noopener">Épisode 1 offert ↗</a>`:"")+(n.page?`<a class="go buy" href="${esc(n.page)}" target="_blank" rel="noopener">Découvrir ↗</a>`:(n.youtube?"":`<span class="soon">Lien à venir</span>`)):(n.youtube?`<a class="go buy" href="${esc(n.youtube)}" target="_blank" rel="noopener">Regarder ↗</a>`:`<span class="soon">Lien à venir</span>`)}</div>`).join("")}</section>`:"";
   const exoCard=`<section class="card"><h2>Exercice du matin<span>2 min 30</span></h2><div class="med"><div class="info"><div class="name">Ancrage et étirement</div><div class="meta">5 mouvements de 30 secondes, en images</div></div><button type="button" class="go" data-exo="1">Ouvrir la fiche</button></div></section>`;
   const brCard=`<section class="card"><h2>Respirations<span>${BREATHS.length}</span></h2>${BREATHS.map((b,i)=>`<div class="med"><div class="info"><div class="name">${b.e} ${esc(b.n)}</div><div class="meta">${esc(b.s)} · ${brDur(b)}</div></div><button type="button" class="go" data-br="${i}">Respirer</button></div>`).join("")}</section>`;
-  document.getElementById("medits").innerHTML=sec("Mon voyage intérieur immersif",VOYAGES)+nvHTML+sec("Méditations du matin",MATIN)+sec("Méditations du soir",SOIR)+sec("Pleine lune et nouvelle lune",LUNES)+sec("Soins énergétiques pour les animaux",ANIMAUX)+sec("Soins énergétiques : bulle de protection",SOIN_BULLE)+sec("Voyages intérieurs offerts",OFFERTS);
+  document.getElementById("medits").innerHTML=sec("Mon voyage intérieur immersif",VOYAGES)+nvHTML+sec("Méditations du matin",MATIN)+sec("Méditations du soir",SOIR)+sec("Pleine lune et nouvelle lune",LUNES)+sec("Soins énergétiques pour les animaux",ANIMAUX)+sec("Soins énergétiques",SOIN_BULLE)+sec("Voyages intérieurs offerts",OFFERTS);
 }
 renderMedits();
 
