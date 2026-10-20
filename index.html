@@ -11,7 +11,7 @@
 <link rel="manifest" href="manifest.json">
 <meta http-equiv="Cache-Control" content="no-cache">
 <style>.gate{display:none!important}[hidden]{display:none!important}</style>
-<script>(function(){var B="1792440734";function chk(){try{fetch("version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.json()}).then(function(j){if(j&&j.v&&j.v!==B){var k="gv-reload";try{if(sessionStorage.getItem(k)===j.v)return;sessionStorage.setItem(k,j.v)}catch(e){}location.replace(location.pathname+"?v="+j.v)}}).catch(function(){})}catch(e){}}chk();document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible")chk()});})();</script>
+<script>(function(){var B="1792476341";function chk(){try{fetch("version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.json()}).then(function(j){if(j&&j.v&&j.v!==B){var k="gv-reload";try{if(sessionStorage.getItem(k)===j.v)return;sessionStorage.setItem(k,j.v)}catch(e){}location.replace(location.pathname+"?v="+j.v)}}).catch(function(){})}catch(e){}}chk();document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible")chk()});})();</script>
 <title>Georges</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700&family=Figtree:wght@400;500;600&display=swap">
 <style>
@@ -1108,7 +1108,14 @@ const GEORGES=[
  "Même la plus petite fleur fait tourner la tête des abeilles. Ne te crois jamais insignifiant.",
  "Ta force n'est pas dans le bruit. Elle est dans le calme, comme celle de la montagne.",
  "Quand tu ne sais plus qui tu es, va voir la nature. Elle te le rappellera.",
- "Je suis toujours là, quelque part entre le vent et le soleil. Je veille sur toi."];
+ "Je suis toujours là, quelque part entre le vent et le soleil. Je veille sur toi.",
+ "Tout est possible pour toi si tu le veux vraiment. Moi, j'y crois. Et toi ?",
+ "Ce que tu n'aimerais pas qu'on te fasse, ne le fais à personne. Ni aux humains, ni aux animaux, ni à la Terre.",
+ "Avant d'agir, mets-toi à la place de l'autre. Même d'une fourmi. Tu verras le monde autrement.",
+ "Chacun a sa place sur Terre. Un ours polaire ne vit pas dans le désert. Et toi, où te sens-tu vraiment chez toi ?",
+ "Tout est relié. Ce que tu fais ici touche quelqu'un, quelque part. Alors fais en sorte que ce soit doux.",
+ "Plus tu donnes, plus tu reçois. Moi, je t'ai tout donné. Et regarde tout l'amour que j'ai reçu.",
+ "Ce n'est pas parce que tu ne me vois plus que je n'existe pas. Je suis là."];
 // Ton voyage intérieur immersif Vivant : [titre, description, lien vers la leçon TinyPages où l'audio est hébergé].
 const VOYAGES=[
  ["Vivant","Ton voyage intérieur immersif",""]];
@@ -1490,7 +1497,11 @@ const MISSIONS={
   ["💧","Arrose avec l'eau de cuisson","une fois refroidie"],
   ["🧴","Remplace un produit chimique par un naturel","vinaigre blanc, savon noir ou bicarbonate"],
   ["🤝","Parle d'un geste pour la Terre à quelqu'un","et donne-lui envie de le faire"],
-  ["👕","Donne un vêtement que tu ne portes plus","à une association ou à une amie"]]},
+  ["👕","Donne un vêtement que tu ne portes plus","à une association ou à une amie"],
+  ["🕊️","Ne fais à aucun être vivant ce que tu ne veux pas qu'on te fasse","règle 2 · toute la journée"],
+  ["🦔","Découvre où vit un animal près de chez toi","règle 4 · chacun a sa place sur Terre"],
+  ["🔗","Choisis un geste pour la planète et pense à tous ceux qu'il touche","règle 5 · tout est interdépendant"],
+  ["🐜","Observe un tout petit être vivant pendant 2 minutes","règle 7 · ce qui ne se voit pas existe"]]},
  jouer:{t:"Joue avec Georges 🐾",sub:"Georges adore quand tu bouges, quand tu ris, quand ton enfant intérieur sort jouer.",g:"j",list:[
   ["🌳","Fais une balade dans la nature","au moins 20 minutes"],
   ["🦶","Marche pieds nus dans l'herbe ou le sable","sens la Terre"],
@@ -1505,7 +1516,9 @@ const MISSIONS={
   ["🙋","Ose dire ce que tu penses une fois aujourd'hui","calmement, sincèrement"],
   ["📝","Écris 3 choses que tu as réussies","même minuscules"],
   ["🙏","Dis merci à quelqu'un, en le regardant","vraiment"],
-  ["🌟","Répète « Tout est possible pour moi si je le veux vraiment »","3 fois, en respirant"],
+  ["🌟","Répète « Tout est possible pour moi si je le veux vraiment »","règle 1 · 3 fois, en respirant"],
+  ["👣","Mets-toi à la place de quelqu'un avant de lui répondre","règle 3 · une fois aujourd'hui"],
+  ["🎁","Donne quelque chose sans rien attendre en retour","règle 6 · plus je donne, plus je reçois"],
   ["🤝","Aide quelqu'un sans qu'on te le demande","un petit geste suffit"],
   ["🎯","Fais une chose qui te fait un peu peur","un petit pas"],
   ["💌","Écris un mot gentil à toi-même","comme à un ami"]]}
