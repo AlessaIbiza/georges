@@ -11,7 +11,7 @@
 <link rel="manifest" href="manifest.json">
 <meta http-equiv="Cache-Control" content="no-cache">
 <style>.gate{display:none!important}[hidden]{display:none!important}</style>
-<script>(function(){var B="1792956752";function chk(){try{fetch("version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.json()}).then(function(j){if(j&&j.v&&j.v!==B){var k="gv-reload";try{if(sessionStorage.getItem(k)===j.v)return;sessionStorage.setItem(k,j.v)}catch(e){}location.replace(location.pathname+"?v="+j.v)}}).catch(function(){})}catch(e){}}chk();document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible")chk()});})();</script>
+<script>(function(){var B="1792959993";function chk(){try{fetch("version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.json()}).then(function(j){if(j&&j.v&&j.v!==B){var k="gv-reload";try{if(sessionStorage.getItem(k)===j.v)return;sessionStorage.setItem(k,j.v)}catch(e){}location.replace(location.pathname+"?v="+j.v)}}).catch(function(){})}catch(e){}}chk();document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible")chk()});})();</script>
 <title>Georges</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700&family=Figtree:wght@400;500;600&display=swap">
 <style>
@@ -373,6 +373,14 @@ form.add button{grid-column:1/-1;padding:10px;border-radius:10px;border:0;backgr
     <h3 id="ytT"></h3>
     <div class="ytbox"><iframe id="ytF" title="Vidéo" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe></div>
     <p class="ytnote">Garde l'écran allumé pendant l'écoute. <a id="ytO" href="#" target="_blank" rel="noopener">Ouvrir dans YouTube ↗</a></p>
+  </div>
+</div>
+<div class="exo" id="auw" role="dialog" aria-modal="true" aria-labelledby="auT" hidden>
+  <div class="exobox">
+    <div class="exotop"><span class="tagx">Ton voyage intérieur</span><button type="button" class="gsoft" id="auClose">Fermer</button></div>
+    <h3 id="auT"></h3>
+    <audio id="auA" controls preload="metadata" controlsList="nodownload noplaybackrate" style="width:100%;margin:10px 0" oncontextmenu="return false"></audio>
+    <p class="ytnote">Mets ton casque, ferme les yeux, laisse-toi porter. Ne ferme pas Georges avant la fin. Jamais en conduisant.</p>
   </div>
 </div>
 <div class="exo" id="exo" role="dialog" aria-modal="true" aria-labelledby="exoT" hidden>
@@ -1122,7 +1130,7 @@ const GEORGES=[
  "Ce n'est pas parce que tu ne me vois plus que je n'existe pas. Je suis là."];
 // Ton voyage intérieur immersif Vivant : [titre, description, lien vers la leçon TinyPages où l'audio est hébergé].
 const VOYAGES=[
- ["Vivant","Ton voyage intérieur immersif · dans ton espace","https://vivant.gardiendelaterre.com/students"]];
+ ["Vivant","Ton voyage intérieur immersif","https://gcydqswrcrwiyweegllk.supabase.co/storage/v1/object/public/creators/bf9d8219-c4d6-49b6-9b70-f3a4faa6e02f/audios/vivant-voyage-interieur-master-v1-9deprisb.mp3"]];
 // Voyages intérieurs offerts, gratuits sur YouTube : [titre, durée, lien YouTube]. Laisse "" tant que le lien n'existe pas.
 const OFFERTS=[
  ["Voyage intérieur offert n° 1","YouTube",""],
@@ -1203,12 +1211,17 @@ const RITS=[
 function ytEmbed(u){try{const x=new URL(u);const list=x.searchParams.get("list");let id=x.hostname.includes("youtu.be")?x.pathname.slice(1):x.searchParams.get("v");
   if(id)return "https://www.youtube-nocookie.com/embed/"+encodeURIComponent(id)+"?autoplay=1&playsinline=1&rel=0";
   if(list)return "https://www.youtube-nocookie.com/embed/videoseries?list="+encodeURIComponent(list)+"&autoplay=1&playsinline=1&rel=0";}catch(e){}return "";}
-const ytBtn=(u,t,label,cls)=>ytEmbed(u)?`<button type="button" class="go${cls||""}" data-yt="${esc(u)}" data-ytt="${esc(t)}">${label}</button>`:`<a class="go${cls||""}" href="${esc(u)}" target="_blank" rel="noopener">${label} ↗</a>`;
+const isAudio=u=>/\.(mp3|m4a|aac|ogg)(\?|$)/i.test(u||"");
+const ytBtn=(u,t,label,cls)=>isAudio(u)?`<button type="button" class="go${cls||""}" data-au="${esc(u)}" data-aut="${esc(t)}">${label}</button>`:ytEmbed(u)?`<button type="button" class="go${cls||""}" data-yt="${esc(u)}" data-ytt="${esc(t)}">${label}</button>`:`<a class="go${cls||""}" href="${esc(u)}" target="_blank" rel="noopener">${label} ↗</a>`;
 const linkHTML=m=>m&&m[2]?ytBtn(m[2],m[0],"▶ Écouter"):`<span class="soon">Lien à venir</span>`;
 function ytOpen(u,t){document.getElementById("ytT").textContent=t;document.getElementById("ytO").href=u;document.getElementById("ytF").src=ytEmbed(u);document.getElementById("ytw").hidden=false;}
 function ytClose(){document.getElementById("ytF").src="about:blank";document.getElementById("ytw").hidden=true;}
 document.addEventListener("click",e=>{const b=e.target.closest("[data-yt]");if(b){e.preventDefault();ytOpen(b.dataset.yt,b.dataset.ytt);}});
 document.getElementById("ytClose").addEventListener("click",ytClose);
+function auOpen(u,t){const A=document.getElementById("auA");document.getElementById("auT").textContent=t;if(A.dataset.src!==u){A.src=u;A.dataset.src=u;}document.getElementById("auw").hidden=false;try{A.play().catch(()=>{});}catch(e){}try{if("mediaSession" in navigator)navigator.mediaSession.metadata=new MediaMetadata({title:t,artist:"Stéphanie Dordain · Fiction audio immersive®",album:"Georges, ton gardien"});}catch(e){}}
+function auClose(){const A=document.getElementById("auA");A.pause();document.getElementById("auw").hidden=true;}
+document.addEventListener("click",e=>{const b=e.target.closest("[data-au]");if(b){e.preventDefault();auOpen(b.dataset.au,b.dataset.aut);}});
+document.getElementById("auClose").addEventListener("click",auClose);
 const doneCount=k=>{const d=vh[k]||{};return RITS.filter(([r])=>!!d[r]).length;};
 
 function renderDay(){
