@@ -8,10 +8,11 @@ def rep(a, b):
     h = h.replace(a, b)
 rep('<meta charset="utf-8">', '<meta charset="utf-8">\n<script>window.PERSO_MODE=1</script>')
 rep('<meta name="apple-mobile-web-app-title" content="Georges">', '<meta name="apple-mobile-web-app-title" content="Mon assiette">')
-rep('href="icon.png?v=7"', 'href="icon.png?v=1"')
-h = re.sub(r'<link rel="icon" href="icon-512.png\?v=\d+">', '<link rel="icon" href="icon.png?v=1">', h)
+rep('href="icon.png?v=7"', 'href="plante-512.png?v=3"')
+h = re.sub(r'<link rel="icon" href="icon-512.png\?v=\d+">', '<link rel="icon" href="plante-192.png?v=3">', h)
 rep('fetch("version.json?t="', 'fetch("../version.json?t="')
 rep('<h1>Georges</h1>', '<h1>Mon assiette</h1>')
+rep('<div class="gport xs"></div>', '<img src="plante-192.png?v=3" alt="" style="width:58px;height:58px;border-radius:50%;flex:none">')
 if '<title>' in h:
     h = re.sub(r'<title>.*?</title>', '<title>Mon assiette</title>', h, count=1)
 else:
@@ -19,7 +20,7 @@ else:
 open('mes-proteines/index.html', 'w', encoding='utf-8').write(h)
 json.dump({"id": "/mes-proteines/", "name": "Mon assiette", "short_name": "Mon assiette", "start_url": "./", "scope": "./",
            "display": "standalone", "background_color": "#eaf6f6", "theme_color": "#0a8379",
-           "icons": [{"src": "icon-192.png?v=1", "sizes": "192x192", "type": "image/png", "purpose": "any"},
-                     {"src": "icon.png?v=1", "sizes": "512x512", "type": "image/png", "purpose": "any"}]},
+           "icons": [{"src": "plante-192.png?v=3", "sizes": "192x192", "type": "image/png", "purpose": "any"},
+                     {"src": "plante-512.png?v=3", "sizes": "512x512", "type": "image/png", "purpose": "any"}]},
           open('mes-proteines/manifest.json', 'w', encoding='utf-8'), ensure_ascii=False)
 print('mes-proteines/index.html régénéré')
