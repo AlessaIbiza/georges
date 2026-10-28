@@ -11,8 +11,8 @@
 <link rel="icon" href="plante-192.png?v=3">
 <link rel="manifest" href="manifest.json">
 <meta http-equiv="Cache-Control" content="no-cache">
-<style>.gate{display:none!important}[hidden]{display:none!important}.po{display:none!important}.perso .po{display:block!important}.perso .bnav,.perso .apphead .atag,.perso .apphead .asig{display:none!important}.perso .nut .kc{display:inline-block}.nut .kc{display:none;font-weight:600}.perso section[aria-label="Résumé du jour"] .settings{display:none!important}</style>
-<script>(function(){var B="1792959993";function chk(){try{fetch("../version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.json()}).then(function(j){if(j&&j.v&&j.v!==B){var k="gv-reload";try{if(sessionStorage.getItem(k)===j.v)return;sessionStorage.setItem(k,j.v)}catch(e){}location.replace(location.pathname+"?v="+j.v)}}).catch(function(){})}catch(e){}}chk();document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible")chk()});})();</script>
+<style>.gate{display:none!important}[hidden]{display:none!important}.bnav,.apphead .atag,.apphead .asig{display:none!important}.nut .kc{font-weight:600}section[aria-label="Résumé du jour"] .settings{display:none!important}</style>
+<script>(function(){var B="1793225089";function chk(){try{fetch("../version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.json()}).then(function(j){if(j&&j.v&&j.v!==B){var k="gv-reload";try{if(sessionStorage.getItem(k)===j.v)return;sessionStorage.setItem(k,j.v)}catch(e){}location.replace(location.pathname+"?v="+j.v)}}).catch(function(){})}catch(e){}}chk();document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible")chk()});})();</script>
 <title>Mon assiette</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700&family=Figtree:wght@400;500;600&display=swap">
 <style>
@@ -592,7 +592,7 @@ form.add button{grid-column:1/-1;padding:10px;border-radius:10px;border:0;backgr
 
   <!-- SUIVI -->
   <div id="pane-s" class="pane" role="tabpanel" aria-labelledby="tab-s">
-    <section class="card po" aria-labelledby="kcT" id="kcCard">
+    <section class="card" aria-labelledby="kcT" id="kcCard">
       <h2 id="kcT">Mes calories du jour<span id="kScore"></span></h2>
       <div class="settings">
         <label for="pT">Taille <input id="pT" type="number" inputmode="numeric" min="130" max="210" value="163"> cm</label>
@@ -709,7 +709,7 @@ form.add button{grid-column:1/-1;padding:10px;border-radius:10px;border:0;backgr
         <label for="aCa">Calcium (mg)<input id="aCa" inputmode="decimal" placeholder="0"></label>
         <label for="aC">Vitamine C (mg)<input id="aC" inputmode="decimal" placeholder="0"></label>
         <label for="aO">Oméga-3 (g)<input id="aO" inputmode="decimal" placeholder="0"></label>
-        <label class="po" for="aK">Calories (kcal)<input id="aK" inputmode="decimal" placeholder="0"></label>
+        <label for="aK">Calories (kcal)<input id="aK" inputmode="decimal" placeholder="0"></label>
         <button type="submit">Ajouter à mes aliments</button>
       </form>
     </section>
@@ -863,8 +863,6 @@ function goals(){return {fe:prof.sex==="m"?11:18,zn:prof.sex==="m"?14:10,ca:950,
 function allCats(){return custom.length?[{t:"Mes aliments",custom:true,items:custom}].concat(CATS):CATS;}
 function allFoods(){return allCats().flatMap(c=>c.items);}
 const FOODMAP=()=>Object.fromEntries(allFoods().map(f=>[f[0],f]));
-// ---------- Mode perso (page « Mon assiette ») : calories et déficit ----------
-const PERSO=!!window.PERSO_MODE;
 // kcal par portion (valeurs moyennes Ciqual/USDA, arrondies)
 const KCAL={laitS:85,laitA:40,yaS:65,avoine:150,painC:95,cacah:190,pureeA:200,tahini:90,tofu:130,tempeh:190,tvp:165,lent:230,soupeL:180,pateL:270,
  poisC:245,haric:190,houmous:140,edam:120,petitsP:80,seitan:140,poudre:115,courge:170,chanvre:115,chia:100,lin:55,tourn:175,sesame:52,amande:175,
@@ -879,13 +877,11 @@ function persoPlan(){
   const tdee=bmr*(1.375+0.025*pp.s);                  // marche quotidienne + séances de muscu
   const lose=pp.k-pp.g>0.3;
   const goal=lose?Math.max(1300,Math.round(tdee*0.8/10)*10):Math.round(tdee/10)*10;
-  return {bmr:Math.round(bmr),tdee:Math.round(tdee),goal,lose,prot:Math.round(pp.k*1.8)};
+  return {tdee:Math.round(tdee),goal,lose,prot:Math.round(pp.k*1.8)};
 }
-if(PERSO){document.documentElement.classList.add("perso");
-  [["pT","t"],["pA","a"],["pK","k"],["pG","g"],["pS","s"]].forEach(([id,k])=>{const el=document.getElementById(id);el.value=pp[k];
-    el.addEventListener(el.tagName==="SELECT"?"change":"input",()=>{const v=parseFloat(String(el.value).replace(",","."));if(v>0){pp[k]=v;store("perso",pp);render();}});});
-}
-function renderPerso(T){if(!PERSO)return;
+[["pT","t"],["pA","a"],["pK","k"],["pG","g"],["pS","s"]].forEach(([id,k])=>{const el=document.getElementById(id);el.value=pp[k];
+  el.addEventListener(el.tagName==="SELECT"?"change":"input",()=>{const v=parseFloat(String(el.value).replace(",","."));if(v>0){pp[k]=v;store("perso",pp);render();}});});
+function renderPerso(T){
   const P=persoPlan(),k=Math.round(T.k);
   document.getElementById("kArc").setAttribute("stroke-dashoffset",(263.9*(1-Math.min(1,k/P.goal))).toFixed(1));
   document.getElementById("kArc").style.stroke=k>P.goal+100?"var(--iron)":"";
@@ -954,7 +950,7 @@ function render(){
     const ne=document.getElementById("n-"+f[0]);if(ne)ne.textContent=k;
     const re=document.getElementById("r-"+f[0]);if(re)re.classList.toggle("on",k>0);
     if(k)ate.push(`<span class="chip">${k>1?k+" × ":""}${esc(f[1])}</span>`);});
-  const [fl,ft]=ACT[prof.act],lo=Math.round(prof.kg*fl),target=PERSO?persoPlan().prot:Math.round(prof.kg*ft);
+  const [fl,ft]=ACT[prof.act],lo=Math.round(prof.kg*fl),target=persoPlan().prot;
   document.getElementById("arc").setAttribute("stroke-dashoffset",(263.9*(1-Math.min(1,T.p/target))).toFixed(1));
   document.getElementById("tot").textContent=Math.round(T.p)+" g";
   document.getElementById("goal").textContent=`Objectif : environ ${target} g de protéines par jour`;
@@ -1330,14 +1326,14 @@ function renderExtras(){
   // menus du jour
   document.getElementById("menus").innerHTML=MENU_KEYS.map(([k,lab])=>{const r=menuPick(k),t=recTotals(r),on=!!d.meals[k];
     return `<div class="menu${on?" done":""}"><div class="mtop"><span class="mlabel">${lab}</span>${on?`<span class="dtag">✓ Mangé</span>`:""}</div>
-      <details><summary><b>${r.n}</b><span class="meta">${r.time} · ${fmt(t.p)} g de protéines${PERSO?" · "+Math.round(t.k)+" kcal":""}</span></summary>
+      <details><summary><b>${r.n}</b><span class="meta">${r.time} · ${fmt(t.p)} g de protéines · ${Math.round(t.k)} kcal</span></summary>
       <div class="rbody"><h4 class="mlabel">Ingrédients</h4><ul>${r.ing.map(i=>`<li>${i[2]}</li>`).join("")}</ul>
       <h4 class="mlabel">Préparation</h4><ol>${r.steps.map(s=>`<li>${s}</li>`).join("")}</ol></div></details>
       <div class="mact">${on?`<button type="button" class="undo" data-tundo="${k}">Annuler</button>`:`<button type="button" class="eat2" data-teat="${k}">J'ai mangé ça</button><button type="button" class="swap" data-swap="${k}">Autre idée</button>`}</div></div>`;}).join("");
   const nm=MENU_KEYS.filter(([k])=>d.meals[k]).length;
   document.getElementById("menuScore").textContent=`${nm} sur ${MENU_KEYS.length}`;
   // alimentation en bref
-  const T=window.__T||{p:0,fe:0,ca:0,c:0},G=goals(),target=PERSO?persoPlan().prot:Math.round(prof.kg*ACT[prof.act][1]);
+  const T=window.__T||{p:0,fe:0,ca:0,c:0},G=goals(),target=persoPlan().prot;
   const mb=(l,v,g,u,col)=>`<div class="bar"><div class="lab"><b>${l}</b><span>${fmt(v)} / ${fmt(g)} ${u}</span></div><div class="track"><div style="width:${Math.min(100,v/g*100)}%;background:var(${col})"></div></div></div>`;
   document.getElementById("miniBars").innerHTML=mb("Protéines",T.p,target,"g","--leaf")+mb("Fer",T.fe,G.fe,"mg","--iron")+mb("Calcium",T.ca,G.ca,"mg","--ca")+mb("Vitamine C",T.c,G.c,"mg","--vitc");
   // progression du jour : routine + menus
@@ -1907,7 +1903,7 @@ document.addEventListener("click",e=>{const g=e.target.closest("[data-g]");if(!g
 const CODES=["2d873b69f6f83437e6b016046b87dd8e13a49cd5d8931a4fefa38d8378ed8209"];
 async function sha(s){const b=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(s));return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,"0")).join("");}
 const gate=document.getElementById("gate");
-if(true){gate.hidden=true;if(!PERSO&&load("georges_vu","")!==today)showGeorges();}
+if(true){gate.hidden=true;}
 else{setTimeout(()=>document.getElementById("gcode").focus(),50);}
 document.getElementById("gateForm").addEventListener("submit",async e=>{
   e.preventDefault();const v=document.getElementById("gcode").value.trim().toUpperCase();if(!v)return;
@@ -1917,7 +1913,7 @@ document.getElementById("gateForm").addEventListener("submit",async e=>{
 });
 // L'appli s'ouvre toujours sur « Aujourd'hui », sauf lien direct
 const H=location.hash.slice(1);
-if(PERSO){showTab("a");}else showTab(H==="mediter"?"m":H==="assiette"?"a":H==="journal"?"n":H==="aujourdhui"?"j":"g");
+showTab("a");
 </script>
 
 <style>
@@ -1929,15 +1925,15 @@ if(PERSO){showTab("a");}else showTab(H==="mediter"?"m":H==="assiette"?"a":H==="j
 <div class="inst" id="inst" role="dialog" aria-live="polite" hidden><p id="instTxt"></p><div class="ia"><button type="button" class="ib" id="instGo" hidden>Installer Georges</button><button type="button" class="ix" id="instX">Plus tard</button></div></div>
 <script>
 (function(){
-  if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register(window.PERSO_MODE?"../sw.js":"sw.js").catch(function(){});});}
+  if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("../sw.js").catch(function(){});});}
   var ua=navigator.userAgent||"",box=document.getElementById("inst"),txt=document.getElementById("instTxt"),go=document.getElementById("instGo"),dp=null;
   var installed=(window.matchMedia&&matchMedia("(display-mode: standalone)").matches)||navigator.standalone===true;
   var android=/Android/i.test(ua);
   var inApp=/(FBAN|FBAV|Instagram|Line\/|WhatsApp|GSA\/|; wv\)|Snapchat|TikTok|musical_ly|Pinterest|LinkedInApp|Twitter)/i.test(ua);
   function later(){try{return localStorage.getItem("inst_later")===new Date().toDateString()}catch(e){return false}}
-  function show(t,btn){if(installed||later())return;txt.innerHTML=t;go.hidden=!btn;if(window.PERSO_MODE)go.textContent="Installer";box.hidden=false;}
+  function show(t,btn){if(installed||later())return;txt.innerHTML=t;go.hidden=!btn;go.textContent="Installer";box.hidden=false;}
   document.getElementById("instX").addEventListener("click",function(){box.hidden=true;try{localStorage.setItem("inst_later",new Date().toDateString())}catch(e){}});
-  window.addEventListener("beforeinstallprompt",function(e){e.preventDefault();dp=e;show(window.PERSO_MODE?"<strong>Installe « Mon assiette » sur ton téléphone.</strong>":"<strong>Accueille Georges sur ton téléphone.</strong> Il aura sa propre icône, comme une vraie application.",true);});
+  window.addEventListener("beforeinstallprompt",function(e){e.preventDefault();dp=e;show("<strong>Installe « Mon assiette » sur ton téléphone.</strong>",true);});
   go.addEventListener("click",function(){if(!dp)return;dp.prompt();dp.userChoice.then(function(){dp=null;box.hidden=true;});});
   window.addEventListener("appinstalled",function(){box.hidden=true;installed=true;});
   if(android&&inApp)show("<strong>Pour accueillir Georges sur ton téléphone, ouvre-le dans Chrome.</strong> Touche les trois petits points en haut à droite, puis « Ouvrir dans Chrome » (ou « Ouvrir dans le navigateur »).",false);
