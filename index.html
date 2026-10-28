@@ -7,11 +7,11 @@
 <meta name="theme-color" content="#0a8379">
 <meta name="robots" content="noindex">
 <link rel="apple-touch-icon" sizes="180x180" href="icon.png?v=7">
-<link rel="icon" href="icon-512.png?v=7">
+<link rel="icon" href="icon-512.png?v=8">
 <link rel="manifest" href="manifest.json">
 <meta http-equiv="Cache-Control" content="no-cache">
 <style>.gate{display:none!important}[hidden]{display:none!important}</style>
-<script>(function(){var B="1792959993";function chk(){try{fetch("version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.json()}).then(function(j){if(j&&j.v&&j.v!==B){var k="gv-reload";try{if(sessionStorage.getItem(k)===j.v)return;sessionStorage.setItem(k,j.v)}catch(e){}location.replace(location.pathname+"?v="+j.v)}}).catch(function(){})}catch(e){}}chk();document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible")chk()});})();</script>
+<script>(function(){var B="1793222964";function chk(){try{fetch("version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.json()}).then(function(j){if(j&&j.v&&j.v!==B){var k="gv-reload";try{if(sessionStorage.getItem(k)===j.v)return;sessionStorage.setItem(k,j.v)}catch(e){}location.replace(location.pathname+"?v="+j.v)}}).catch(function(){})}catch(e){}}chk();document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible")chk()});})();</script>
 <title>Georges</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700&family=Figtree:wght@400;500;600&display=swap">
 <style>
@@ -1858,4 +1858,27 @@ const H=location.hash.slice(1);
 showTab(H==="mediter"?"m":H==="assiette"?"a":H==="journal"?"n":H==="aujourdhui"?"j":"g");
 </script>
 
+<style>
+.inst{position:fixed;left:12px;right:12px;bottom:calc(76px + env(safe-area-inset-bottom));z-index:6;background:var(--card);border:1px solid var(--leaf);border-radius:16px;padding:14px 14px 12px;box-shadow:0 8px 28px rgba(0,0,0,.18);max-width:520px;margin:0 auto}
+.inst p{margin:0 0 10px;font-size:.92rem;line-height:1.4}.inst .ia{display:flex;gap:8px;flex-wrap:wrap}
+.inst .ib{background:var(--leaf);color:#fff;border:0;border-radius:999px;padding:10px 16px;font-weight:600;font-size:.95rem}
+.inst .ix{background:transparent;border:1px solid var(--line);border-radius:999px;padding:10px 14px;font-size:.9rem;color:inherit}
+</style>
+<div class="inst" id="inst" role="dialog" aria-live="polite" hidden><p id="instTxt"></p><div class="ia"><button type="button" class="ib" id="instGo" hidden>Installer Georges</button><button type="button" class="ix" id="instX">Plus tard</button></div></div>
+<script>
+(function(){
+  if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){});});}
+  var ua=navigator.userAgent||"",box=document.getElementById("inst"),txt=document.getElementById("instTxt"),go=document.getElementById("instGo"),dp=null;
+  var installed=(window.matchMedia&&matchMedia("(display-mode: standalone)").matches)||navigator.standalone===true;
+  var android=/Android/i.test(ua);
+  var inApp=/(FBAN|FBAV|Instagram|Line\/|WhatsApp|GSA\/|; wv\)|Snapchat|TikTok|musical_ly|Pinterest|LinkedInApp|Twitter)/i.test(ua);
+  function later(){try{return localStorage.getItem("inst_later")===new Date().toDateString()}catch(e){return false}}
+  function show(t,btn){if(installed||later())return;txt.innerHTML=t;go.hidden=!btn;box.hidden=false;}
+  document.getElementById("instX").addEventListener("click",function(){box.hidden=true;try{localStorage.setItem("inst_later",new Date().toDateString())}catch(e){}});
+  window.addEventListener("beforeinstallprompt",function(e){e.preventDefault();dp=e;show("<strong>Accueille Georges sur ton téléphone.</strong> Il aura sa propre icône, comme une vraie application.",true);});
+  go.addEventListener("click",function(){if(!dp)return;dp.prompt();dp.userChoice.then(function(){dp=null;box.hidden=true;});});
+  window.addEventListener("appinstalled",function(){box.hidden=true;installed=true;});
+  if(android&&inApp)show("<strong>Pour accueillir Georges sur ton téléphone, ouvre-le dans Chrome.</strong> Touche les trois petits points en haut à droite, puis « Ouvrir dans Chrome » (ou « Ouvrir dans le navigateur »).",false);
+})();
+</script>
 </html>
