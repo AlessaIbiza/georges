@@ -20,7 +20,7 @@ rep('fetch("version.json?t="', 'fetch("../version.json?t="')
 rep('<h1>Georges</h1>', '<h1>Mon assiette</h1>')
 rep('<div class="gport xs"></div>', '<img src="plante-192.png?v=3" alt="" style="width:58px;height:58px;border-radius:50%;flex:none">')
 rep('navigator.serviceWorker.register("sw.js")', 'navigator.serviceWorker.register("../sw.js")')
-rep('show("<strong>Accueille Georges sur ton téléphone.</strong> Il aura sa propre icône, comme une vraie application.",true);',
+rep('show("<strong>Accueille Georges sur ton téléphone.</strong> Il aura sa propre icône sur ton écran d\'accueil.",true);',
     'show("<strong>Installe « Mon assiette » sur ton téléphone.</strong>",true);')
 rep('go.hidden=!btn;', 'go.hidden=!btn;go.textContent="Installer";')
 
