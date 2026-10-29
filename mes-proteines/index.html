@@ -12,7 +12,7 @@
 <link rel="manifest" href="manifest.json">
 <meta http-equiv="Cache-Control" content="no-cache">
 <style>.gate{display:none!important}[hidden]{display:none!important}.bnav,.apphead .atag,.apphead .asig{display:none!important}.nut .kc{font-weight:600}section[aria-label="Résumé du jour"] .settings{display:none!important}</style>
-<script>(function(){var B="1793282481";function chk(){try{fetch("../version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.json()}).then(function(j){if(j&&j.v&&j.v!==B){var k="gv-reload";try{if(sessionStorage.getItem(k)===j.v)return;sessionStorage.setItem(k,j.v)}catch(e){}location.replace(location.pathname+"?v="+j.v)}}).catch(function(){})}catch(e){}}chk();document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible")chk()});})();</script>
+<script>(function(){var B="1793282543";function chk(){try{fetch("../version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.json()}).then(function(j){if(j&&j.v&&j.v!==B){var k="gv-reload";try{if(sessionStorage.getItem(k)===j.v)return;sessionStorage.setItem(k,j.v)}catch(e){}location.replace(location.pathname+"?v="+j.v)}}).catch(function(){})}catch(e){}}chk();document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible")chk()});})();</script>
 <title>Mon assiette</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700&family=Figtree:wght@400;500;600&display=swap">
 <style>
@@ -1925,13 +1925,17 @@ showTab("a");
 <div class="inst" id="inst" role="dialog" aria-live="polite" hidden><p id="instTxt"></p><div class="ia"><button type="button" class="ib" id="instGo" hidden>Installer Georges</button><button type="button" class="ix" id="instX">Plus tard</button></div></div>
 <script>
 (function(){
-  if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("../sw.js").catch(function(){});});}
   var ua=navigator.userAgent||"",box=document.getElementById("inst"),txt=document.getElementById("instTxt"),go=document.getElementById("instGo"),dp=null;
   var installed=(window.matchMedia&&matchMedia("(display-mode: standalone)").matches)||navigator.standalone===true;
   var android=/Android/i.test(ua);
-  // Seul le vrai Chrome installe Georges proprement sur Android. Les autres navigateurs fabriquent une appli que Google bloque.
+  // Seul le vrai Chrome installe Georges proprement sur Android. Les autres navigateurs (Samsung Internet…) fabriquent un paquet que Google bloque.
   var other=/(SamsungBrowser|EdgA|OPR\/|OPX|Opera|YaBrowser|MiuiBrowser|XiaoMi|HuaweiBrowser|HeyTapBrowser|VivoBrowser|UCBrowser|Firefox|DuckDuckGo|FBAN|FBAV|Instagram|Line\/|WhatsApp|GSA\/|; wv\)|Snapchat|TikTok|musical_ly|Pinterest|LinkedInApp|Twitter)/i.test(ua)||!!navigator.brave;
   var chrome=android&&/Chrome\/\d+/.test(ua)&&!other;
+  // Sans service worker, ces navigateurs ne proposent plus leur propre « installation » bloquée : seulement un raccourci.
+  if("serviceWorker" in navigator){
+    if(android&&!chrome){navigator.serviceWorker.getRegistrations().then(function(r){r.forEach(function(x){x.unregister()})}).catch(function(){});}
+    else window.addEventListener("load",function(){navigator.serviceWorker.register("../sw.js").catch(function(){});});
+  }
   function later(){try{return localStorage.getItem("inst_later")===new Date().toDateString()}catch(e){return false}}
   function show(t,btn){if(installed||later())return;txt.innerHTML=t;go.hidden=!btn;go.textContent="Installer";box.hidden=false;}
   document.getElementById("instX").addEventListener("click",function(){box.hidden=true;try{localStorage.setItem("inst_later",new Date().toDateString())}catch(e){}});
@@ -1943,7 +1947,7 @@ showTab("a");
   if(android&&!chrome&&!installed){
     var u=location.href.replace(/^https?:\/\//,"").replace(/[?#].*$/,"");
     go.dataset.chrome="intent://"+u+"#Intent;scheme=https;package=com.android.chrome;end";
-    show("<strong>Pour installer Georges, ouvre-le dans Chrome.</strong> Ici, ton téléphone risque de le bloquer. Touche « Ouvrir dans Chrome », puis dans Chrome : les trois petits points en haut à droite → « Ajouter à l'écran d'accueil » (parfois écrit « Installer »).",false);
+    show("<strong>Pour installer Georges, ouvre-le dans Chrome.</strong> Ici, ton téléphone risque de le bloquer. Touche « Ouvrir dans Chrome », puis dans Chrome : les trois petits points en haut à droite → « Ajouter à l'écran d'accueil » (parfois écrit « Installer »). Si on te propose « Installer » ici, refuse.",false);
     go.hidden=false;go.textContent="Ouvrir dans Chrome";
   }
 })();
