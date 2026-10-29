@@ -11,7 +11,7 @@
 <link rel="manifest" href="manifest.json">
 <meta http-equiv="Cache-Control" content="no-cache">
 <style>.gate{display:none!important}[hidden]{display:none!important}</style>
-<script>(function(){var B="1793282543";function chk(){try{fetch("version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.json()}).then(function(j){if(j&&j.v&&j.v!==B){var k="gv-reload";try{if(sessionStorage.getItem(k)===j.v)return;sessionStorage.setItem(k,j.v)}catch(e){}location.replace(location.pathname+"?v="+j.v)}}).catch(function(){})}catch(e){}}chk();document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible")chk()});})();</script>
+<script>(function(){var B="1793282831";function chk(){try{fetch("version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.json()}).then(function(j){if(j&&j.v&&j.v!==B){var k="gv-reload";try{if(sessionStorage.getItem(k)===j.v)return;sessionStorage.setItem(k,j.v)}catch(e){}location.replace(location.pathname+"?v="+j.v)}}).catch(function(){})}catch(e){}}chk();document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible")chk()});})();</script>
 <title>Georges</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700&family=Figtree:wght@400;500;600&display=swap">
 <style>
@@ -1883,14 +1883,16 @@ showTab(H==="mediter"?"m":H==="assiette"?"a":H==="journal"?"n":H==="aujourdhui"?
   function show(t,btn){if(installed||later())return;txt.innerHTML=t;go.hidden=!btn;box.hidden=false;}
   document.getElementById("instX").addEventListener("click",function(){box.hidden=true;try{localStorage.setItem("inst_later",new Date().toDateString())}catch(e){}});
   window.addEventListener("beforeinstallprompt",function(e){e.preventDefault();if(android&&!chrome)return;dp=e;
-    show("<strong>Accueille Georges sur ton téléphone.</strong> Il aura sa propre icône sur ton écran d'accueil.",true);});
+    show("<strong>Accueille Georges sur ton téléphone.</strong> Il aura sa propre icône sur ton écran d'accueil."+(android?" <br><small>Ton téléphone dit que l'écran d'accueil est verrouillé ? Appui long sur ton écran d'accueil → Paramètres → désactive « Verrouiller la disposition ».</small>":""),true);});
   go.addEventListener("click",function(){if(dp){dp.prompt();dp.userChoice.then(function(){dp=null;box.hidden=true;});return;}
     if(go.dataset.chrome){location.href=go.dataset.chrome;}});
   window.addEventListener("appinstalled",function(){box.hidden=true;installed=true;});
   if(android&&!chrome&&!installed){
     var u=location.href.replace(/^https?:\/\//,"").replace(/[?#].*$/,"");
     go.dataset.chrome="intent://"+u+"#Intent;scheme=https;package=com.android.chrome;end";
-    show("<strong>Pour installer Georges, ouvre-le dans Chrome.</strong> Ici, ton téléphone risque de le bloquer. Touche « Ouvrir dans Chrome », puis dans Chrome : les trois petits points en haut à droite → « Ajouter à l'écran d'accueil » (parfois écrit « Installer »). Si on te propose « Installer » ici, refuse.",false);
+    var lock=" <br><small>Ton téléphone dit que l'écran d'accueil est verrouillé ? Appui long sur ton écran d'accueil → Paramètres → désactive « Verrouiller la disposition ».</small>";
+    if(/SamsungBrowser/i.test(ua))show("<strong>Pour poser Georges sur ton écran :</strong> touche ≡ en bas à droite → « Ajouter la page à » → « Écran d'accueil ». Si on te propose « Installer », refuse : choisis bien « Écran d'accueil ». Ou ouvre-le dans Chrome."+lock,false);
+    else show("<strong>Pour poser Georges sur ton écran, ouvre-le dans Chrome.</strong> Touche « Ouvrir dans Chrome », puis les trois petits points en haut à droite → « Ajouter à l'écran d'accueil »."+lock,false);
     go.hidden=false;go.textContent="Ouvrir dans Chrome";
   }
 })();
