@@ -69,7 +69,7 @@ rep('v("aP"),v("aFe"),v("aZn"),v("aCa"),v("aC"),v("aO")]', 'v("aP"),v("aFe"),v("
 # ---------- Table des calories et calcul du déficit ----------
 rep('const FOODMAP=()=>Object.fromEntries(allFoods().map(f=>[f[0],f]));', '''const FOODMAP=()=>Object.fromEntries(allFoods().map(f=>[f[0],f]));
 // kcal par portion (valeurs moyennes Ciqual/USDA, arrondies)
-const KCAL={laitS:85,laitA:40,yaS:65,avoine:150,painC:95,cacah:190,pureeA:200,tahini:90,tofu:130,tempeh:190,tvp:165,lent:230,soupeL:180,pateL:270,
+const KCAL={laitS:85,laitA:40,yaS:65,avoine:150,painC:95,cacah:95,pureeA:200,tahini:90,tofu:130,tempeh:190,tvp:165,lent:230,soupeL:180,pateL:270,
  poisC:245,haric:190,houmous:140,edam:120,petitsP:80,seitan:140,poudre:115,courge:170,chanvre:115,chia:100,lin:55,tourn:175,sesame:52,amande:175,
  cajou:170,noix:200,bresil:66,olive:120,colza:120,quinoa:180,riz:195,rizC:185,sarrasin:140,pates:185,patesB:235,patesSG:200,patateD:180,pdt:170,
  avocat:120,radis:8,carotte:40,epinard:35,kale:25,pakchoi:13,brocoli:35,chouF:25,poivron:23,tomate:22,courgette:25,haricV:45,betterave:45,champi:22,

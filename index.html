@@ -11,7 +11,7 @@
 <link rel="manifest" href="manifest.json">
 <meta http-equiv="Cache-Control" content="no-cache">
 <style>.gate{display:none!important}[hidden]{display:none!important}</style>
-<script>(function(){var B="1793282831";function chk(){try{fetch("version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.json()}).then(function(j){if(j&&j.v&&j.v!==B){var k="gv-reload";try{if(sessionStorage.getItem(k)===j.v)return;sessionStorage.setItem(k,j.v)}catch(e){}location.replace(location.pathname+"?v="+j.v)}}).catch(function(){})}catch(e){}}chk();document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible")chk()});})();</script>
+<script>(function(){var B="1793453804";function chk(){try{fetch("version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.json()}).then(function(j){if(j&&j.v&&j.v!==B){var k="gv-reload";try{if(sessionStorage.getItem(k)===j.v)return;sessionStorage.setItem(k,j.v)}catch(e){}location.replace(location.pathname+"?v="+j.v)}}).catch(function(){})}catch(e){}}chk();document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible")chk()});})();</script>
 <title>Georges</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700&family=Figtree:wght@400;500;600&display=swap">
 <style>
@@ -732,7 +732,7 @@ const CATS=[
   ["yaS","Yaourt de soja enrichi","1 pot de 125 g",5,0.5,0.3,150,0,0],
   ["avoine","Flocons d'avoine","40 g",5.3,1.7,1.6,20,0,0],
   ["painC","Pain complet","1 tranche, 40 g",3.5,1,0.7,30,0,0],
-  ["cacah","Beurre de cacahuète","2 c. à soupe",8,0.6,0.9,15,0,0],
+  ["cacah","Beurre de cacahuète","1 c. à soupe",4,0.3,0.45,7.5,0,0],
   ["pureeA","Purée d'amande","2 c. à soupe",7,1.2,1,85,0,0],
   ["tahini","Tahini (crème de sésame)","1 c. à soupe",2.6,1.3,0.7,60,0,0]]},
  {t:"Protéines végétales",items:[
@@ -937,7 +937,7 @@ const REC={
  matin:{t:"Petit-déj",note:"Pour bien démarrer, avec des protéines dès le matin.",list:[
   {n:"Bol chia-soja aux fruits rouges",time:"5 min",ing:[["yaS",1,"1 yaourt de soja enrichi"],["chia",1,"2 c. à soupe de graines de chia"],["chanvre",1,"2 c. à soupe de graines de chanvre"],["myrtille",1,"100 g de fruits rouges"]],
    steps:["La veille, mélange le yaourt et le chia, puis laisse au frais.","Le matin, ajoute les fruits rouges et le chanvre."]},
-  {n:"Porridge cacahuète-banane",time:"10 min",ing:[["avoine",1,"40 g de flocons d'avoine"],["laitS",1,"250 ml de lait de soja enrichi"],["cacah",1,"2 c. à soupe de beurre de cacahuète"],["banane",1,"1 banane"],[null,0,"1 pincée de cannelle"]],
+  {n:"Porridge cacahuète-banane",time:"10 min",ing:[["avoine",1,"40 g de flocons d'avoine"],["laitS",1,"250 ml de lait de soja enrichi"],["cacah",2,"2 c. à soupe de beurre de cacahuète"],["banane",1,"1 banane"],[null,0,"1 pincée de cannelle"]],
    steps:["Fais cuire l'avoine dans le lait de soja 5 min à feu doux.","Ajoute la banane en rondelles, le beurre de cacahuète et la cannelle."]},
   {n:"Tofu brouillé, avocat et tomate",time:"10 min",ing:[["tofu",1,"100 g de tofu ferme"],["avocat",1,"½ avocat"],["tomate",1,"1 tomate"],["sesame",1,"1 c. à soupe de sésame"],[null,0,"Curcuma, sel noir kala namak (goût d'œuf), poivre"]],
    steps:["Émiette le tofu à la fourchette et fais-le dorer 5 min avec le curcuma.","Sale au kala namak, sers avec l'avocat écrasé et la tomate, parsème de sésame."]},
@@ -965,7 +965,7 @@ const REC={
    steps:["Dore le tempeh en lamelles à la poêle.","Masse le kale avec un peu de citron pour l'attendrir.","Assemble le tout et nappe de sauce au tahini."]}]},
  gouter:{t:"Goûter",note:"Vers 16-17 h, pour arriver au dîner sans faim.",list:[
   {n:"Yaourt soja, graines de courge et fruits rouges",time:"2 min",ing:[["yaS",1,"1 yaourt de soja enrichi"],["courge",1,"30 g de graines de courge"],["myrtille",1,"100 g de fruits rouges"]],steps:["Mélange et déguste."]},
-  {n:"Pomme, beurre de cacahuète et noix du Brésil",time:"2 min",ing:[["pomme",1,"1 pomme en quartiers"],["cacah",1,"2 c. à soupe de beurre de cacahuète"],["bresil",1,"2 noix du Brésil"]],steps:["Trempe les quartiers de pomme dans le beurre de cacahuète, croque les noix du Brésil à côté : ton sélénium du jour est fait."]},
+  {n:"Pomme, beurre de cacahuète et noix du Brésil",time:"2 min",ing:[["pomme",1,"1 pomme en quartiers"],["cacah",2,"2 c. à soupe de beurre de cacahuète"],["bresil",1,"2 noix du Brésil"]],steps:["Trempe les quartiers de pomme dans le beurre de cacahuète, croque les noix du Brésil à côté : ton sélénium du jour est fait."]},
   {n:"Edamame tièdes et une orange",time:"5 min",ing:[["edam",1,"100 g d'edamame"],["orange",1,"1 orange"],[null,0,"1 pincée de fleur de sel"]],steps:["Réchauffe les edamame 3 min à l'eau bouillante et sale légèrement.","Termine par l'orange."]},
   {n:"Figues, noix et chocolat noir",time:"2 min",ing:[["figue",1,"3 figues sèches"],["noix",1,"1 poignée de noix"],["choco",1,"2 carrés de chocolat noir"]],steps:["Un goûter riche en calcium, en fer et en oméga-3, à grignoter."]}]},
  soir:{t:"Dîner",note:"Léger et tôt, idéalement avant 19 h, pour laisser le corps au repos.",list:[
