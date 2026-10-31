@@ -82,7 +82,7 @@ const kcalOf=f=>f[9]!=null?f[9]:(KCAL[f[0]]||0);
 let pp=Object.assign({t:163,a:39,k:60,g:55,s:3.5},load("perso",{}));
 function persoPlan(){
   const bmr=10*pp.k+6.25*pp.t-5*pp.a-161;            // Mifflin-St Jeor, femme
-  const tdee=bmr*(1.375+0.025*pp.s);                  // marche quotidienne + séances de muscu
+  const tdee=bmr*(1.3+0.025*pp.s);                  // marche quotidienne + séances de muscu
   const lose=pp.k-pp.g>0.3;
   const goal=lose?Math.max(1400,Math.round((tdee-300)/10)*10):Math.round(tdee/10)*10;   // déficit doux d'environ 300 kcal
   return {tdee:Math.round(tdee),goal,lose,prot:Math.round(pp.k*1.6)};               // 1,6 g de protéines par kilo
