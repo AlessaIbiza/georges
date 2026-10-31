@@ -60,7 +60,7 @@ rep('''  <div id="pane-s" class="pane" role="tabpanel" aria-labelledby="tab-s">
 ''')
 
 # ---------- Œuf dur (page perso uniquement) ----------
-rep('  ["tofu","Tofu ferme au calcium","100 g",14,2.7,1.5,350,0,0.3],', '  ["oeuf","Petit œuf dur (de ma poule)","1 petit œuf, 40 g",5,0.7,0.5,22,0,0.03,58],\n  ["tofu","Tofu ferme au calcium","100 g",14,2.7,1.5,350,0,0.3],')
+rep('  ["tofu","Tofu ferme au calcium","100 g",14,2.7,1.5,350,0,0.3],', '  ["oeuf","Petit œuf dur (de ma poule)","1 petit œuf, 40 g",5,0.7,0.5,22,0,0.03,58],\n  ["tvpcs","Soja texturé, à la cuillère","1 c. à soupe, 8 g sec",4,0.7,0.2,20,0,0,27],\n  ["tofu","Tofu ferme au calcium","100 g",14,2.7,1.5,350,0,0.3],')
 
 # ---------- Calories des aliments ajoutés soi-même ----------
 rep('''        <label for="aO">Oméga-3 (g)<input id="aO" inputmode="decimal" placeholder="0"></label>
