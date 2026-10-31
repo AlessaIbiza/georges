@@ -761,6 +761,7 @@ const CATS=[
   ["pureeA","Purée d'amande","2 c. à soupe",7,1.2,1,85,0,0],
   ["tahini","Tahini (crème de sésame)","1 c. à soupe",2.6,1.3,0.7,60,0,0]]},
  {t:"Protéines végétales",items:[
+  ["oeuf","Œuf dur (de ma poule)","1 œuf",6.3,0.9,0.6,28,0,0.04,70],
   ["tofu","Tofu ferme au calcium","100 g",14,2.7,1.5,350,0,0.3],
   ["tempeh","Tempeh","100 g",19,2.7,1.1,110,0,0],
   ["tvp","Soja texturé","50 g sec (réhydraté)",25,4.5,1.2,120,0,0],
@@ -876,8 +877,8 @@ function persoPlan(){
   const bmr=10*pp.k+6.25*pp.t-5*pp.a-161;            // Mifflin-St Jeor, femme
   const tdee=bmr*(1.375+0.025*pp.s);                  // marche quotidienne + séances de muscu
   const lose=pp.k-pp.g>0.3;
-  const goal=lose?Math.max(1300,Math.round(tdee*0.8/10)*10):Math.round(tdee/10)*10;
-  return {tdee:Math.round(tdee),goal,lose,prot:Math.round(pp.k*1.8)};
+  const goal=lose?Math.max(1400,Math.round((tdee-300)/10)*10):Math.round(tdee/10)*10;   // déficit doux d'environ 300 kcal
+  return {tdee:Math.round(tdee),goal,lose,prot:Math.round(pp.k*1.6)};               // 1,6 g de protéines par kilo
 }
 [["pT","t"],["pA","a"],["pK","k"],["pG","g"],["pS","s"]].forEach(([id,k])=>{const el=document.getElementById(id);el.value=pp[k];
   el.addEventListener(el.tagName==="SELECT"?"change":"input",()=>{const v=parseFloat(String(el.value).replace(",","."));if(v>0){pp[k]=v;store("perso",pp);render();}});});
@@ -889,9 +890,9 @@ function renderPerso(T){
   document.getElementById("kLeft").textContent=k<=P.goal?`Encore ${P.goal-k} kcal`:`${k-P.goal} kcal au-dessus`;
   document.getElementById("kGoal").textContent=`Objectif : ${P.goal} kcal par jour${P.lose?" pour perdre du gras":""} · ${P.prot} g de protéines`;
   document.getElementById("kScore").textContent=P.lose?`déficit d'environ ${P.tdee-P.goal} kcal`:"";
-  const weeks=P.lose?Math.ceil((pp.k-pp.g)/0.35):0,end=new Date();end.setDate(end.getDate()+weeks*7);
+  const weeks=P.lose?Math.ceil((pp.k-pp.g)/0.3):0,end=new Date();end.setDate(end.getDate()+weeks*7);
   document.getElementById("kNote").textContent=P.lose
-    ?`Ton corps dépense environ ${P.tdee} kcal par jour. Avec ${P.goal} kcal et tes protéines atteintes, tu perds environ 0,3 à 0,4 kg de gras par semaine en gardant ton muscle : ${fmt(pp.g)} kg vers ${end.toLocaleDateString("fr-FR",{day:"numeric",month:"long"})}. Un jour au-dessus ne change rien : c'est la semaine qui compte. Mets à jour ton poids une fois par semaine, le matin à jeun.`
+    ?`Ton corps dépense environ ${P.tdee} kcal par jour. Avec ${P.goal} kcal et tes protéines atteintes, tu perds environ 0,25 à 0,35 kg de gras par semaine en gardant ton muscle : ${fmt(pp.g)} kg vers ${end.toLocaleDateString("fr-FR",{day:"numeric",month:"long"})}. Un jour au-dessus ne change rien : c'est la semaine qui compte. Mets à jour ton poids une fois par semaine, le matin à jeun.`
     :`Tu es à ton objectif : ${P.goal} kcal par jour pour rester stable.`;
 }
 
