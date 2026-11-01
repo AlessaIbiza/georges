@@ -29,7 +29,8 @@ rep('<style>.gate{display:none!important}[hidden]{display:none!important}</style
     '<style>.gate{display:none!important}[hidden]{display:none!important}'
     '.bnav,.apphead .atag,.apphead .asig{display:none!important}'
     '.nut .kc{font-weight:600}'
-    'section[aria-label="Résumé du jour"] .settings{display:none!important}</style>')
+    'section[aria-label="Résumé du jour"] .settings{display:none!important}'
+    '#tab-e,#pane-e{display:none!important}</style>')
 
 # ---------- Carte « Mes calories du jour » ----------
 rep('''  <div id="pane-s" class="pane" role="tabpanel" aria-labelledby="tab-s">
@@ -119,6 +120,32 @@ rep('function recTotals(r){const M=FOODMAP(),t={p:0,fe:0,ca:0,c:0};\n  r.ing.for
 rep('<div class="nut">${r.kc&&!window.PERSO_MODE?`<span class="kc">${r.kc} kcal</span>`:""}<span class="p">${fmt(t.p)} g protéines</span><span class="f">fer ${fmt(t.fe)} mg</span>',
     '<div class="nut"><span class="kc">${Math.round(t.k)} kcal</span><span class="p">${fmt(t.p)} g protéines</span><span class="f">fer ${fmt(t.fe)} mg</span>')
 rep('<span class="meta">${r.time} · ${fmt(t.p)} g de protéines</span>', '<span class="meta">${r.time} · ${fmt(t.p)} g de protéines · ${Math.round(t.k)} kcal</span>')
+
+# ---------- Mes recettes à moi : seulement mon petit-déj, mes plats et mes soupes ----------
+MES_PLATS = ''']},
+ midi:{t:"Plats",note:"Mes plats du midi ou du soir, riches en protéines.",list:[
+  {n:"Spaghetti bolognaise au soja texturé",time:"20 min",ing:[["patesB",1,"60 g de spaghetti secs (≈ 150 g cuits)"],["tvp",0.6,"30 g de soja texturé"],["tomate",2,"200 g de coulis ou de tomates concassées"],["olive",0.33,"1 c. à café d'huile d'olive"],[null,0,"Oignon, ail, herbes de Provence, sel, poivre"]],
+   steps:["Réhydrate le soja texturé 10 min dans de l'eau chaude ou un bouillon, puis égoutte-le.","Fais revenir l'oignon et l'ail dans l'huile d'olive, ajoute le soja et laisse-le dorer 2 min.","Verse la tomate et les herbes, laisse mijoter 10 min pendant que les spaghetti cuisent.","Mélange et sers bien chaud."]},
+  {n:"Curry coco, quinoa et soja texturé",time:"20 min",ing:[["quinoa",1,"150 g de quinoa cuit (≈ 50 g sec)"],["tvp",0.6,"30 g de soja texturé"],["coco",1,"10 cl de lait de coco"],[null,0,"1 c. à café de curry, oignon, sel"]],
+   steps:["Fais cuire le quinoa.","Réhydrate le soja texturé 10 min dans de l'eau chaude, puis égoutte-le.","Fais revenir l'oignon avec le curry, ajoute le soja puis le lait de coco, laisse mijoter 5 min.","Sers sur le quinoa."]}]},
+ soir:{t:"Soupes",note:"Mes soupes du soir, douces et légères.",list:[
+  {n:"Ma soupe verte",time:"25 min",ing:[["pdt",1,"2 pommes de terre (≈ 200 g)"],["courgette",2,"2 courgettes (≈ 300 g)"],[null,0,"1 oignon, bouillon de légumes, sel, poivre"]],
+   steps:["Coupe les pommes de terre et les courgettes en morceaux.","Fais-les cuire 20 min dans le bouillon avec l'oignon.","Mixe jusqu'à ce que ce soit bien lisse."]},
+  {n:"Ma soupe orange",time:"25 min",ing:[["pdt",1,"2 pommes de terre (≈ 200 g)"],["carotte",3,"3 carottes (≈ 300 g)"],[null,0,"1 oignon, bouillon de légumes, sel, poivre"]],
+   steps:["Coupe les pommes de terre et les carottes en morceaux.","Fais-les cuire 20 min dans le bouillon avec l'oignon.","Mixe jusqu'à ce que ce soit bien lisse."]}]}
+};
+'''
+OLD_ORDER = 'const ORDER=["matin","brunch","midi","gouter","soir"];'
+i0 = h.index('const REC={'); i1 = h.index(OLD_ORDER)
+steph = h[h.index('  {n:"Le petit-déj veggie protéiné de Steph"'):h.index('  {n:"Bol chia-soja aux fruits rouges"')].rstrip().rstrip(',')
+h = h[:i0] + 'const REC={\n matin:{t:"Petit-déj",note:"Mon petit-déj protéiné, prêt en 5 minutes.",list:[\n' + steph + MES_PLATS + 'const ORDER=["matin","midi","soir"];' + h[i1+len(OLD_ORDER):]
+rep('let meal=(()=>{const h=new Date().getHours();return h<9?"matin":h<12?"brunch":h<15?"midi":h<18?"gouter":"soir"})();',
+    'let meal=(()=>{const h=new Date().getHours();return h<11?"matin":h<17?"midi":"soir"})();')
+rep('const MENU_KEYS=[["matin","Petit-déj"],["midi","Midi"],["gouter","Goûter"],["soir","Dîner"]];',
+    'const MENU_KEYS=[["matin","Petit-déj"],["midi","Plat"],["soir","Soupe du soir"]];')
+rep('''  ["olive","Huile d'olive","1 c. à soupe",0,0.1,0,0,0,0.1],''',
+    '''  ["olive","Huile d'olive","1 c. à soupe",0,0.1,0,0,0,0.1],
+  ["coco","Lait de coco","10 cl",2,1.6,0.6,16,1,0,197],''')
 
 # ---------- Ouverture directe sur l'Assiette, sans message de Georges ----------
 rep('if(true){gate.hidden=true;if(load("georges_vu","")!==today)showGeorges();}', 'if(true){gate.hidden=true;}')

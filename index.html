@@ -1002,7 +1002,7 @@ function renderRecipes(){
   document.getElementById("meals").innerHTML=ORDER.map(k=>`<button type="button" data-meal="${k}" aria-pressed="${k===meal}">${REC[k].t}</button>`).join("");
   const m=REC[meal];document.getElementById("mnote").textContent=m.note;
   const L=m.list,star=L.find(r=>r.star),O=star?L.filter(r=>r!==star):L,n=star?2:3,start=(dayNum+shift)%O.length,
-    pick=(star?[star]:[]).concat([...Array(n).keys()].map(i=>O[(start+i)%O.length]));
+    pick=(star?[star]:[]).concat([...Array(Math.min(n,O.length)).keys()].map(i=>O[(start+i)%O.length]));
   document.getElementById("recs").innerHTML=pick.map(r=>{const t=recTotals(r),ri=L.indexOf(r);
     return `<article class="card rec${r.star?" star":""}">${r.photo?`<div class="rphoto"><img src="${r.photo}" alt="${r.n}" loading="lazy"><div><span class="steph">La recette de Steph 💚</span><h3>${r.n}</h3><span class="time">${r.time}</span></div></div>`:`<div class="rhead"><h3>${r.n}</h3><span class="time">${r.time}</span></div>`}
       <div class="nut">${r.kc&&!window.PERSO_MODE?`<span class="kc">${r.kc} kcal</span>`:""}<span class="p">${fmt(t.p)} g protéines</span><span class="f">fer ${fmt(t.fe)} mg</span><span class="k">calcium ${fmt(t.ca)} mg</span><span class="c">vit C ${fmt(t.c)} mg</span></div>

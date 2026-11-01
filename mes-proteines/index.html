@@ -11,7 +11,7 @@
 <link rel="icon" href="plante-192.png?v=3">
 <link rel="manifest" href="manifest.json">
 <meta http-equiv="Cache-Control" content="no-cache">
-<style>.gate{display:none!important}[hidden]{display:none!important}.bnav,.apphead .atag,.apphead .asig{display:none!important}.nut .kc{font-weight:600}section[aria-label="Résumé du jour"] .settings{display:none!important}</style>
+<style>.gate{display:none!important}[hidden]{display:none!important}.bnav,.apphead .atag,.apphead .asig{display:none!important}.nut .kc{font-weight:600}section[aria-label="Résumé du jour"] .settings{display:none!important}#tab-e,#pane-e{display:none!important}</style>
 <script>(function(){var B="1793454465";function chk(){try{fetch("../version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.json()}).then(function(j){if(j&&j.v&&j.v!==B){var k="gv-reload";try{if(sessionStorage.getItem(k)===j.v)return;sessionStorage.setItem(k,j.v)}catch(e){}location.replace(location.pathname+"?v="+j.v)}}).catch(function(){})}catch(e){}}chk();document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible")chk()});})();</script>
 <title>Mon assiette</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700&family=Figtree:wght@400;500;600&display=swap">
@@ -796,6 +796,7 @@ const CATS=[
   ["noix","Noix","1 poignée, 30 g",4.6,0.9,0.9,29,0,2.7],
   ["bresil","Noix du Brésil (sélénium)","2 noix",1.4,0.2,0.4,16,0,0],
   ["olive","Huile d'olive","1 c. à soupe",0,0.1,0,0,0,0.1],
+  ["coco","Lait de coco","10 cl",2,1.6,0.6,16,1,0,197],
   ["colza","Huile de colza","1 c. à soupe",0,0,0,0,0,1.3]]},
  {t:"Céréales et féculents",items:[
   ["quinoa","Quinoa cuit","150 g",6.6,2.2,1.6,25,0,0.1],
@@ -1001,58 +1002,24 @@ build();
 
 // ---------- Recettes ----------
 const REC={
- matin:{t:"Petit-déj",note:"Pour bien démarrer, avec des protéines dès le matin.",list:[
+ matin:{t:"Petit-déj",note:"Mon petit-déj protéiné, prêt en 5 minutes.",list:[
   {n:"Le petit-déj veggie protéiné de Steph",time:"5 min + 20 min de repos",star:1,photo:"/img/recettes/bol-steph.jpg",kc:"≈ 600",
    ing:[["chia",1,"2 grosses c. à soupe de graines de chia (≈ 20 g)"],["yaS",1.2,"⅓ de pot de yaourt Alpro soja, nature ou aromatisé (≈ 150 g)"],["tvp",0.6,"3 grosses c. à soupe de soja texturé fin (≈ 30 g)"],["kiwi",1,"1 kiwi"],["framb",0.8,"1 belle poignée de framboises (≈ 80 g)"],["fraise",0.6,"3 belles fraises"],["chanvre",0.6,"1 c. à soupe bombée de graines de chanvre"],["courge",0.33,"1 c. à soupe de graines de courge"],["cacah",1,"1 c. à soupe de beurre de cacahuète"],["citron",0.5,"Le jus d'½ citron frais, ou d'½ orange pressée"],[null,0,"En option : quelques copeaux de chocolat noir"]],
-   steps:["Laisse gonfler les graines de chia 20 min dans un fond d'eau. Tu peux le faire la veille au soir pour être tranquille.","Dans le yaourt, mélange le soja texturé et laisse-le gonfler, lui aussi.","Ajoute le chia, le kiwi coupé, les framboises et les fraises, puis arrose du jus d'½ citron (ou d'½ orange pressée) et mélange : sa vitamine C aide ton corps à bien absorber le fer.","Parsème de graines de chanvre et de courge, puis ajoute le beurre de cacahuète pour le goût. Et si le cœur t'en dit, quelques copeaux de chocolat. À toi de choisir !"]},
-  {n:"Bol chia-soja aux fruits rouges",time:"5 min",ing:[["yaS",1,"1 yaourt de soja enrichi"],["chia",1,"2 c. à soupe de graines de chia"],["chanvre",1,"2 c. à soupe de graines de chanvre"],["myrtille",1,"100 g de fruits rouges"]],
-   steps:["La veille, mélange le yaourt et le chia, puis laisse au frais.","Le matin, ajoute les fruits rouges et le chanvre."]},
-  {n:"Porridge cacahuète-banane",time:"10 min",ing:[["avoine",1,"40 g de flocons d'avoine"],["laitS",1,"250 ml de lait de soja enrichi"],["cacah",2,"2 c. à soupe de beurre de cacahuète"],["banane",1,"1 banane"],[null,0,"1 pincée de cannelle"]],
-   steps:["Fais cuire l'avoine dans le lait de soja 5 min à feu doux.","Ajoute la banane en rondelles, le beurre de cacahuète et la cannelle."]},
-  {n:"Tofu brouillé, avocat et tomate",time:"10 min",ing:[["tofu",1,"100 g de tofu ferme"],["avocat",1,"½ avocat"],["tomate",1,"1 tomate"],["sesame",1,"1 c. à soupe de sésame"],[null,0,"Curcuma, sel noir kala namak (goût d'œuf), poivre"]],
-   steps:["Émiette le tofu à la fourchette et fais-le dorer 5 min avec le curcuma.","Sale au kala namak, sers avec l'avocat écrasé et la tomate, parsème de sésame."]},
-  {n:"Smoothie fraise-banane protéiné",time:"5 min",ing:[["poudre",1,"1 dose de protéine de pois"],["laitS",1,"250 ml de lait de soja enrichi"],["banane",1,"1 banane"],["fraise",1,"100 g de fraises"],["lin",1,"1 c. à soupe de lin moulu"]],
-   steps:["Mixe tout avec quelques glaçons."]}]},
- brunch:{t:"Brunch",note:"Des assiettes riches en fer, avec toujours au moins 75 mg de vitamine C pour bien l'absorber. Évite le café et le thé dans l'heure qui suit.",list:[
-  {n:"Tofu brouillé épinards-poivron, quinoa et kiwi",time:"15 min",ing:[["tofu",1,"100 g de tofu ferme"],["epinard",1,"150 g d'épinards"],["poivron",1,"½ poivron rouge"],["quinoa",1,"150 g de quinoa cuit"],["kiwi",1,"1 kiwi en dessert"],[null,0,"Curcuma, huile d'olive"]],
-   steps:["Fais revenir le poivron émincé 3 min, puis ajoute les épinards jusqu'à ce qu'ils fondent.","Ajoute le tofu émietté et le curcuma, laisse dorer 5 min.","Sers avec le quinoa, et le kiwi en dessert."]},
-  {n:"Bol tiède lentilles, patate douce et orange",time:"25 min",ing:[["lent",1,"200 g de lentilles cuites"],["patateD",1,"200 g de patate douce"],["courge",1,"30 g de graines de courge"],["persil",1,"1 poignée de persil"],["orange",1,"1 orange en quartiers"],[null,0,"Huile d'olive, cumin"]],
-   steps:["Rôtis la patate douce en cubes 20 min à 200 °C avec le cumin.","Mélange avec les lentilles tièdes, le persil et l'orange.","Parsème de graines de courge grillées."]},
-  {n:"Houmous, tempeh doré et crudités",time:"15 min",ing:[["poisC",1,"150 g de pois chiches cuits"],["tahini",1,"1 c. à soupe de tahini"],["citron",1,"Le jus d'1 citron"],["tempeh",1,"100 g de tempeh"],["poivron",1,"½ poivron rouge en bâtonnets"],["carotte",1,"1 carotte en bâtonnets"],[null,0,"1 gousse d'ail, cumin, huile d'olive"]],
-   steps:["Mixe les pois chiches, le tahini, le citron, l'ail et le cumin avec un peu d'eau.","Dore le tempeh en tranches 4 min de chaque côté.","Sers avec les bâtonnets de crudités."]},
-  {n:"Pancakes avoine-banane, fraises et kiwi",time:"15 min",ing:[["avoine",1,"40 g de flocons d'avoine"],["laitS",1,"250 ml de lait de soja enrichi"],["banane",1,"1 banane écrasée"],["lin",1,"1 c. à soupe de lin moulu"],["pureeA",1,"2 c. à soupe de purée d'amande"],["fraise",1,"100 g de fraises"],["kiwi",1,"1 kiwi"],[null,0,"½ c. à café de levure chimique"]],
-   steps:["Mélange le lin avec 3 c. à soupe d'eau et laisse gonfler 5 min.","Mixe avec l'avoine, la banane, la levure et un peu de lait, puis cuis de petits pancakes.","Garnis de purée d'amande, de fraises et de kiwi. Bois le reste du lait à côté."]}]},
- midi:{t:"Midi",note:"Le repas le plus protéiné de la journée.",list:[
-  {n:"Chili au soja texturé",time:"25 min",ing:[["tvp",1,"50 g de soja texturé"],["haric",1,"150 g de haricots rouges"],["tomate",2,"2 tomates ou 200 g de coulis"],["poivron",1,"½ poivron rouge"],["rizC",1,"150 g de riz complet cuit"],[null,0,"Oignon, ail, cumin, paprika"]],
-   steps:["Réhydrate le soja 10 min dans un bouillon chaud.","Fais revenir l'oignon, l'ail et le poivron, puis ajoute le soja, les haricots, les tomates et les épices.","Laisse mijoter 15 min et sers avec le riz."]},
-  {n:"Salade de quinoa complète",time:"15 min",ing:[["quinoa",1,"150 g de quinoa cuit"],["edam",1,"100 g d'edamame"],["avocat",1,"½ avocat"],["radis",1,"1 poignée de radis"],["carotte",1,"100 g de carottes râpées"],["grenade",1,"½ grenade en graines"],["courge",1,"30 g de graines de courge"],[null,0,"Jus de citron, huile de colza"]],
-   steps:["Mélange tout dans un grand bol.","Assaisonne au citron et à l'huile de colza, riche en oméga-3."]},
-  {n:"Pâtes de lentilles, pesto persil-amande",time:"15 min",ing:[["pateL",1,"80 g de pâtes de lentilles"],["brocoli",1,"100 g de brocoli"],["amande",1,"30 g d'amandes"],["persil",1,"1 poignée de persil"],[null,0,"Ail, jus de citron, huile d'olive"]],
-   steps:["Cuis les pâtes et le brocoli ensemble, dans la même eau.","Mixe le persil, les amandes, l'ail, le citron et l'huile pour le pesto.","Mélange le tout."]},
-  {n:"Curry de lentilles corail et patate douce",time:"30 min",ing:[["lent",1,"200 g de lentilles corail cuites"],["patateD",1,"200 g de patate douce"],["epinard",1,"150 g d'épinards"],["rizC",1,"150 g de riz complet cuit"],[null,0,"10 cl de lait de coco, curry, gingembre"]],
-   steps:["Fais cuire la patate douce en cubes 10 min dans un peu d'eau, avec le curry et le gingembre.","Ajoute les lentilles et le lait de coco, laisse mijoter 10 min.","Ajoute les épinards à la fin et sers avec le riz."]},
-  {n:"Bowl tempeh, sarrasin et betterave",time:"15 min",ing:[["tempeh",1,"100 g de tempeh"],["sarrasin",1,"150 g de sarrasin cuit"],["kale",1,"1 poignée de chou kale"],["betterave",1,"100 g de betterave"],["sesame",1,"1 c. à soupe de sésame"],[null,0,"Sauce : tahini, citron, eau"]],
-   steps:["Dore le tempeh en lamelles à la poêle.","Masse le kale avec un peu de citron pour l'attendrir.","Assemble le tout et nappe de sauce au tahini."]}]},
- gouter:{t:"Goûter",note:"Vers 16-17 h, pour arriver au dîner sans faim.",list:[
-  {n:"Yaourt soja, graines de courge et fruits rouges",time:"2 min",ing:[["yaS",1,"1 yaourt de soja enrichi"],["courge",1,"30 g de graines de courge"],["myrtille",1,"100 g de fruits rouges"]],steps:["Mélange et déguste."]},
-  {n:"Pomme, beurre de cacahuète et noix du Brésil",time:"2 min",ing:[["pomme",1,"1 pomme en quartiers"],["cacah",2,"2 c. à soupe de beurre de cacahuète"],["bresil",1,"2 noix du Brésil"]],steps:["Trempe les quartiers de pomme dans le beurre de cacahuète, croque les noix du Brésil à côté : ton sélénium du jour est fait."]},
-  {n:"Edamame tièdes et une orange",time:"5 min",ing:[["edam",1,"100 g d'edamame"],["orange",1,"1 orange"],[null,0,"1 pincée de fleur de sel"]],steps:["Réchauffe les edamame 3 min à l'eau bouillante et sale légèrement.","Termine par l'orange."]},
-  {n:"Figues, noix et chocolat noir",time:"2 min",ing:[["figue",1,"3 figues sèches"],["noix",1,"1 poignée de noix"],["choco",1,"2 carrés de chocolat noir"]],steps:["Un goûter riche en calcium, en fer et en oméga-3, à grignoter."]}]},
- soir:{t:"Dîner",note:"Léger et tôt, idéalement avant 19 h, pour laisser le corps au repos.",list:[
-  {n:"Soupe de lentilles corail et carotte",time:"25 min",ing:[["soupeL",1,"1 bol de lentilles corail"],["carotte",1,"1 carotte"],["persil",1,"1 poignée de persil"],["lin",1,"1 c. à soupe de lin moulu"],[null,0,"Oignon, cumin, gingembre"]],
-   steps:["Fais cuire lentilles, carotte et oignon 20 min dans l'eau avec les épices.","Mixe, puis parsème de persil et de lin."]},
-  {n:"Tofu poêlé aux champignons et roquette",time:"15 min",ing:[["tofu",1,"100 g de tofu ferme"],["champi",1,"100 g de champignons"],["salade",1,"1 poignée de roquette"],["tomate",1,"1 tomate"],[null,0,"Ail, persil, huile d'olive"]],
-   steps:["Dore le tofu en cubes avec l'ail.","Ajoute les champignons 5 min.","Sers sur la roquette avec la tomate."]},
-  {n:"Velouté courgette-petits pois et graines de courge",time:"20 min",ing:[["courgette",1,"1 courgette"],["petitsP",1,"100 g de petits pois"],["courge",1,"30 g de graines de courge"],[null,0,"Menthe fraîche, bouillon de légumes"]],
-   steps:["Fais cuire la courgette et les petits pois 12 min dans le bouillon, puis mixe avec la menthe.","Parsème de graines de courge grillées."]},
-  {n:"Wok de pak choï, tofu et sésame",time:"15 min",ing:[["tofu",1,"100 g de tofu ferme"],["pakchoi",1,"100 g de pak choï"],["brocoli",1,"100 g de brocoli"],["sesame",1,"1 c. à soupe de sésame"],[null,0,"Gingembre, ail, huile de sésame"]],
-   steps:["Fais sauter le tofu en cubes à feu vif jusqu'à ce qu'il dore.","Ajoute le brocoli 4 min, puis le pak choï 2 min avec l'ail et le gingembre.","Parsème de sésame."]},
-  {n:"Poêlée de légumes verts et edamame",time:"15 min",ing:[["edam",1,"100 g d'edamame"],["brocoli",1,"100 g de brocoli"],["chouF",1,"100 g de chou-fleur"],["sesame",1,"1 c. à soupe de sésame"],[null,0,"Gingembre, ail, huile de sésame"]],
-   steps:["Fais sauter le brocoli et le chou-fleur 6 min à feu vif avec l'ail et le gingembre.","Ajoute les edamame 2 min, puis parsème de sésame."]}]}
+   steps:["Laisse gonfler les graines de chia 20 min dans un fond d'eau. Tu peux le faire la veille au soir pour être tranquille.","Dans le yaourt, mélange le soja texturé et laisse-le gonfler, lui aussi.","Ajoute le chia, le kiwi coupé, les framboises et les fraises, puis arrose du jus d'½ citron (ou d'½ orange pressée) et mélange : sa vitamine C aide ton corps à bien absorber le fer.","Parsème de graines de chanvre et de courge, puis ajoute le beurre de cacahuète pour le goût. Et si le cœur t'en dit, quelques copeaux de chocolat. À toi de choisir !"]}]},
+ midi:{t:"Plats",note:"Mes plats du midi ou du soir, riches en protéines.",list:[
+  {n:"Spaghetti bolognaise au soja texturé",time:"20 min",ing:[["patesB",1,"60 g de spaghetti secs (≈ 150 g cuits)"],["tvp",0.6,"30 g de soja texturé"],["tomate",2,"200 g de coulis ou de tomates concassées"],["olive",0.33,"1 c. à café d'huile d'olive"],[null,0,"Oignon, ail, herbes de Provence, sel, poivre"]],
+   steps:["Réhydrate le soja texturé 10 min dans de l'eau chaude ou un bouillon, puis égoutte-le.","Fais revenir l'oignon et l'ail dans l'huile d'olive, ajoute le soja et laisse-le dorer 2 min.","Verse la tomate et les herbes, laisse mijoter 10 min pendant que les spaghetti cuisent.","Mélange et sers bien chaud."]},
+  {n:"Curry coco, quinoa et soja texturé",time:"20 min",ing:[["quinoa",1,"150 g de quinoa cuit (≈ 50 g sec)"],["tvp",0.6,"30 g de soja texturé"],["coco",1,"10 cl de lait de coco"],[null,0,"1 c. à café de curry, oignon, sel"]],
+   steps:["Fais cuire le quinoa.","Réhydrate le soja texturé 10 min dans de l'eau chaude, puis égoutte-le.","Fais revenir l'oignon avec le curry, ajoute le soja puis le lait de coco, laisse mijoter 5 min.","Sers sur le quinoa."]}]},
+ soir:{t:"Soupes",note:"Mes soupes du soir, douces et légères.",list:[
+  {n:"Ma soupe verte",time:"25 min",ing:[["pdt",1,"2 pommes de terre (≈ 200 g)"],["courgette",2,"2 courgettes (≈ 300 g)"],[null,0,"1 oignon, bouillon de légumes, sel, poivre"]],
+   steps:["Coupe les pommes de terre et les courgettes en morceaux.","Fais-les cuire 20 min dans le bouillon avec l'oignon.","Mixe jusqu'à ce que ce soit bien lisse."]},
+  {n:"Ma soupe orange",time:"25 min",ing:[["pdt",1,"2 pommes de terre (≈ 200 g)"],["carotte",3,"3 carottes (≈ 300 g)"],[null,0,"1 oignon, bouillon de légumes, sel, poivre"]],
+   steps:["Coupe les pommes de terre et les carottes en morceaux.","Fais-les cuire 20 min dans le bouillon avec l'oignon.","Mixe jusqu'à ce que ce soit bien lisse."]}]}
 };
-const ORDER=["matin","brunch","midi","gouter","soir"];
+const ORDER=["matin","midi","soir"];
 const dayNum=Math.floor(new Date(today+"T12:00:00").getTime()/864e5);
-let meal=(()=>{const h=new Date().getHours();return h<9?"matin":h<12?"brunch":h<15?"midi":h<18?"gouter":"soir"})();
+let meal=(()=>{const h=new Date().getHours();return h<11?"matin":h<17?"midi":"soir"})();
 let shift=0;
 function recTotals(r){const M=FOODMAP(),t={p:0,fe:0,ca:0,c:0,k:0};
   r.ing.forEach(([id,q])=>{const f=id&&M[id];if(f){t.k+=q*kcalOf(f);t.p+=q*f[3];t.fe+=q*f[4];t.ca+=q*f[6];t.c+=q*f[7];}});return t;}
@@ -1061,7 +1028,7 @@ function renderRecipes(){
   document.getElementById("meals").innerHTML=ORDER.map(k=>`<button type="button" data-meal="${k}" aria-pressed="${k===meal}">${REC[k].t}</button>`).join("");
   const m=REC[meal];document.getElementById("mnote").textContent=m.note;
   const L=m.list,star=L.find(r=>r.star),O=star?L.filter(r=>r!==star):L,n=star?2:3,start=(dayNum+shift)%O.length,
-    pick=(star?[star]:[]).concat([...Array(n).keys()].map(i=>O[(start+i)%O.length]));
+    pick=(star?[star]:[]).concat([...Array(Math.min(n,O.length)).keys()].map(i=>O[(start+i)%O.length]));
   document.getElementById("recs").innerHTML=pick.map(r=>{const t=recTotals(r),ri=L.indexOf(r);
     return `<article class="card rec${r.star?" star":""}">${r.photo?`<div class="rphoto"><img src="${r.photo}" alt="${r.n}" loading="lazy"><div><span class="steph">La recette de Steph 💚</span><h3>${r.n}</h3><span class="time">${r.time}</span></div></div>`:`<div class="rhead"><h3>${r.n}</h3><span class="time">${r.time}</span></div>`}
       <div class="nut"><span class="kc">${Math.round(t.k)} kcal</span><span class="p">${fmt(t.p)} g protéines</span><span class="f">fer ${fmt(t.fe)} mg</span><span class="k">calcium ${fmt(t.ca)} mg</span><span class="c">vit C ${fmt(t.c)} mg</span></div>
@@ -1335,7 +1302,7 @@ let voeuT;voeu.addEventListener("input",()=>{vh[today].voeu=voeu.value;saveV();c
 let msgT;msg.addEventListener("input",()=>{vh[today].msg=msg.value;saveV();clearTimeout(msgT);
   msgT=setTimeout(()=>{document.getElementById("msgSaved").textContent="Enregistré ✓";renderDay();},500);});
 // ---------- Écran Aujourd'hui : menus, alimentation, progression ----------
-const MENU_KEYS=[["matin","Petit-déj"],["midi","Midi"],["gouter","Goûter"],["soir","Dîner"]];
+const MENU_KEYS=[["matin","Petit-déj"],["midi","Plat"],["soir","Soupe du soir"]];
 if(!vh[today].meals)vh[today].meals={};
 if(!vh[today].sw)vh[today].sw={};
 const menuPick=k=>{const L=REC[k].list,sw=vh[today].sw[k]||0,s=L.find(r=>r.star);return s&&!sw?s:L[(dayNum+sw)%L.length];};
