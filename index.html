@@ -99,7 +99,9 @@ h1{font:700 1.7rem/1.1 var(--display);margin:0;text-wrap:balance}
 .dot.on{background:var(--leaf);border-color:var(--leaf)}
 .day.today{color:var(--fg);font-weight:600}
 .ate{display:flex;flex-wrap:wrap;gap:6px;padding:12px 14px}
-.chip{background:var(--leaf-soft);border-radius:14px;padding:3px 10px;font-size:.85rem}
+.chip{background:var(--leaf-soft);border-radius:14px;padding:3px 4px 3px 10px;font-size:.85rem;display:inline-flex;align-items:center;gap:4px}
+.chipx{border:0;background:rgba(0,0,0,.08);color:inherit;width:22px;height:22px;border-radius:50%;font:700 .9rem/1 var(--body);cursor:pointer;padding:0}
+.uneat{align-self:center;border:0;background:none;color:var(--muted);font:600 .85rem var(--body);text-decoration:underline;cursor:pointer;padding:2px 8px}
 .search{position:sticky;top:env(safe-area-inset-top,0px);z-index:2;background:var(--bg);padding-block:8px}
 .search input{width:100%;padding:11px 14px;border:1px solid var(--line);border-radius:12px;background:var(--card);color:var(--fg);font:500 1rem var(--body)}
 #cats{display:flex;flex-direction:column;gap:14px}
@@ -899,7 +901,7 @@ function render(){
     T.p+=k*f[3];T.fe+=k*f[4];T.zn+=k*f[5];T.ca+=k*f[6];T.c+=k*f[7];T.o3+=k*f[8];
     const ne=document.getElementById("n-"+f[0]);if(ne)ne.textContent=fmt(k);
     const re=document.getElementById("r-"+f[0]);if(re)re.classList.toggle("on",k>0);
-    if(k)ate.push(`<span class="chip">${k!==1?fmt(k)+" × ":""}${esc(f[1])}</span>`);});
+    if(k)ate.push(`<span class="chip">${k!==1?fmt(k)+" × ":""}${esc(f[1])}<button type="button" class="chipx" data-rm="${f[0]}" aria-label="Retirer ${esc(f[1])}">×</button></span>`);});
   const [fl,ft]=ACT[prof.act],lo=Math.round(prof.kg*fl),target=Math.round(prof.kg*ft);
   document.getElementById("arc").setAttribute("stroke-dashoffset",(263.9*(1-Math.min(1,T.p/target))).toFixed(1));
   document.getElementById("tot").textContent=Math.round(T.p)+" g";
@@ -995,6 +997,7 @@ let meal=(()=>{const h=new Date().getHours();return h<9?"matin":h<12?"brunch":h<
 let shift=0;
 function recTotals(r){const M=FOODMAP(),t={p:0,fe:0,ca:0,c:0};
   r.ing.forEach(([id,q])=>{const f=id&&M[id];if(f){t.p+=q*f[3];t.fe+=q*f[4];t.ca+=q*f[6];t.c+=q*f[7];}});return t;}
+const canUneat=r=>r.ing.some(([id])=>id)&&r.ing.every(([id,q])=>!id||(st.c[id]||0)>=q-0.001);
 function renderRecipes(){
   document.getElementById("meals").innerHTML=ORDER.map(k=>`<button type="button" data-meal="${k}" aria-pressed="${k===meal}">${REC[k].t}</button>`).join("");
   const m=REC[meal];document.getElementById("mnote").textContent=m.note;
@@ -1006,7 +1009,7 @@ function renderRecipes(){
       ${t.fe>=6&&t.c>=75?`<span class="badge">Fer bien absorbé</span>`:""}
       <h4>Ingrédients</h4><ul>${r.ing.map(i=>`<li>${i[2]}</li>`).join("")}</ul>
       <h4>Préparation</h4><ol>${r.steps.map(s=>`<li>${s}</li>`).join("")}</ol>
-      <button type="button" class="eat" data-eat="${meal}:${ri}">J'ai mangé ça</button></article>`;}).join("");
+      <button type="button" class="eat" data-eat="${meal}:${ri}">J'ai mangé ça</button>${canUneat(r)?`<button type="button" class="uneat" data-uneat="${meal}:${ri}">Retirer une portion de mon suivi</button>`:""}</article>`;}).join("");
   document.getElementById("more").hidden=O.length<=n;
 }
 let toastT;
@@ -1014,9 +1017,13 @@ function toast(msg){const t=document.getElementById("toast");t.textContent=msg;t
 document.getElementById("pane-r").addEventListener("click",e=>{
   const mb=e.target.closest("[data-meal]");if(mb){meal=mb.dataset.meal;shift=0;renderRecipes();return;}
   const eb=e.target.closest("[data-eat]");if(eb){const [k,i]=eb.dataset.eat.split(":");
-    REC[k].list[+i].ing.forEach(([id,q])=>{if(id)st.c[id]=Math.round(((st.c[id]||0)+q)*100)/100;});save();render();toast("Ajouté à ton suivi ✓");}
+    REC[k].list[+i].ing.forEach(([id,q])=>{if(id)st.c[id]=Math.round(((st.c[id]||0)+q)*100)/100;});save();render();renderRecipes();toast("Ajouté à ton suivi ✓");return;}
+  const ub=e.target.closest("[data-uneat]");if(ub){const [k,i]=ub.dataset.uneat.split(":");
+    REC[k].list[+i].ing.forEach(([id,q])=>{if(id){st.c[id]=Math.max(0,Math.round(((st.c[id]||0)-q)*100)/100);if(!st.c[id])delete st.c[id];}});save();render();renderRecipes();toast("Retiré de ton suivi");}
 });
 document.getElementById("more").addEventListener("click",()=>{shift++;renderRecipes();});
+document.getElementById("ate").addEventListener("click",e=>{const b=e.target.closest("[data-rm]");if(!b)return;const id=b.dataset.rm;
+  delete st.c[id];save();render();renderRecipes();});
 renderRecipes();
 
 // ---------- Les essentiels ----------
