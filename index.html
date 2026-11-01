@@ -131,6 +131,12 @@ form.add button{grid-column:1/-1;padding:10px;border-radius:10px;border:0;backgr
 .time{flex:none;font-size:.8rem;color:var(--muted);border:1px solid var(--line);border-radius:10px;padding:2px 8px}
 .rec ul,.rec ol{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:3px}
 .rec h4{margin:0;font:700 .78rem var(--body);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.rec.star{border:2px solid var(--leaf)}
+.rphoto{display:flex;gap:14px;align-items:center}
+.rphoto img{width:112px;height:112px;object-fit:cover;border-radius:50%;flex:none;box-shadow:0 4px 14px rgba(0,0,0,.12)}
+.rphoto div{display:flex;flex-direction:column;gap:5px;align-items:flex-start}
+.steph{align-self:flex-start;font-size:.78rem;font-weight:700;color:var(--leaf);background:var(--leaf-soft);border-radius:12px;padding:2px 10px}
+.nut .kc{font-weight:600}
 .badge{align-self:flex-start;font-size:.8rem;font-weight:600;color:var(--iron);border:1.5px solid var(--iron);border-radius:12px;padding:2px 10px}
 .eat{align-self:stretch;padding:11px;border-radius:10px;border:0;background:var(--leaf);color:var(--bg);font:600 .95rem var(--body);cursor:pointer}
 .more{align-self:center;background:var(--card);border:1px solid var(--line);color:var(--fg);padding:9px 18px;border-radius:20px;font:600 .9rem var(--body);cursor:pointer}
@@ -867,7 +873,7 @@ document.getElementById("essList").innerHTML=ESS.map(([k,n,d])=>`<label class="e
 let pendingDel=null;
 document.addEventListener("click",e=>{
   const b=e.target.closest("button[data-id]");
-  if(b){const id=b.dataset.id;st.c[id]=Math.max(0,(st.c[id]||0)+ +b.dataset.d);if(!st.c[id])delete st.c[id];save();render();return;}
+  if(b){const id=b.dataset.id;st.c[id]=Math.max(0,Math.round(((st.c[id]||0)+ +b.dataset.d)*100)/100);if(!st.c[id])delete st.c[id];save();render();return;}
   const d=e.target.closest("button[data-del]");
   if(d){const id=d.dataset.del;
     if(pendingDel!==id){pendingDel=id;d.textContent="Toucher encore pour supprimer";return;}
@@ -891,9 +897,9 @@ function render(){
   const G=goals(),T={p:0,fe:0,zn:0,ca:0,c:0,o3:0},ate=[];
   allFoods().forEach(f=>{const k=st.c[f[0]]||0;
     T.p+=k*f[3];T.fe+=k*f[4];T.zn+=k*f[5];T.ca+=k*f[6];T.c+=k*f[7];T.o3+=k*f[8];
-    const ne=document.getElementById("n-"+f[0]);if(ne)ne.textContent=k;
+    const ne=document.getElementById("n-"+f[0]);if(ne)ne.textContent=fmt(k);
     const re=document.getElementById("r-"+f[0]);if(re)re.classList.toggle("on",k>0);
-    if(k)ate.push(`<span class="chip">${k>1?k+" × ":""}${esc(f[1])}</span>`);});
+    if(k)ate.push(`<span class="chip">${k!==1?fmt(k)+" × ":""}${esc(f[1])}</span>`);});
   const [fl,ft]=ACT[prof.act],lo=Math.round(prof.kg*fl),target=Math.round(prof.kg*ft);
   document.getElementById("arc").setAttribute("stroke-dashoffset",(263.9*(1-Math.min(1,T.p/target))).toFixed(1));
   document.getElementById("tot").textContent=Math.round(T.p)+" g";
@@ -935,6 +941,9 @@ build();
 // ---------- Recettes ----------
 const REC={
  matin:{t:"Petit-déj",note:"Pour bien démarrer, avec des protéines dès le matin.",list:[
+  {n:"Le petit-déj veggie protéiné de Steph",time:"5 min + 20 min de repos",star:1,photo:"/img/recettes/bol-steph.jpg",kc:"≈ 600",
+   ing:[["chia",1,"2 grosses c. à soupe de graines de chia (≈ 20 g)"],["yaS",1.2,"⅓ de pot de yaourt Alpro soja, nature ou aromatisé (≈ 150 g)"],["tvp",0.6,"3 grosses c. à soupe de soja texturé fin (≈ 30 g)"],["kiwi",1,"1 kiwi"],["framb",0.8,"1 belle poignée de framboises (≈ 80 g)"],["fraise",0.6,"3 belles fraises"],["chanvre",0.6,"1 c. à soupe bombée de graines de chanvre"],["courge",0.33,"1 c. à soupe de graines de courge"],["cacah",1,"1 c. à soupe de beurre de cacahuète"],["citron",0.5,"Le jus d'½ citron frais, ou d'½ orange pressée"],[null,0,"En option : quelques copeaux de chocolat noir"]],
+   steps:["Laisse gonfler les graines de chia 20 min dans un fond d'eau. Tu peux le faire la veille au soir pour être tranquille.","Dans le yaourt, mélange le soja texturé et laisse-le gonfler, lui aussi.","Ajoute le chia, le kiwi coupé, les framboises et les fraises, puis arrose du jus d'½ citron (ou d'½ orange pressée) et mélange : sa vitamine C aide ton corps à bien absorber le fer.","Parsème de graines de chanvre et de courge, puis ajoute le beurre de cacahuète pour le goût. Et si le cœur t'en dit, quelques copeaux de chocolat. À toi de choisir !"]},
   {n:"Bol chia-soja aux fruits rouges",time:"5 min",ing:[["yaS",1,"1 yaourt de soja enrichi"],["chia",1,"2 c. à soupe de graines de chia"],["chanvre",1,"2 c. à soupe de graines de chanvre"],["myrtille",1,"100 g de fruits rouges"]],
    steps:["La veille, mélange le yaourt et le chia, puis laisse au frais.","Le matin, ajoute les fruits rouges et le chanvre."]},
   {n:"Porridge cacahuète-banane",time:"10 min",ing:[["avoine",1,"40 g de flocons d'avoine"],["laitS",1,"250 ml de lait de soja enrichi"],["cacah",2,"2 c. à soupe de beurre de cacahuète"],["banane",1,"1 banane"],[null,0,"1 pincée de cannelle"]],
@@ -989,22 +998,23 @@ function recTotals(r){const M=FOODMAP(),t={p:0,fe:0,ca:0,c:0};
 function renderRecipes(){
   document.getElementById("meals").innerHTML=ORDER.map(k=>`<button type="button" data-meal="${k}" aria-pressed="${k===meal}">${REC[k].t}</button>`).join("");
   const m=REC[meal];document.getElementById("mnote").textContent=m.note;
-  const L=m.list,start=(dayNum+shift)%L.length,pick=[0,1,2].map(i=>L[(start+i)%L.length]);
+  const L=m.list,star=L.find(r=>r.star),O=star?L.filter(r=>r!==star):L,n=star?2:3,start=(dayNum+shift)%O.length,
+    pick=(star?[star]:[]).concat([...Array(n).keys()].map(i=>O[(start+i)%O.length]));
   document.getElementById("recs").innerHTML=pick.map(r=>{const t=recTotals(r),ri=L.indexOf(r);
-    return `<article class="card rec"><div class="rhead"><h3>${r.n}</h3><span class="time">${r.time}</span></div>
-      <div class="nut"><span class="p">${fmt(t.p)} g protéines</span><span class="f">fer ${fmt(t.fe)} mg</span><span class="k">calcium ${fmt(t.ca)} mg</span><span class="c">vit C ${fmt(t.c)} mg</span></div>
+    return `<article class="card rec${r.star?" star":""}">${r.photo?`<div class="rphoto"><img src="${r.photo}" alt="${r.n}" loading="lazy"><div><span class="steph">La recette de Steph 💚</span><h3>${r.n}</h3><span class="time">${r.time}</span></div></div>`:`<div class="rhead"><h3>${r.n}</h3><span class="time">${r.time}</span></div>`}
+      <div class="nut">${r.kc&&!window.PERSO_MODE?`<span class="kc">${r.kc} kcal</span>`:""}<span class="p">${fmt(t.p)} g protéines</span><span class="f">fer ${fmt(t.fe)} mg</span><span class="k">calcium ${fmt(t.ca)} mg</span><span class="c">vit C ${fmt(t.c)} mg</span></div>
       ${t.fe>=6&&t.c>=75?`<span class="badge">Fer bien absorbé</span>`:""}
       <h4>Ingrédients</h4><ul>${r.ing.map(i=>`<li>${i[2]}</li>`).join("")}</ul>
       <h4>Préparation</h4><ol>${r.steps.map(s=>`<li>${s}</li>`).join("")}</ol>
       <button type="button" class="eat" data-eat="${meal}:${ri}">J'ai mangé ça</button></article>`;}).join("");
-  document.getElementById("more").hidden=L.length<=3;
+  document.getElementById("more").hidden=O.length<=n;
 }
 let toastT;
 function toast(msg){const t=document.getElementById("toast");t.textContent=msg;t.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>t.hidden=true,2200);}
 document.getElementById("pane-r").addEventListener("click",e=>{
   const mb=e.target.closest("[data-meal]");if(mb){meal=mb.dataset.meal;shift=0;renderRecipes();return;}
   const eb=e.target.closest("[data-eat]");if(eb){const [k,i]=eb.dataset.eat.split(":");
-    REC[k].list[+i].ing.forEach(([id,q])=>{if(id)st.c[id]=(st.c[id]||0)+q;});save();render();toast("Ajouté à ton suivi ✓");}
+    REC[k].list[+i].ing.forEach(([id,q])=>{if(id)st.c[id]=Math.round(((st.c[id]||0)+q)*100)/100;});save();render();toast("Ajouté à ton suivi ✓");}
 });
 document.getElementById("more").addEventListener("click",()=>{shift++;renderRecipes();});
 renderRecipes();
@@ -1262,7 +1272,7 @@ let msgT;msg.addEventListener("input",()=>{vh[today].msg=msg.value;saveV();clear
 const MENU_KEYS=[["matin","Petit-déj"],["midi","Midi"],["gouter","Goûter"],["soir","Dîner"]];
 if(!vh[today].meals)vh[today].meals={};
 if(!vh[today].sw)vh[today].sw={};
-const menuPick=k=>{const L=REC[k].list;return L[(dayNum+(vh[today].sw[k]||0))%L.length];};
+const menuPick=k=>{const L=REC[k].list,sw=vh[today].sw[k]||0,s=L.find(r=>r.star);return s&&!sw?s:L[(dayNum+sw)%L.length];};
 function renderExtras(){
   const d=vh[today],h=new Date().getHours();
   document.getElementById("hello").textContent=h<18?"Bonjour ✨":"Bonsoir ✨";
@@ -1292,9 +1302,9 @@ function renderExtras(){
 document.getElementById("menus").addEventListener("click",e=>{
   const d=vh[today];
   const eb=e.target.closest("[data-teat]");
-  if(eb){const k=eb.dataset.teat;menuPick(k).ing.forEach(([id,q])=>{if(id)st.c[id]=(st.c[id]||0)+q;});d.meals[k]=true;saveV();save();render();toast("Ajouté à ton assiette ✓");return;}
+  if(eb){const k=eb.dataset.teat;menuPick(k).ing.forEach(([id,q])=>{if(id)st.c[id]=Math.round(((st.c[id]||0)+q)*100)/100;});d.meals[k]=true;saveV();save();render();toast("Ajouté à ton assiette ✓");return;}
   const ub=e.target.closest("[data-tundo]");
-  if(ub){const k=ub.dataset.tundo;menuPick(k).ing.forEach(([id,q])=>{if(id){st.c[id]=Math.max(0,(st.c[id]||0)-q);if(!st.c[id])delete st.c[id];}});delete d.meals[k];saveV();save();render();return;}
+  if(ub){const k=ub.dataset.tundo;menuPick(k).ing.forEach(([id,q])=>{if(id){st.c[id]=Math.max(0,Math.round(((st.c[id]||0)-q)*100)/100);if(!st.c[id])delete st.c[id];}});delete d.meals[k];saveV();save();render();return;}
   const sb=e.target.closest("[data-swap]");
   if(sb){const k=sb.dataset.swap;d.sw[k]=(d.sw[k]||0)+1;saveV();renderExtras();}
 });

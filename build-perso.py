@@ -116,7 +116,7 @@ rep('const T=window.__T||{p:0,fe:0,ca:0,c:0},G=goals(),target=Math.round(prof.kg
 rep('function nutHTML(f){\n  return [f[3]?', 'function nutHTML(f){\n  return [`<span class="kc">${kcalOf(f)} kcal</span>`,f[3]?')
 rep('function recTotals(r){const M=FOODMAP(),t={p:0,fe:0,ca:0,c:0};\n  r.ing.forEach(([id,q])=>{const f=id&&M[id];if(f){t.p+=q*f[3];',
     'function recTotals(r){const M=FOODMAP(),t={p:0,fe:0,ca:0,c:0,k:0};\n  r.ing.forEach(([id,q])=>{const f=id&&M[id];if(f){t.k+=q*kcalOf(f);t.p+=q*f[3];')
-rep('<div class="nut"><span class="p">${fmt(t.p)} g protéines</span><span class="f">fer ${fmt(t.fe)} mg</span>',
+rep('<div class="nut">${r.kc&&!window.PERSO_MODE?`<span class="kc">${r.kc} kcal</span>`:""}<span class="p">${fmt(t.p)} g protéines</span><span class="f">fer ${fmt(t.fe)} mg</span>',
     '<div class="nut"><span class="kc">${Math.round(t.k)} kcal</span><span class="p">${fmt(t.p)} g protéines</span><span class="f">fer ${fmt(t.fe)} mg</span>')
 rep('<span class="meta">${r.time} · ${fmt(t.p)} g de protéines</span>', '<span class="meta">${r.time} · ${fmt(t.p)} g de protéines · ${Math.round(t.k)} kcal</span>')
 
