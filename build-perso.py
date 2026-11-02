@@ -124,7 +124,7 @@ rep('<span class="meta">${r.time} · ${fmt(t.p)} g de protéines</span>', '<span
 # ---------- Mes recettes à moi : seulement mon petit-déj, mes plats et mes soupes ----------
 MES_PLATS = ''']},
  midi:{t:"Plats",note:"Mes plats du midi ou du soir, riches en protéines.",list:[
-  {n:"Spaghetti bolognaise au soja texturé",time:"20 min",ing:[["patesB",1,"60 g de spaghetti secs (≈ 150 g cuits)"],["tvp",0.6,"30 g de soja texturé"],["tomate",2,"200 g de coulis ou de tomates concassées"],["olive",0.33,"1 c. à café d'huile d'olive"],[null,0,"Oignon, ail, herbes de Provence, sel, poivre"]],
+  {n:"Spaghetti bolognaise au soja texturé",time:"20 min",ing:[["patesB",1,"60 g de spaghetti secs (≈ 150 g cuits)"],["tvp",0.32,"2 grosses c. à soupe de soja texturé (≈ 16 g)"],["tomate",2,"200 g de coulis ou de tomates concassées"],["olive",0.33,"1 c. à café d'huile d'olive"],[null,0,"Oignon, ail, herbes de Provence, sel, poivre"]],
    steps:["Réhydrate le soja texturé 10 min dans de l'eau chaude ou un bouillon, puis égoutte-le.","Fais revenir l'oignon et l'ail dans l'huile d'olive, ajoute le soja et laisse-le dorer 2 min.","Verse la tomate et les herbes, laisse mijoter 10 min pendant que les spaghetti cuisent.","Mélange et sers bien chaud."]},
   {n:"Curry coco, quinoa et soja texturé",time:"20 min",ing:[["quinoa",1,"150 g de quinoa cuit (≈ 50 g sec)"],["tvp",0.6,"30 g de soja texturé"],["coco",1,"10 cl de lait de coco"],[null,0,"1 c. à café de curry, oignon, sel"]],
    steps:["Fais cuire le quinoa.","Réhydrate le soja texturé 10 min dans de l'eau chaude, puis égoutte-le.","Fais revenir l'oignon avec le curry, ajoute le soja puis le lait de coco, laisse mijoter 5 min.","Sers sur le quinoa."]}]},
