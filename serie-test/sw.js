@@ -1,5 +1,5 @@
 // Univers Lilith : garde la page en mémoire pour l'ouvrir sans réseau. Les épisodes « gardés » sont dans le cache lilith-audio-v1.
-const SHELL="lilith-shell-v1",FILES=["./","index.html","cover.jpg","icon-192.png","manifest.json"];
+const SHELL="lilith-shell-v2",FILES=["./","index.html","icon-192.png","manifest.json"];
 self.addEventListener("install",e=>{e.waitUntil(caches.open(SHELL).then(c=>c.addAll(FILES)));self.skipWaiting();});
 self.addEventListener("activate",e=>e.waitUntil(self.clients.claim()));
 self.addEventListener("fetch",e=>{const u=new URL(e.request.url);if(e.request.method!=="GET"||u.pathname.endsWith(".mp3"))return;

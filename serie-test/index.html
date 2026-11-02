@@ -1,98 +1,190 @@
 <!doctype html><html lang="fr"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="robots" content="noindex,nofollow">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="Lilith">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="theme-color" content="#120c08">
-<link rel="apple-touch-icon" href="icon-180.png">
-<link rel="icon" href="icon-192.png">
-<link rel="manifest" href="manifest.json">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Lilith"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0c0710">
+<link rel="apple-touch-icon" href="icon-180.png"><link rel="icon" href="icon-192.png"><link rel="manifest" href="manifest.json">
 <title>Lilith</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400..700&family=Cormorant+Garamond:ital,wght@0,400..600;1,400..600&family=Manrope:wght@400..700&display=swap">
 <style>
-:root{--bg:#120c08;--card:#1d140e;--line:#3a2a1d;--ink:#f6ead9;--muted:#c9b39a;--gold:#e7b46a;--fire:#d9772b}
+:root{--night:#0c0710;--ember:#8c2f3a;--gold:#d8b27a;--gold-soft:#a98a62;--text:#efe3d2;--muted:#bba996;--line:#d8b27a33;
+ --display:'Cinzel',Georgia,serif;--serif:'Cormorant Garamond',Georgia,serif;--sans:'Manrope','Helvetica Neue',Arial,sans-serif;color-scheme:dark}
 *{box-sizing:border-box;margin:0}
-body{background:var(--bg);color:var(--ink);font-family:Georgia,"Times New Roman",serif;-webkit-font-smoothing:antialiased;padding-bottom:40px}
-.hero{position:relative;aspect-ratio:16/9;background:url(cover.jpg) center/cover}
-.hero:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(18,12,8,0) 45%,var(--bg) 100%)}
-.wrap{max-width:560px;margin:0 auto;padding:0 18px}
-.k{font-family:system-ui,sans-serif;font-size:.72rem;letter-spacing:.25em;text-transform:uppercase;color:var(--gold);margin-top:6px}
-h1{font-weight:400;font-size:2.3rem;letter-spacing:.12em;margin:4px 0 6px}
-.lead{color:var(--muted);line-height:1.55;font-size:1rem}
-.mot{margin:18px 0;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;display:flex;gap:12px;align-items:flex-start}
-.mot b{display:block;color:var(--gold);font-family:system-ui,sans-serif;font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;margin-bottom:4px}
-.mot p{line-height:1.5;font-style:italic}
-h2{font-family:system-ui,sans-serif;font-size:.8rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin:26px 0 10px}
-.ep{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:10px}
-.ep.lock{opacity:.45}
-.row{display:flex;align-items:center;gap:12px}
-.play{width:52px;height:52px;border-radius:50%;border:0;background:linear-gradient(135deg,var(--gold),var(--fire));color:#1a0f07;font-size:1.25rem;flex:none;display:grid;place-items:center}
-.play:disabled{background:#3a2a1d;color:var(--muted)}
-.t{flex:1;min-width:0}.t b{display:block;font-size:1.05rem}.t span{font-family:system-ui,sans-serif;font-size:.8rem;color:var(--muted)}
-audio{width:100%;margin-top:12px;display:none}
-.ep.on audio{display:block}
-.keep{margin-top:10px;font-family:system-ui,sans-serif;font-size:.85rem;background:transparent;color:var(--gold);border:1px solid var(--line);border-radius:999px;padding:8px 14px}
-.keep.ok{color:#9be3b2;border-color:#2d5a3c}
-.inst{margin-top:22px;background:linear-gradient(135deg,#2a1a0e,#1d140e);border:1px solid var(--gold);border-radius:16px;padding:16px;font-family:system-ui,sans-serif;font-size:.92rem;line-height:1.5}
-.inst b{color:var(--gold)}
-.inst button{margin-top:10px;background:var(--gold);color:#1a0f07;border:0;border-radius:999px;padding:10px 16px;font-weight:700}
-.foot{margin-top:28px;font-family:system-ui,sans-serif;font-size:.78rem;color:var(--muted);text-align:center;line-height:1.5}
-.test{font-family:system-ui,sans-serif;font-size:.75rem;background:#3a2a1d;color:var(--gold);text-align:center;padding:6px}
+html,body{background:var(--night);color:var(--text)}
+body{font-family:var(--sans);font-size:15px;line-height:1.55;min-height:100vh;-webkit-font-smoothing:antialiased;
+ background:radial-gradient(ellipse 120% 60% at 50% -10%,#3a1730 0%,var(--night) 60%) fixed,var(--night)}
+.test{font-size:11px;letter-spacing:.06em;background:#2a1424;color:var(--gold);text-align:center;padding:6px}
+.wrap{max-width:560px;margin:0 auto;padding:28px max(16px,env(safe-area-inset-right)) 64px max(16px,env(safe-area-inset-left));display:flex;flex-direction:column;gap:22px}
+.stars{position:fixed;inset:0;pointer-events:none;opacity:.55;background-image:
+ radial-gradient(1.2px 1.2px at 12% 18%,#f6e4c2,transparent 60%),radial-gradient(1px 1px at 82% 12%,#f6e4c2,transparent 60%),
+ radial-gradient(1.4px 1.4px at 64% 34%,#f6e4c2aa,transparent 60%),radial-gradient(1px 1px at 22% 62%,#f6e4c288,transparent 60%),
+ radial-gradient(1.2px 1.2px at 90% 70%,#f6e4c2aa,transparent 60%),radial-gradient(1px 1px at 40% 86%,#f6e4c277,transparent 60%),
+ radial-gradient(1px 1px at 6% 90%,#f6e4c299,transparent 60%),radial-gradient(1.3px 1.3px at 52% 8%,#f6e4c2bb,transparent 60%)}
+.kicker{font-size:11px;letter-spacing:.32em;text-transform:uppercase;color:var(--gold)}
+h1{font-family:var(--display);font-weight:500;font-size:clamp(44px,13vw,64px);letter-spacing:.14em;line-height:1;
+ background:linear-gradient(180deg,#f6e2bc,#c99a5e);-webkit-background-clip:text;background-clip:text;color:transparent}
+.tag{font-family:var(--serif);font-style:italic;font-size:21px;text-wrap:balance}
+.hero{display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px;padding-top:8px}
+.sigil{width:92px;height:92px}
+.rule{display:flex;align-items:center;gap:12px;width:70%}.rule i{flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}.rule b{width:7px;height:7px;border:1px solid var(--gold);transform:rotate(45deg)}
+.card{border:1px solid var(--line);background:linear-gradient(180deg,#ffffff08,#ffffff03);border-radius:4px;padding:18px}
+.prog{display:flex;align-items:center;gap:16px}.ring{width:64px;height:64px;flex:none}
+.big{font-family:var(--display);font-size:20px;color:var(--gold)}
+.ep{padding:14px 0;border-bottom:1px solid var(--line)}.ep:last-child{border-bottom:0}
+.erow{display:flex;align-items:center;gap:14px}
+.num{font-family:var(--display);font-size:22px;color:var(--gold);width:34px;text-align:center;flex:none}
+.info{flex:1;min-width:0}
+.t{font-family:var(--serif);font-size:20px;line-height:1.2}
+.m{font-size:12px;color:var(--muted);letter-spacing:.04em}
+.ep.done .t::after{content:"  ✓";color:var(--gold);font-family:var(--sans);font-size:14px}
+.ep.locked{opacity:.45}
+.play{width:46px;height:46px;border-radius:50%;border:1px solid var(--gold);background:transparent;color:var(--gold);display:grid;place-items:center;cursor:pointer;flex:none}
+.play:disabled{cursor:default}.play svg{width:18px;height:18px}
+.keep{margin:10px 0 0 48px;font:600 12px var(--sans);background:transparent;color:var(--gold);border:1px solid var(--line);border-radius:999px;padding:7px 14px;cursor:pointer}
+.keep.ok{color:#a8dcb5;border-color:#a8dcb544}
+.btn{display:inline-flex;justify-content:center;align-items:center;min-height:48px;padding:0 22px;border-radius:999px;border:1px solid var(--gold);background:linear-gradient(180deg,#e2bf8a,#b98a52);color:#1b0f14;font:700 15px var(--sans);cursor:pointer;text-decoration:none}
+.btn.ghost{background:transparent;color:var(--gold)}
+.tips{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;text-align:center}
+.tips div{display:flex;flex-direction:column;align-items:center;gap:6px;font-size:12px;color:var(--muted)}
+.tips svg{width:26px;height:26px;color:var(--gold)}
+.warn{font-size:12px;color:var(--muted);text-align:center;margin-top:10px}
+.inst{font-size:14px;line-height:1.5}.inst b{color:var(--gold)}.inst .btn{margin-top:12px}
+.player{position:fixed;left:0;right:0;bottom:0;z-index:5;background:linear-gradient(180deg,#1d0f1bf2,#110a12f7);backdrop-filter:blur(8px);border-top:1px solid var(--line);
+ padding:14px max(16px,env(safe-area-inset-right)) calc(14px + env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left))}
+.player .in{max-width:560px;margin:0 auto;display:flex;flex-direction:column;gap:10px}
+.prow{display:flex;align-items:center;gap:12px}
+.prow .t{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.skip{background:none;border:0;color:var(--muted);font:600 12px var(--sans);cursor:pointer;padding:6px}
+.bar{height:6px;background:#ffffff1c;border-radius:4px;overflow:hidden;cursor:pointer}.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--ember),var(--gold))}
+.time{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums}
+textarea{width:100%;min-height:90px;resize:vertical;background:#00000033;border:1px solid var(--line);border-radius:4px;color:var(--text);font-family:var(--serif);font-size:18px;padding:10px 12px}
+textarea:focus{outline:none;border-color:var(--gold)}
+label{font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold)}
+footer{font-size:11px;color:var(--muted);text-align:center;line-height:1.6}
+.toast{position:fixed;left:50%;bottom:130px;transform:translateX(-50%);background:var(--gold);color:#1b0f14;padding:10px 16px;border-radius:999px;font-weight:700;font-size:13px;z-index:20}
 </style></head><body>
+<div class="stars" aria-hidden="true"></div>
 <div class="test">Version de test · audio provisoire</div>
-<div class="hero" role="img" aria-label="Lilith"></div>
-<div class="wrap">
-  <div class="k">Fiction audio immersive® · Stéphanie Dordain</div>
-  <h1>LILITH</h1>
-  <p class="lead">Casque sur les oreilles, yeux fermés. Tu deviens le héros.</p>
+<main class="wrap">
+ <section class="hero">
+  <svg class="sigil" viewBox="0 0 100 100" aria-hidden="true"><g fill="none" stroke="#d8b27a" stroke-width="1.2"><circle cx="50" cy="50" r="30"/><path d="M50 14v72M20 50h60"/><path d="M62 30a24 24 0 1 0 0 40a19 19 0 1 1 0-40z" fill="#d8b27a22"/></g></svg>
+  <p class="kicker">Une Fiction audio immersive® de Stéphanie Dordain</p>
+  <h1>Lilith</h1>
+  <p class="tag">La vérité cachée sur l'origine de l'humanité</p>
+  <div class="rule" aria-hidden="true"><i></i><b></b><i></i></div>
+ </section>
 
-  <div class="mot"><div><b>Un mot d'Alessa</b><p>Bienvenue dans l'univers de Lilith. Installe-toi au calme, laisse ton téléphone en mode avion si tu as gardé l'épisode, et laisse-toi porter.</p></div></div>
+ <section class="card inst" id="inst" hidden></section>
 
-  <div class="inst" id="inst" hidden></div>
+ <section class="card prog" aria-label="Ta progression">
+  <svg class="ring" viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="27" fill="none" stroke="#ffffff1c" stroke-width="4"/><circle id="ringFg" cx="32" cy="32" r="27" fill="none" stroke="#d8b27a" stroke-width="4" stroke-linecap="round" stroke-dasharray="169.6" stroke-dashoffset="169.6" transform="rotate(-90 32 32)"/></svg>
+  <div><p class="big" id="progTxt">0 épisode sur 7</p><p class="m" id="progSub" style="font-size:13px">Ton voyage commence ici.</p></div>
+ </section>
 
-  <h2>Les épisodes</h2>
+ <section class="card" aria-label="Avant d'écouter">
+  <p class="kicker" style="text-align:center;margin-bottom:14px">Avant d'écouter</p>
+  <div class="tips">
+   <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 15a8 8 0 0 1 16 0"/><rect x="3" y="14" width="4" height="7" rx="1.5"/><rect x="17" y="14" width="4" height="7" rx="1.5"/></svg>Un casque</div>
+   <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 17h18M5 17v-4h9a4 4 0 0 1 4 4"/><circle cx="7.5" cy="10" r="2"/></svg>Allongé ou assis</div>
+   <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 12s3.5-5 9-5 9 5 9 5"/><path d="M6 14l-1 2M12 15v2M18 14l1 2"/></svg>Les yeux fermés</div>
+  </div>
+  <p class="warn">Jamais en conduisant. Un épisode par jour, dans l'ordre.</p>
+ </section>
+
+ <section class="card" aria-label="Les épisodes">
+  <p class="kicker" style="margin-bottom:4px">Les 7 épisodes</p>
   <div id="eps"></div>
+ </section>
 
-  <p class="foot">Écoute en ligne, ou touche « Garder sans réseau » pour l'écouter partout, même en avion.<br>Besoin d'aide ? Réponds simplement au mail de ton achat.</p>
-</div>
+ <section class="card" aria-label="Mon carnet">
+  <label for="note">Ce que j'ai ressenti</label>
+  <p style="margin:6px 0 10px;color:var(--muted);font-size:13px" id="noteFor">Après l'épisode, écris quelques mots. Ils restent sur ton appareil.</p>
+  <textarea id="note" placeholder="Une image, une émotion, un souvenir…"></textarea>
+ </section>
+
+ <footer>Écoute depuis ton téléphone, ta tablette ou ton ordinateur.<br>Besoin d'aide ? Réponds simplement au mail de ton achat.<br><br>Fiction audio immersive® est une marque déposée de Stéphanie Dordain.<br>Cette série ne remplace ni un médecin, ni un traitement, ni un suivi psychologique.</footer>
+ <div style="height:130px" aria-hidden="true"></div>
+</main>
+
+<div class="player" id="player" hidden><div class="in">
+ <div class="prow">
+  <button class="play" id="pp" type="button" aria-label="Lecture"><svg viewBox="0 0 24 24"><path id="ppIcon" d="M7 4l13 8-13 8z" fill="currentColor"/></svg></button>
+  <div class="info"><div class="t" id="pt">Épisode 1</div></div>
+  <button class="skip" id="back" type="button">−15 s</button><button class="skip" id="fwd" type="button">+30 s</button>
+ </div>
+ <div class="bar" id="bar"><i id="pbar"></i></div>
+ <div class="time"><span id="pcur">0:00</span><span id="pdur">0:00</span></div>
+</div></div>
+<audio id="audio" preload="none"></audio>
+
 <script>
-const EPS=[
- {t:"Épisode 1",s:"Audio de test",src:"audio/episode-1.mp3",d:"27 min"},
- {t:"Épisode 2",s:"Bientôt",src:null},{t:"Épisode 3",s:"Bientôt",src:null},{t:"Épisode 4",s:"Bientôt",src:null},
- {t:"Épisode 5",s:"Bientôt",src:null},{t:"Épisode 6",s:"Bientôt",src:null},{t:"Épisode 7",s:"Bientôt",src:null}];
-const CACHE="lilith-audio-v1";
-const box=document.getElementById("eps");
-box.innerHTML=EPS.map((e,i)=>`<div class="ep${e.src?"":" lock"}" id="e${i}"><div class="row">
-  <button class="play" data-i="${i}" ${e.src?"":"disabled"} aria-label="Écouter ${e.t}">▶</button>
-  <div class="t"><b>${e.t}</b><span>${e.s}${e.d?" · "+e.d:""}</span></div></div>
-  ${e.src?`<audio controls preload="none"></audio><button class="keep" data-k="${i}">⬇︎ Garder sans réseau</button>`:""}</div>`).join("");
-async function cached(src){try{const c=await caches.open(CACHE);return await c.match(src)}catch(e){return null}}
-async function refreshKeep(){for(const [i,e] of EPS.entries()){if(!e.src)continue;const b=document.querySelector(`[data-k="${i}"]`);
-  if(await cached(e.src)){b.textContent="✓ Gardé dans ton téléphone";b.classList.add("ok")}}}
-refreshKeep();
+const EPISODES=[
+ {t:"Épisode 1",d:27,audio:"audio/episode-1.mp3"},
+ {t:"Épisode 2",d:0,audio:""},{t:"Épisode 3",d:0,audio:""},{t:"Épisode 4",d:0,audio:""},
+ {t:"Épisode 5",d:0,audio:""},{t:"Épisode 6",d:0,audio:""},{t:"Épisode 7",d:0,audio:""}];
+const ROMAN=["I","II","III","IV","V","VI","VII"],CACHE="lilith-audio-v1",K="lilith_";
+const load=(k,d)=>{try{const v=localStorage.getItem(K+k);return v==null?d:JSON.parse(v)}catch(_){return d}};
+const save=(k,v)=>{try{localStorage.setItem(K+k,JSON.stringify(v))}catch(_){}};
+const $=id=>document.getElementById(id);
+const fmt=s=>{s=Math.max(0,Math.floor(s||0));return Math.floor(s/60)+":"+String(s%60).padStart(2,"0")};
+function toast(m){const t=document.createElement("div");t.className="toast";t.textContent=m;document.body.appendChild(t);setTimeout(()=>t.remove(),1800)}
+async function cached(src){try{return await (await caches.open(CACHE)).match(src)}catch(_){return null}}
+
+function render(){
+ const done=load("done",[]);
+ $("eps").innerHTML=EPISODES.map((e,i)=>{
+  const open=!!e.audio;
+  return `<div class="ep${done.includes(i)?" done":""}${open?"":" locked"}"><div class="erow">
+   <div class="num">${ROMAN[i]}</div>
+   <div class="info"><div class="t">${e.t}</div><div class="m">${open?e.d+" min":"Bientôt"}</div></div>
+   <button class="play" type="button" data-ep="${i}" ${open?"":"disabled"} aria-label="Écouter ${e.t}"><svg viewBox="0 0 24 24"><path d="M7 4l13 8-13 8z" fill="currentColor"/></svg></button></div>
+   ${open?`<button class="keep" type="button" data-k="${i}">⬇︎ Garder pour écouter sans réseau</button>`:""}</div>`}).join("");
+ const n=done.length;$("ringFg").setAttribute("stroke-dashoffset",169.6*(1-n/7));
+ $("progTxt").textContent=n===7?"Série terminée":`${n} épisode${n>1?"s":""} sur 7`;
+ $("progSub").textContent=n===0?"Ton voyage commence ici.":n===7?"Tu as traversé les sept portes.":"Reprends là où tu t'es arrêté.";
+ const idx=Math.min(n,6);$("noteFor").textContent=`Ton carnet pour l'épisode ${idx+1}. Tes mots restent sur ton appareil.`;
+ $("note").value=load("note"+idx,"");$("note").dataset.i=idx;
+ EPISODES.forEach(async(e,i)=>{if(e.audio&&await cached(e.audio)){const b=document.querySelector(`[data-k="${i}"]`);if(b){b.textContent="✓ Gardé, écoute possible sans réseau";b.classList.add("ok")}}});
+}
+$("note").addEventListener("input",e=>save("note"+e.target.dataset.i,e.target.value));
+
+const audio=$("audio");let cur=-1;
+async function start(i){
+ const e=EPISODES[i];cur=i;$("player").hidden=false;$("pt").textContent=e.t;
+ const r=await cached(e.audio);audio.src=r?URL.createObjectURL(await r.blob()):e.audio;
+ const pos=load("pos"+i,0);audio.addEventListener("loadedmetadata",()=>{if(pos)audio.currentTime=pos},{once:true});
+ audio.play().catch(()=>{});
+}
+function setIcon(){const p=!audio.paused;$("ppIcon").setAttribute("d",p?"M7 4h4v16H7zM13 4h4v16h-4z":"M7 4l13 8-13 8z");$("pp").setAttribute("aria-label",p?"Pause":"Lecture")}
+audio.addEventListener("play",setIcon);audio.addEventListener("pause",setIcon);
+audio.addEventListener("timeupdate",()=>{if(cur<0)return;const d=audio.duration||EPISODES[cur].d*60;
+ $("pbar").style.width=(100*audio.currentTime/d)+"%";$("pcur").textContent=fmt(audio.currentTime);$("pdur").textContent=fmt(d);save("pos"+cur,audio.currentTime)});
+audio.addEventListener("ended",()=>{const d=load("done",[]);if(!d.includes(cur)){d.push(cur);save("done",d)}save("pos"+cur,0);
+ toast(cur===6?"Série terminée. Merci d'avoir voyagé.":"Épisode terminé");render()});
+$("pp").onclick=()=>{if(cur<0)return;audio.paused?audio.play():audio.pause()};
+$("back").onclick=()=>{audio.currentTime=Math.max(0,audio.currentTime-15)};
+$("fwd").onclick=()=>{audio.currentTime=audio.currentTime+30};
+$("bar").onclick=ev=>{if(!audio.duration)return;const r=ev.currentTarget.getBoundingClientRect();audio.currentTime=audio.duration*(ev.clientX-r.left)/r.width};
+
 document.addEventListener("click",async ev=>{
-  const p=ev.target.closest("[data-i]");
-  if(p){const i=+p.dataset.i,e=EPS[i],card=document.getElementById("e"+i),a=card.querySelector("audio");
-    document.querySelectorAll(".ep.on audio").forEach(x=>{if(x!==a)x.pause()});
-    card.classList.add("on");
-    if(!a.src){const r=await cached(e.src);a.src=r?URL.createObjectURL(await r.blob()):e.src;}
-    a.play().catch(()=>{});return;}
-  const k=ev.target.closest("[data-k]");
-  if(k&&!k.classList.contains("ok")){const e=EPS[+k.dataset.k];k.textContent="Téléchargement en cours…";
-    try{const r=await fetch(e.src);if(!r.ok)throw 0;const c=await caches.open(CACHE);await c.put(e.src,r);k.textContent="✓ Gardé dans ton téléphone";k.classList.add("ok");}
-    catch(_){k.textContent="Réessaie avec du réseau";}}
+ const p=ev.target.closest("[data-ep]");if(p&&!p.disabled){start(+p.dataset.ep);return}
+ const k=ev.target.closest("[data-k]");
+ if(k&&!k.classList.contains("ok")){const e=EPISODES[+k.dataset.k];k.textContent="Un instant…";
+  try{const r=await fetch(e.audio);if(!r.ok)throw 0;await (await caches.open(CACHE)).put(e.audio,r);k.textContent="✓ Gardé, écoute possible sans réseau";k.classList.add("ok")}
+  catch(_){k.textContent="Réessaie avec du réseau"}}
 });
-// Installation sur l'écran d'accueil
+render();
+
 (function(){
-  if("serviceWorker" in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));
-  const ua=navigator.userAgent,box=document.getElementById("inst");
-  const installed=matchMedia("(display-mode: standalone)").matches||navigator.standalone===true;if(installed)return;
-  const ios=/iPhone|iPad|iPod/.test(ua),android=/Android/.test(ua);
-  if(ios){box.innerHTML="<b>Mets Lilith sur ton téléphone :</b> dans Safari, touche Partager (le carré avec la flèche), puis « Sur l'écran d'accueil ».";box.hidden=false;}
-  else if(android){box.innerHTML="<b>Mets Lilith sur ton téléphone :</b> dans Chrome, touche les trois petits points en haut à droite, puis « Ajouter à l'écran d'accueil ».";box.hidden=false;}
-  window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();box.innerHTML="<b>Mets Lilith sur ton téléphone,</b> avec sa propre icône.<br><button id='ib'>Installer Lilith</button>";box.hidden=false;
-    document.getElementById("ib").onclick=()=>e.prompt();});
+ if("serviceWorker" in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));
+ const ua=navigator.userAgent,box=$("inst");
+ if(matchMedia("(display-mode: standalone)").matches||navigator.standalone===true)return;
+ const ios=/iPhone|iPad|iPod/.test(ua)||(/Macintosh/.test(ua)&&navigator.maxTouchPoints>1),android=/Android/.test(ua);
+ if(ios){box.innerHTML="<b>Garde Lilith sur ton écran d'accueil :</b> dans Safari, touche Partager (le carré avec la flèche), puis « Sur l'écran d'accueil ».";box.hidden=false}
+ else if(android){box.innerHTML="<b>Garde Lilith sur ton écran d'accueil :</b> dans Chrome, touche ⋮ en haut à droite, puis « Ajouter à l'écran d'accueil ».";box.hidden=false}
+ addEventListener("beforeinstallprompt",e=>{e.preventDefault();box.innerHTML="<b>Garde Lilith à portée de main,</b> avec sa propre icône.<br><button class='btn' id='ib' type='button'>Installer Lilith</button>";box.hidden=false;$("ib").onclick=()=>e.prompt()});
 })();
 </script>
 </body></html>
