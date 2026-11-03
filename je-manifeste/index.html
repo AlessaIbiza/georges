@@ -66,6 +66,7 @@ h1{font:400 clamp(40px,11vw,64px)/1 var(--display);text-align:center;letter-spac
 .bar{height:5px;background:#ffffff1c;border-radius:4px;overflow:hidden;cursor:pointer}.bar i{display:block;height:100%;width:0;background:var(--accent)}
 .time{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums}
 .teaser{align-self:center;display:inline-flex;align-items:center;gap:10px;background:transparent;border:1px solid var(--accent);color:var(--gold);border-radius:999px;padding:10px 20px;font:600 14px var(--sans);cursor:pointer}.teaser[hidden]{display:none}.teaser span{color:var(--accent)}
+.teaser i{font-style:normal}.trailer,.film video{width:100%;aspect-ratio:16/9;background:#000;border-radius:8px;border:1px solid var(--line)}.trailer[hidden],.film[hidden]{display:none}.fnote{font-size:12px;color:var(--muted);margin-top:6px;text-align:center}
 .gate{display:flex;flex-direction:column;gap:12px;padding:20px 18px;border:1px solid var(--line);border-radius:14px;background:#ffffff07}
 .gate[hidden]{display:none}
 .gate h2{font:400 26px var(--display);text-align:center;color:var(--gold)}
@@ -88,7 +89,8 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--gold);outline-offse
  <p class="kicker">Un programme guidé de Stéphanie Dordain</p>
  <h1>Je manifeste</h1>
  <p class="sous">30 jours pour manifester ta nouvelle réalité</p>
- <button class="teaser" id="teaser" type="button" hidden><span>▶</span> Écouter la bande-annonce</button>
+ <button class="teaser" id="teaser" type="button" hidden><span>▶</span> <i id="teaserL">Écouter la bande-annonce</i></button>
+ <video class="trailer" id="trailer" controls playsinline preload="none" hidden></video>
  <div class="rule" aria-hidden="true"><i></i><b></b><i></i></div>
 
  <form class="gate" id="gate" hidden>
@@ -103,6 +105,7 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--gold);outline-offse
  <div id="content">
   <div class="intro"><p>Tout commence par toi.</p><p>Chaque jour, avec ma voix, je t&#x27;accompagne dans une pratique courte mais régulière, car le pouvoir de manifestation s&#x27;apprend progressivement.</p></div>
   <div class="avant"><b>Avant d'écouter</b>Un audio par jour, pendant 30 jours, à ton rythme : 5 à 12 minutes. Les jours 10, 20 et 30 sont tes trois voyages intérieurs, de 17 à 22 minutes : casque sur les oreilles, yeux fermés, jamais en conduisant. Commence par ton livret.</div>
+  <section class="film" id="filmBox" hidden><video id="film" controls playsinline preload="none"></video><p class="fnote" id="fnote"></p></section>
   <div id="blocs"></div>
   <section class="docs" id="docs" hidden><div class="bloc"><h2>Tes documents</h2></div><div id="docList"></div></section>
   <section class="inst" id="inst" hidden></section>
@@ -116,7 +119,7 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--gold);outline-offse
 </div></div>
 <audio id="audio" preload="none"></audio>
 <script>
-const D={"slug": "je-manifeste", "nom": "Je manifeste", "blocs": [{"bloc": "Tes 30 jours", "items": [{"t": "Jour 1", "k": "je-manifeste/jour-01.mp3", "d": "5 min", "v": false}, {"t": "Jour 2", "k": "je-manifeste/jour-02.mp3", "d": "8 min", "v": false}, {"t": "Jour 3", "k": "je-manifeste/jour-03.mp3", "d": "8 min", "v": false}, {"t": "Jour 4", "k": "je-manifeste/jour-04.mp3", "d": "6 min", "v": false}, {"t": "Jour 5", "k": "je-manifeste/jour-05.mp3", "d": "6 min", "v": false}, {"t": "Jour 6", "k": "je-manifeste/jour-06.mp3", "d": "7 min", "v": false}, {"t": "Jour 7", "k": "je-manifeste/jour-07.mp3", "d": "6 min", "v": false}, {"t": "Jour 8", "k": "je-manifeste/jour-08.mp3", "d": "6 min", "v": false}, {"t": "Jour 9", "k": "je-manifeste/jour-09.mp3", "d": "12 min", "v": false}, {"t": "Jour 10 · Voyage intérieur", "k": "je-manifeste/jour-10.mp3", "d": "17 min", "v": true}, {"t": "Jour 11", "k": "je-manifeste/jour-11.mp3", "d": "5 min", "v": false}, {"t": "Jour 12", "k": "je-manifeste/jour-12.mp3", "d": "5 min", "v": false}, {"t": "Jour 13", "k": "je-manifeste/jour-13.mp3", "d": "5 min", "v": false}, {"t": "Jour 14", "k": "je-manifeste/jour-14.mp3", "d": "5 min", "v": false}, {"t": "Jour 15", "k": "je-manifeste/jour-15.mp3", "d": "12 min", "v": false}, {"t": "Jour 16", "k": "je-manifeste/jour-16.mp3", "d": "5 min", "v": false}, {"t": "Jour 17", "k": "je-manifeste/jour-17.mp3", "d": "7 min", "v": false}, {"t": "Jour 18", "k": "je-manifeste/jour-18.mp3", "d": "7 min", "v": false}, {"t": "Jour 19", "k": "je-manifeste/jour-19.mp3", "d": "7 min", "v": false}, {"t": "Jour 20 · Voyage intérieur", "k": "je-manifeste/jour-20.mp3", "d": "19 min", "v": true}, {"t": "Jour 21", "k": "je-manifeste/jour-21.mp3", "d": "7 min", "v": false}, {"t": "Jour 22", "k": "je-manifeste/jour-22.mp3", "d": "8 min", "v": false}, {"t": "Jour 23", "k": "je-manifeste/jour-23.mp3", "d": "7 min", "v": false}, {"t": "Jour 24", "k": "je-manifeste/jour-24.mp3", "d": "10 min", "v": false}, {"t": "Jour 25", "k": "je-manifeste/jour-25.mp3", "d": "7 min", "v": false}, {"t": "Jour 26", "k": "je-manifeste/jour-26.mp3", "d": "12 min", "v": false}, {"t": "Jour 27", "k": "je-manifeste/jour-27.mp3", "d": "6 min", "v": false}, {"t": "Jour 28", "k": "je-manifeste/jour-28.mp3", "d": "6 min", "v": false}, {"t": "Jour 29", "k": "je-manifeste/jour-29.mp3", "d": "11 min", "v": false}, {"t": "Jour 30 · Voyage intérieur", "k": "je-manifeste/jour-30.mp3", "d": "22 min", "v": true}]}], "docs": [{"t": "Ton livret Je manifeste", "k": "je-manifeste/livret-je-manifeste.pdf", "f": "PDF · 6 pages", "i": "📖"}, {"t": "Ton fond d'écran pour téléphone", "k": "je-manifeste/fond-ecran-telephone.jpg", "f": "Image", "i": "📱"}, {"t": "Ton fond d'écran pour ordinateur", "k": "je-manifeste/fond-ecran-ordinateur.png", "f": "Image", "i": "🖥️"}], "jours": true, "teaser": true};
+const D={"slug": "je-manifeste", "nom": "Je manifeste", "blocs": [{"bloc": "Tes 30 jours", "items": [{"t": "Jour 1", "k": "je-manifeste/jour-01.mp3", "d": "5 min", "v": false}, {"t": "Jour 2", "k": "je-manifeste/jour-02.mp3", "d": "8 min", "v": false}, {"t": "Jour 3", "k": "je-manifeste/jour-03.mp3", "d": "8 min", "v": false}, {"t": "Jour 4", "k": "je-manifeste/jour-04.mp3", "d": "6 min", "v": false}, {"t": "Jour 5", "k": "je-manifeste/jour-05.mp3", "d": "6 min", "v": false}, {"t": "Jour 6", "k": "je-manifeste/jour-06.mp3", "d": "7 min", "v": false}, {"t": "Jour 7", "k": "je-manifeste/jour-07.mp3", "d": "6 min", "v": false}, {"t": "Jour 8", "k": "je-manifeste/jour-08.mp3", "d": "6 min", "v": false}, {"t": "Jour 9", "k": "je-manifeste/jour-09.mp3", "d": "12 min", "v": false}, {"t": "Jour 10 · Voyage intérieur", "k": "je-manifeste/jour-10.mp3", "d": "17 min", "v": true}, {"t": "Jour 11", "k": "je-manifeste/jour-11.mp3", "d": "5 min", "v": false}, {"t": "Jour 12", "k": "je-manifeste/jour-12.mp3", "d": "5 min", "v": false}, {"t": "Jour 13", "k": "je-manifeste/jour-13.mp3", "d": "5 min", "v": false}, {"t": "Jour 14", "k": "je-manifeste/jour-14.mp3", "d": "5 min", "v": false}, {"t": "Jour 15", "k": "je-manifeste/jour-15.mp3", "d": "12 min", "v": false}, {"t": "Jour 16", "k": "je-manifeste/jour-16.mp3", "d": "5 min", "v": false}, {"t": "Jour 17", "k": "je-manifeste/jour-17.mp3", "d": "7 min", "v": false}, {"t": "Jour 18", "k": "je-manifeste/jour-18.mp3", "d": "7 min", "v": false}, {"t": "Jour 19", "k": "je-manifeste/jour-19.mp3", "d": "7 min", "v": false}, {"t": "Jour 20 · Voyage intérieur", "k": "je-manifeste/jour-20.mp3", "d": "19 min", "v": true}, {"t": "Jour 21", "k": "je-manifeste/jour-21.mp3", "d": "7 min", "v": false}, {"t": "Jour 22", "k": "je-manifeste/jour-22.mp3", "d": "8 min", "v": false}, {"t": "Jour 23", "k": "je-manifeste/jour-23.mp3", "d": "7 min", "v": false}, {"t": "Jour 24", "k": "je-manifeste/jour-24.mp3", "d": "10 min", "v": false}, {"t": "Jour 25", "k": "je-manifeste/jour-25.mp3", "d": "7 min", "v": false}, {"t": "Jour 26", "k": "je-manifeste/jour-26.mp3", "d": "12 min", "v": false}, {"t": "Jour 27", "k": "je-manifeste/jour-27.mp3", "d": "6 min", "v": false}, {"t": "Jour 28", "k": "je-manifeste/jour-28.mp3", "d": "6 min", "v": false}, {"t": "Jour 29", "k": "je-manifeste/jour-29.mp3", "d": "11 min", "v": false}, {"t": "Jour 30 · Voyage intérieur", "k": "je-manifeste/jour-30.mp3", "d": "22 min", "v": true}]}], "docs": [{"t": "Ton livret Je manifeste", "k": "je-manifeste/livret-je-manifeste.pdf", "f": "PDF · 6 pages", "i": "📖"}, {"t": "Ton fond d'écran pour téléphone", "k": "je-manifeste/fond-ecran-telephone.jpg", "f": "Image", "i": "📱"}, {"t": "Ton fond d'écran pour ordinateur", "k": "je-manifeste/fond-ecran-ordinateur.png", "f": "Image", "i": "🖥️"}], "jours": true, "teaser": true, "video": null, "tvideo": false};
 const $=id=>document.getElementById(id),audio=$("audio");
 const K=k=>D.slug+"_"+k,g=k=>{try{return localStorage.getItem(K(k))}catch(_){return null}},s=(k,v)=>{try{localStorage.setItem(K(k),v)}catch(_){}};
 const fmt=x=>{x=Math.max(0,Math.floor(x||0));return Math.floor(x/60)+":"+String(x%60).padStart(2,"0")};
@@ -138,14 +141,14 @@ function renderBlocs(){
    sec.appendChild(grid);
   }else{
    b.items.forEach((it,i)=>{const k=bi+"-"+i,row=document.createElement("div");row.className="ep"+(vus.has(k)?" vu":"")+(curKey===k?" on":"");
-    row.innerHTML=`<span class="no">${i+1}</span><span class="t"><b></b><small>${it.k?(it.d||""):"Bientôt disponible ici"}</small></span>`;
+    row.innerHTML=`<span class="no">${it.no??(i+1)}</span><span class="t"><b></b><small>${it.k?(it.d||""):"Bientôt disponible ici"}</small></span>`;
     row.querySelector("b").textContent=it.t;
     if(it.k){const dl=document.createElement("button");dl.type="button";dl.className="dl";dl.textContent="⬇︎ Garder";dl.onclick=()=>keep(it.k,dl);isKept(it.k).then(ok=>{if(ok){dl.textContent="✓ Gardé";dl.classList.add("ok")}});row.querySelector(".t small").appendChild(dl)}
     const p=document.createElement("button");p.type="button";p.className="play";p.innerHTML=PLAY;p.disabled=!it.k;p.setAttribute("aria-label","Écouter "+it.t);p.onclick=()=>play(bi,i);row.appendChild(p);sec.appendChild(row)});
   }
   box.appendChild(sec);
  });
- if(D.docs.length){$("docs").hidden=false;$("docList").innerHTML=D.docs.map(d=>`<a href="${signed(d.k)}" target="_blank" rel="noopener">${d.i||"📄"} <b>${d.t}</b> <span>${d.f||"PDF"}</span></a>`).join("")}
+ if(D.docs.length){$("docs").hidden=false;$("docList").innerHTML=D.docs.map(d=>`<a href="${d.u||signed(d.k)}" target="_blank" rel="noopener">${d.i||"📄"} <b>${d.t}</b> <span>${d.f||"PDF"}</span></a>`).join("")}
 }
 async function isKept(k){try{return !!(await (await caches.open(CACHE)).match(canon(k)))}catch(_){return false}}
 async function keep(k,btn){if(btn.classList.contains("ok"))return;btn.textContent="Un instant…";try{const r=await fetch(signed(k));if(!r.ok)throw 0;await (await caches.open(CACHE)).put(canon(k),r);btn.textContent="✓ Gardé";btn.classList.add("ok")}catch(_){btn.textContent="Réessaie avec du réseau"}}
@@ -162,14 +165,23 @@ audio.addEventListener("timeupdate",()=>{const d=audio.duration||0;$("pbar").sty
 $("pp").onclick=()=>audio.paused?audio.play():audio.pause();
 $("back").onclick=()=>{audio.currentTime=Math.max(0,audio.currentTime-15)};$("fwd").onclick=()=>{audio.currentTime+=30};
 $("bar").onclick=e=>{if(!audio.duration)return;const r=e.currentTarget.getBoundingClientRect();audio.currentTime=audio.duration*(e.clientX-r.left)/r.width};
+let filmReady=false;
+function setupFilm(){if(filmReady)return;filmReady=true;const v=$("film");$("filmBox").hidden=false;v.poster="poster.jpg";
+ const src=signed(D.video.k);const pos=+g("pos_film")||0;
+ v.addEventListener("loadedmetadata",()=>{if(pos&&pos<v.duration-10)v.currentTime=pos},{once:true});
+ v.addEventListener("timeupdate",()=>{s("pos_film",v.currentTime)});
+ if(v.canPlayType("application/vnd.apple.mpegurl")){v.src=src}
+ else{const sc=document.createElement("script");sc.src="https://cdnjs.cloudflare.com/ajax/libs/hls.js/1.5.13/hls.min.js";sc.onload=()=>{if(window.Hls&&Hls.isSupported()){const h=new Hls();h.loadSource(src);h.attachMedia(v)}else{$("fnote").textContent="Ton navigateur ne lit pas ce film. Essaie avec Safari ou Chrome."}};sc.onerror=()=>{$("fnote").textContent="Le lecteur ne se charge pas. Vérifie ta connexion et recharge la page."};document.head.appendChild(sc)}
+ $("fnote").textContent="Le film reprend là où tu t'es arrêté.";}
 renderBlocs();
-if(D.teaser){const tb=$("teaser");tb.hidden=false;tb.onclick=()=>{curKey=null;audio.src="teaser.mp3";$("pt").textContent=D.nom+" · la bande-annonce";$("player").hidden=false;audio.play().catch(()=>{})}}
+if(D.teaser&&D.tvideo){const tb=$("teaser");tb.hidden=false;$("teaserL").textContent="Voir la bande-annonce";tb.onclick=()=>{const v=$("trailer");v.hidden=false;v.src="teaser.mp4";v.poster="poster.jpg";v.play().catch(()=>{});tb.hidden=true}}
+else if(D.teaser){const tb=$("teaser");tb.hidden=false;tb.onclick=()=>{curKey=null;audio.src="teaser.mp3";$("pt").textContent=D.nom+" · la bande-annonce";$("player").hidden=false;audio.play().catch(()=>{})}}
 // Verrou : e-mail d'achat, deux appareils maximum
 (function(){
  const API="https://verrou.magie-alessa.workers.dev",P="pass_"+D.slug,DV="alessa_appareil";
  const lg=k=>{try{return localStorage.getItem(k)}catch(_){return null}},ls=(k,v)=>{try{localStorage.setItem(k,v)}catch(_){}};
  let dev=lg(DV);if(!dev){dev=crypto.randomUUID?crypto.randomUUID():String(Math.random()).slice(2)+Date.now();ls(DV,dev)}
- const open=()=>{$("gate").hidden=true;$("content").classList.add("on");renderBlocs()},shut=()=>{$("content").classList.remove("on");$("gate").hidden=false};
+ const open=()=>{$("gate").hidden=true;$("content").classList.add("on");renderBlocs();if(D.video)setupFilm()},shut=()=>{$("content").classList.remove("on");$("gate").hidden=false};
  const pass=lg(P);
  if(pass){open();fetch(API+"/verifier",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({pass})}).then(r=>r.json()).then(r=>{if(r&&r.ok===false){try{localStorage.removeItem(P)}catch(_){}shut()}}).catch(()=>{})}else shut();
  $("gate").onsubmit=async e=>{e.preventDefault();const b=$("ok"),er=$("err"),email=$("mail").value.trim();er.textContent="";b.disabled=true;b.textContent="Un instant…";
