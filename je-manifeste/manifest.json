@@ -1,0 +1,1 @@
+{"name": "Je manifeste", "short_name": "Je manifeste", "id": "/je-manifeste/", "start_url": "/je-manifeste/", "scope": "/je-manifeste/", "display": "standalone", "background_color": "#070605", "theme_color": "#070605", "icons": [{"src": "icon-192.png", "sizes": "192x192", "type": "image/png"}, {"src": "icon-512.png", "sizes": "512x512", "type": "image/png"}]}

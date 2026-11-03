@@ -92,14 +92,15 @@ footer{font-size:11px;color:var(--muted);text-align:center;line-height:1.6;margi
 </main>
 <audio id="audio" preload="none"></audio>
 <script>
-const SRC="https://gcydqswrcrwiyweegllk.supabase.co/storage/v1/object/public/creators/bf9d8219-c4d6-49b6-9b70-f3a4faa6e02f/audios/vivant-voyage-interieur-master-v1-9deprisb.mp3";
+const MEDIA="https://verrou.magie-alessa.workers.dev/media/vivant/vivant-voyage-interieur.mp3";
+const signed=()=>{let p="";try{p=localStorage.getItem("pass_vivant")||""}catch(_){}return MEDIA+"?p="+encodeURIComponent(p)};
 const CACHE="vivant-audio-v1",K="vivant_pos";
 const $=id=>document.getElementById(id),audio=$("audio");
 const fmt=s=>{s=Math.max(0,Math.floor(s||0));return Math.floor(s/60)+":"+String(s%60).padStart(2,"0")};
-async function cached(){try{return await (await caches.open(CACHE)).match(SRC)}catch(_){return null}}
+async function cached(){try{const c=await caches.open(CACHE);return await c.match(MEDIA)}catch(_){return null}}
 (async()=>{if(await cached()){$("keep").textContent="✓ Gardé, écoute possible sans réseau";$("keep").classList.add("ok")}})();
 $("go").onclick=async()=>{$("player").classList.add("on");
- if(!audio.src){const r=await cached();audio.src=r?URL.createObjectURL(await r.blob()):SRC;
+ if(!audio.src){const r=await cached();audio.src=r?URL.createObjectURL(await r.blob()):signed();
   let p=0;try{p=+localStorage.getItem(K)||0}catch(_){}
   audio.addEventListener("loadedmetadata",()=>{if(p)audio.currentTime=p},{once:true});}
  audio.play().catch(()=>{});$("player").scrollIntoView({behavior:"smooth",block:"nearest"});};
@@ -112,7 +113,7 @@ $("back").onclick=()=>{audio.currentTime=Math.max(0,audio.currentTime-15)};
 $("fwd").onclick=()=>{audio.currentTime+=30};
 $("bar").onclick=e=>{if(!audio.duration)return;const r=e.currentTarget.getBoundingClientRect();audio.currentTime=audio.duration*(e.clientX-r.left)/r.width};
 $("keep").onclick=async()=>{const k=$("keep");if(k.classList.contains("ok"))return;k.textContent="Un instant…";
- try{const r=await fetch(SRC);if(!r.ok)throw 0;await (await caches.open(CACHE)).put(SRC,r);k.textContent="✓ Gardé, écoute possible sans réseau";k.classList.add("ok")}catch(_){k.textContent="Réessaie avec du réseau"}};
+ try{const r=await fetch(signed());if(!r.ok)throw 0;await (await caches.open(CACHE)).put(MEDIA,r);k.textContent="✓ Gardé, écoute possible sans réseau";k.classList.add("ok")}catch(_){k.textContent="Réessaie avec du réseau"}};
 // Verrou : un e-mail d'achat, deux appareils maximum
 (function(){
  const API="https://verrou.magie-alessa.workers.dev",P="pass_vivant",D="alessa_appareil";
