@@ -10,8 +10,8 @@
 <link rel="icon" href="icon-512.png?v=8">
 <link rel="manifest" href="manifest.json">
 <meta http-equiv="Cache-Control" content="no-cache">
-<style>.gate{display:none!important}[hidden]{display:none!important}</style>
-<script>(function(){var B="1793454465";function chk(){try{fetch("version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.json()}).then(function(j){if(j&&j.v&&j.v!==B){var k="gv-reload";try{if(sessionStorage.getItem(k)===j.v)return;sessionStorage.setItem(k,j.v)}catch(e){}location.replace(location.pathname+"?v="+j.v)}}).catch(function(){})}catch(e){}}chk();document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible")chk()});})();</script>
+<style>[hidden]{display:none!important}</style>
+<script>(function(){var B="1793735705";function chk(){try{fetch("version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.json()}).then(function(j){if(j&&j.v&&j.v!==B){var k="gv-reload";try{if(sessionStorage.getItem(k)===j.v)return;sessionStorage.setItem(k,j.v)}catch(e){}location.replace(location.pathname+"?v="+j.v)}}).catch(function(){})}catch(e){}}chk();document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible")chk()});})();</script>
 <title>Georges</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700&family=Figtree:wght@400;500;600&display=swap">
 <style>
@@ -368,11 +368,11 @@ form.add button{grid-column:1/-1;padding:10px;border-radius:10px;border:0;backgr
     <svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="22" fill="var(--leaf-soft)" stroke="var(--leaf)" stroke-width="2"/><path d="M13 30c0-9 7-16 19-17-1 11-8 18-17 18" fill="var(--leaf)"/><g fill="var(--iron)"><ellipse cx="30" cy="34" rx="3.6" ry="3"/><circle cx="26.4" cy="29.6" r="1.4"/><circle cx="29.2" cy="28.2" r="1.4"/><circle cx="32.4" cy="28.6" r="1.4"/><circle cx="34.6" cy="31" r="1.4"/></g></svg>
     <div class="gbrand">Gardien de la Terre® · par Stéphanie &amp; Georges</div>
     <h2 class="gtitle">Georges</h2>
-    <label for="gcode">Entre le code d'accès reçu avec Vivant.</label>
-    <input id="gcode" autocomplete="off" autocapitalize="characters" placeholder="Ton code d'accès">
+    <label for="gcode">Entre l'e-mail utilisé pour ton achat de Vivant. Si on te l'a offert, entre l'e-mail que la personne a noté pour toi.</label>
+    <input id="gcode" type="email" inputmode="email" autocomplete="email" autocapitalize="off" placeholder="ton e-mail" style="text-transform:none;letter-spacing:0">
     <button type="submit">Entrer</button>
     <div class="gerr" id="gerr" role="alert"></div>
-    <div class="gnote">Tu ne le saisis qu'une fois : ton téléphone s'en souvient.</div>
+    <div class="gnote">Tu ne le saisis qu'une fois : ton appareil s'en souvient.<br>Valable pour une seule personne, sur deux appareils maximum (un ordinateur, un téléphone).</div>
   </form>
 </div>
 <div class="exo" id="ytw" role="dialog" aria-modal="true" aria-labelledby="ytT" hidden>
@@ -1863,13 +1863,24 @@ document.addEventListener("click",e=>{const g=e.target.closest("[data-g]");if(!g
 const CODES=["2d873b69f6f83437e6b016046b87dd8e13a49cd5d8931a4fefa38d8378ed8209"];
 async function sha(s){const b=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(s));return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,"0")).join("");}
 const gate=document.getElementById("gate");
-if(true){gate.hidden=true;if(load("georges_vu","")!==today)showGeorges();}
-else{setTimeout(()=>document.getElementById("gcode").focus(),50);}
+// Verrou : e-mail d'achat, deux appareils maximum (partagés avec l'univers Vivant)
+const VAPI="https://verrou.magie-alessa.workers.dev",VP="pass_georges",VD="alessa_appareil";
+const lget=k=>{try{return localStorage.getItem(k)}catch(e){return null}},lset=(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}};
+let vdev=lget(VD);if(!vdev){vdev=crypto.randomUUID?crypto.randomUUID():String(Math.random()).slice(2)+Date.now();lset(VD,vdev)}
+function gOpen(){gate.hidden=true;if(load("georges_vu","")!==today)showGeorges();}
+function gShut(){gate.hidden=false;setTimeout(()=>document.getElementById("gcode").focus(),50);}
+const vpass=lget(VP);
+if(vpass){gOpen();fetch(VAPI+"/verifier",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({pass:vpass})}).then(r=>r.json()).then(r=>{if(r&&r.ok===false){try{localStorage.removeItem(VP)}catch(e){}gShut()}}).catch(()=>{});}
+else{gShut();const pv=lget("pass_vivant");if(pv&&pv.includes("@")){document.getElementById("gcode").value=pv.split("|")[0];setTimeout(()=>document.getElementById("gateForm").requestSubmit(),80);}}
 document.getElementById("gateForm").addEventListener("submit",async e=>{
-  e.preventDefault();const v=document.getElementById("gcode").value.trim().toUpperCase();if(!v)return;
-  const h=await sha(v);
-  if(CODES.includes(h)){store("acces",h);gate.hidden=true;window.scrollTo(0,0);showGeorges();}
-  else document.getElementById("gerr").textContent="Ce code ne fonctionne pas. Vérifie le mail reçu après ton achat.";
+  e.preventDefault();const email=document.getElementById("gcode").value.trim(),er=document.getElementById("gerr"),btn=e.target.querySelector("button");if(!email)return;
+  er.textContent="";btn.disabled=true;btn.textContent="Un instant…";
+  try{const r=await (await fetch(VAPI+"/activer",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email,produit:"georges",appareil:vdev})})).json();
+    if(r.ok){lset(VP,r.pass);window.scrollTo(0,0);gate.hidden=true;showGeorges();}
+    else if(r.raison==="appareils")er.textContent="Georges est déjà ouvert sur deux appareils. Si tu as changé de téléphone ou d'ordinateur, réponds au mail de ton achat : on te remet l'accès.";
+    else er.textContent="Cet e-mail n'apparaît pas parmi les achats de Vivant. Vérifie l'orthographe, ou essaie l'autre e-mail que tu utilises. Si ça ne marche toujours pas, réponds au mail de ton achat.";
+  }catch(_){er.textContent="Pas de réseau pour l'instant. Réessaie dans un moment."}
+  btn.disabled=false;btn.textContent="Entrer";
 });
 // L'appli s'ouvre toujours sur « Aujourd'hui », sauf lien direct
 const H=location.hash.slice(1);
