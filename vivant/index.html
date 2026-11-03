@@ -40,6 +40,17 @@ body{font-family:var(--sans);font-size:15px;line-height:1.55;min-height:100vh;-w
 .note{font-size:12px;color:var(--muted);text-align:center}
 .inst{font-size:14px;line-height:1.5;padding:16px;border:1px solid var(--turq);border-radius:14px;background:#5fd3c412}.inst b{color:var(--turq)}
 .inst button{margin-top:10px;background:var(--turq);color:#04140f;border:0;border-radius:999px;padding:10px 16px;font-weight:700}
+.gate{display:flex;flex-direction:column;gap:12px;padding:20px 18px;border:1px solid var(--line);border-radius:14px;background:linear-gradient(180deg,#ffffff0a,#ffffff03)}
+.gate[hidden]{display:none}
+.gate h2{font-family:var(--serif);font-weight:600;font-size:24px;line-height:1.15;text-align:center}
+.gate p{font-size:13.5px;color:var(--muted);text-align:center;text-wrap:pretty}
+.gate input{width:100%;font:16px var(--sans);color:var(--text);background:#00000040;border:1px solid var(--line);border-radius:10px;padding:13px 14px}
+.gate input:focus{outline:none;border-color:var(--turq);box-shadow:0 0 0 3px #5fd3c42a}
+.gate .btn{background:linear-gradient(135deg,var(--turq),var(--emer));color:#04140f;border:0;border-radius:999px;padding:13px 18px;font:700 15px var(--sans);cursor:pointer}
+.gate .btn:disabled{opacity:.6}
+.gate .err{color:#f0c9a0;font-size:13px;min-height:1em}
+.gate .small{font-size:11.5px}
+#content{display:none;flex-direction:column;gap:20px}#content.on{display:flex}
 footer{font-size:11px;color:var(--muted);text-align:center;line-height:1.6;margin-top:10px}
 </style></head><body>
 <div class="hero" role="img" aria-label="Vivant, voyage au centre de la Terre"></div>
@@ -48,6 +59,15 @@ footer{font-size:11px;color:var(--muted);text-align:center;line-height:1.6;margi
  <p class="tag">Bienvenue. Ton voyage au centre de la Terre commence ici.</p>
  <div class="rule" aria-hidden="true"><i></i><b></b><i></i></div>
 
+ <form class="gate" id="gate" hidden>
+  <h2>Ouvre ton voyage</h2>
+  <p>Entre l'e-mail utilisé pour ton achat. Si ce voyage t'a été offert, entre l'e-mail que la personne a noté pour toi.</p>
+  <input type="email" id="mail" autocomplete="email" inputmode="email" placeholder="ton e-mail" required>
+  <button class="btn" id="ok" type="submit">Entrer</button>
+  <p class="err" id="err" role="alert"></p>
+  <p class="small">Ton billet est valable pour une seule personne, sur deux appareils maximum (un ordinateur, un téléphone).</p>
+ </form>
+ <div id="content">
  <button class="door main" id="go" type="button"><span class="ic">▶</span><span><b>Écouter mon voyage intérieur</b><span>Vivant · une vingtaine de minutes · casque et yeux fermés</span></span></button>
  <div class="player" id="player">
   <div class="prow">
@@ -66,6 +86,7 @@ footer{font-size:11px;color:var(--muted);text-align:center;line-height:1.6;margi
  <a class="door" href="https://vivant.gardiendelaterre.com/vivant" target="_blank" rel="noopener"><span class="ic">🌿</span><span><b>Commencer mon défi Vivant</b><span>7 jours, 7 vidéos avec moi, offerts</span></span></a>
 
  <section class="inst" id="inst" hidden></section>
+ </div>
 
  <footer>Garde précieusement ton billet (le PDF reçu à l'achat) : il te ramène ici à tout moment.<br>Besoin d'aide ? Réponds simplement au mail de ton achat.<br><br>Fiction audio immersive® et Gardien de la Terre® sont des marques déposées de Stéphanie Dordain.<br>Ce voyage ne remplace ni un médecin, ni un traitement, ni un suivi psychologique.</footer>
 </main>
@@ -92,6 +113,23 @@ $("fwd").onclick=()=>{audio.currentTime+=30};
 $("bar").onclick=e=>{if(!audio.duration)return;const r=e.currentTarget.getBoundingClientRect();audio.currentTime=audio.duration*(e.clientX-r.left)/r.width};
 $("keep").onclick=async()=>{const k=$("keep");if(k.classList.contains("ok"))return;k.textContent="Un instant…";
  try{const r=await fetch(SRC);if(!r.ok)throw 0;await (await caches.open(CACHE)).put(SRC,r);k.textContent="✓ Gardé, écoute possible sans réseau";k.classList.add("ok")}catch(_){k.textContent="Réessaie avec du réseau"}};
+// Verrou : un e-mail d'achat, deux appareils maximum
+(function(){
+ const API="https://verrou.magie-alessa.workers.dev",P="pass_vivant",D="alessa_appareil";
+ const g=k=>{try{return localStorage.getItem(k)}catch(_){return null}},s=(k,v)=>{try{localStorage.setItem(k,v)}catch(_){}};
+ let dev=g(D);if(!dev){dev=(crypto.randomUUID?crypto.randomUUID():String(Math.random()).slice(2)+Date.now());s(D,dev)}
+ const open=()=>{$("gate").hidden=true;$("content").classList.add("on")},shut=()=>{$("content").classList.remove("on");$("gate").hidden=false};
+ const pass=g(P);
+ if(pass){open();fetch(API+"/verifier",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({pass})}).then(r=>r.json()).then(r=>{if(r&&r.ok===false){try{localStorage.removeItem(P)}catch(_){}shut()}}).catch(()=>{})}
+ else shut();
+ $("gate").onsubmit=async e=>{e.preventDefault();const b=$("ok"),er=$("err"),email=$("mail").value.trim();er.textContent="";b.disabled=true;b.textContent="Un instant…";
+  try{const r=await (await fetch(API+"/activer",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email,produit:"vivant",appareil:dev})})).json();
+   if(r.ok){s(P,r.pass);open()}
+   else if(r.raison==="appareils")er.textContent="Ce voyage est déjà ouvert sur deux appareils. Si tu as changé de téléphone ou d'ordinateur, réponds au mail de ton achat : on te remet l'accès.";
+   else er.textContent="Cet e-mail n'apparaît pas parmi les achats de Vivant. Vérifie l'orthographe, ou essaie l'autre e-mail que tu utilises. Si ça ne marche toujours pas, réponds au mail de ton achat.";
+  }catch(_){er.textContent="Pas de réseau pour l'instant. Réessaie dans un moment."}
+  b.disabled=false;b.textContent="Entrer"};
+})();
 (function(){
  if("serviceWorker" in navigator)addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));
  const ua=navigator.userAgent,box=$("inst");
