@@ -67,6 +67,7 @@ h1{font:400 clamp(40px,11vw,64px)/1 var(--display);text-align:center;letter-spac
 .time{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums}
 .teaser{align-self:center;display:inline-flex;align-items:center;gap:10px;background:transparent;border:1px solid var(--accent);color:var(--gold);border-radius:999px;padding:10px 20px;font:600 14px var(--sans);cursor:pointer}.teaser[hidden]{display:none}.teaser span{color:var(--accent)}
 .teaser i{font-style:normal}.trailer,.film video{width:100%;aspect-ratio:16/9;background:#000;border-radius:8px;border:1px solid var(--line)}.trailer[hidden],.film[hidden]{display:none}.fnote{font-size:12px;color:var(--muted);margin-top:6px;text-align:center}
+.buy{display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center;text-decoration:none;padding:18px;border-radius:14px;background:linear-gradient(135deg,var(--accent),color-mix(in srgb,var(--accent) 60%,var(--gold)));color:var(--night)}.buy[hidden]{display:none}.buy span{font-size:13.5px;font-weight:600}.buy b{font:400 22px var(--display)}
 .gate{display:flex;flex-direction:column;gap:12px;padding:20px 18px;border:1px solid var(--line);border-radius:14px;background:#ffffff07}
 .gate[hidden]{display:none}
 .gate h2{font:400 26px var(--display);text-align:center;color:var(--gold)}
@@ -101,6 +102,7 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--gold);outline-offse
   <p class="err" id="err" role="alert"></p>
   <p style="font-size:11.5px">Billet et lien valables pour un seul utilisateur, sur deux appareils maximum (un ordinateur, un téléphone).</p>
  </form>
+ <a class="buy" id="buy" href="https://www.lamagiedalessa.com/karma-le-film" target="_blank" rel="noopener" hidden><span>Tu n'as pas encore ton film ?</span><b>Je commande Karma →</b></a>
 
  <div id="content">
   <div class="intro"><p>Tu crois regarder un film… mais c&#x27;est lui qui te regarde.</p><p>Karma, c&#x27;est pas juste un film. C&#x27;est une traversée, une expérience. Une plongée en plein cœur de cette dualité qu&#x27;on vit tous : ce combat intérieur entre l&#x27;ombre et la lumière.</p></div>
@@ -181,7 +183,7 @@ else if(D.teaser){const tb=$("teaser");tb.hidden=false;tb.onclick=()=>{curKey=nu
  const API="https://verrou.magie-alessa.workers.dev",P="pass_"+D.slug,DV="alessa_appareil";
  const lg=k=>{try{return localStorage.getItem(k)}catch(_){return null}},ls=(k,v)=>{try{localStorage.setItem(k,v)}catch(_){}};
  let dev=lg(DV);if(!dev){dev=crypto.randomUUID?crypto.randomUUID():String(Math.random()).slice(2)+Date.now();ls(DV,dev)}
- const open=()=>{$("gate").hidden=true;$("content").classList.add("on");renderBlocs();if(D.video)setupFilm()},shut=()=>{$("content").classList.remove("on");$("gate").hidden=false};
+ const open=()=>{$("gate").hidden=true;$("buy").hidden=true;$("content").classList.add("on");renderBlocs();if(D.video)setupFilm()},shut=()=>{$("content").classList.remove("on");$("gate").hidden=false;if($("buy").getAttribute("href"))$("buy").hidden=false};
  const pass=lg(P);
  if(pass){open();fetch(API+"/verifier",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({pass})}).then(r=>r.json()).then(r=>{if(r&&r.ok===false){try{localStorage.removeItem(P)}catch(_){}shut()}}).catch(()=>{})}else shut();
  $("gate").onsubmit=async e=>{e.preventDefault();const b=$("ok"),er=$("err"),email=$("mail").value.trim();er.textContent="";b.disabled=true;b.textContent="Un instant…";
