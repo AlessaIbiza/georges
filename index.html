@@ -175,6 +175,20 @@ form.add button{grid-column:1/-1;padding:10px;border-radius:10px;border:0;backgr
 .card h2 + div .jr:first-child{border-top:0}
 .jr .meta{text-transform:capitalize}
 .jr p{margin:2px 0 0;white-space:pre-wrap}
+.jr .jl{display:flex;gap:10px;align-items:flex-start;justify-content:space-between}.jr .jl p{flex:1}
+.jdel{flex:none;border:0;background:none;color:var(--muted);font:500 .8rem var(--body);padding:4px 6px;border-radius:8px;cursor:pointer}
+.jdel.sure{background:#c0392b;color:#fff}
+.mf{padding:12px 14px;border-top:1px solid var(--line)}.card h2 + div .mf:first-child{border-top:0}
+.mf q{display:block;font:italic 500 1.08rem/1.5 var(--body);quotes:"« " " »";white-space:pre-wrap}
+.mf .meta{margin-top:2px}.mf .acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.mf .acts button{border:1px solid var(--line);background:var(--card);color:var(--fg);font:600 .85rem var(--body);padding:7px 12px;border-radius:999px;cursor:pointer}
+.mf .acts .vis{background:var(--leaf);color:#fff;border-color:var(--leaf)}
+.mf .acts .jdel{border:0;background:none;color:var(--muted);font-weight:500;margin-left:auto}.mf .acts .jdel.sure{background:#c0392b;color:#fff}
+.mf.ok q{opacity:.75}.mfok{font:600 .8rem var(--body);color:var(--leaf)}
+#visu{position:fixed;inset:0;z-index:90;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;padding:30px 26px;text-align:center;color:#fff;background:radial-gradient(ellipse at 50% 35%,#1f7a5c 0%,#0b2019 55%,#050c09 100%)}
+#visu[hidden]{display:none}#visu .vk{font:600 .78rem var(--body);letter-spacing:.25em;text-transform:uppercase;color:#5fd3c4}
+#visu .vt{font:italic 500 1.6rem/1.45 var(--body);max-width:30ch;white-space:pre-wrap}#visu .vm{font-size:.95rem;color:#cfe6dc;max-width:32ch}
+#visu button{margin-top:10px;border:1px solid #ffffff55;background:none;color:#fff;font:600 .95rem var(--body);padding:10px 22px;border-radius:999px}
 .med{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;padding:12px 14px;border-top:1px solid var(--line)}
 .card h2 + .med{border-top:0}
 .subnav{margin-top:-4px}
@@ -532,9 +546,9 @@ form.add button{grid-column:1/-1;padding:10px;border-radius:10px;border:0;backgr
     </section>
 
     <section class="card" aria-labelledby="voeuT">
-      <h2 id="voeuT">Mon vœu du jour ✨</h2>
+      <h2 id="voeuT">Ma manifestation du jour ✨</h2>
       <div class="pad">
-        <label for="voeu" class="meta">Mon rêve, ma manifestation : écris-le au présent, comme si c'était déjà là. Puis ressens-le.</label>
+        <label for="voeu" class="meta">Ce que je veux voir se manifester, le message que je veux ancrer dans la matière. Écris-le au présent, comme si c'était déjà là. Puis ressens-le. Tu le retrouves dans ton journal pour le relire et le visualiser toute la journée.</label>
         <textarea id="voeu" rows="3" placeholder="Aujourd'hui, je vis…"></textarea>
         <div class="meta" id="voeuSaved"></div>
       </div>
@@ -562,13 +576,19 @@ form.add button{grid-column:1/-1;padding:10px;border-radius:10px;border:0;backgr
         </details>
       </div>
     </section>
+    <section class="card" aria-labelledby="mfT">
+      <h2 id="mfT">Mes manifestations ✨<span id="mfN"></span></h2>
+      <div id="mfList"></div>
+      <div class="empty" id="mfEmpty">Écris ta manifestation du jour dans « Aujourd'hui » : elle apparaîtra ici, pour la relire et la visualiser autant de fois que tu veux.</div>
+    </section>
     <section class="card" id="journalCard" aria-labelledby="jrT">
-      <h2 id="jrT">Mes messages et mes vœux<span id="jN"></span></h2>
+      <h2 id="jrT">Mes messages intuitifs<span id="jN"></span></h2>
       <div id="journal"></div>
-      <div class="empty" id="jEmpty">Tes messages intuitifs et tes vœux apparaîtront ici, jour après jour.</div>
+      <div class="empty" id="jEmpty">Tes messages intuitifs apparaîtront ici, jour après jour.</div>
     </section>
   </div>
 
+  <div id="visu" hidden role="dialog" aria-modal="true" aria-labelledby="visuT"><div class="vk" id="visuT">Ma manifestation</div><div class="vt" id="visuTxt"></div><div class="vm">Ferme les yeux. Vois-le, entends-le, ressens-le, comme si c'était déjà là. Respire. Et remercie.</div><button type="button" id="visuX">C'est ancré 🙏</button></div>
   <!-- MÉDITER -->
   <div id="pane-m" class="pane" role="tabpanel" aria-labelledby="tab-m" hidden>
     <p class="intro">La première fois que tu touches « Écouter » sur ton voyage Vivant, connecte-toi avec l'adresse e-mail de ton achat : ton téléphone s'en souviendra ensuite.</p>
@@ -1264,12 +1284,32 @@ function renderDay(){
   let h="";for(let i=6;i>=0;i--){const x=new Date();x.setDate(x.getDate()-i);const k=ymd(x);
     h+=`<div class="day${i===0?" today":""}"><span class="dot${doneCount(k)>=RITS.length?" on":""}"></span>${i===0?"Auj.":JOURS[x.getDay()]}</div>`;}
   document.getElementById("vivDays").innerHTML=h;
-  const has=k=>(vh[k].msg&&vh[k].msg.trim())||(vh[k].voeu&&vh[k].voeu.trim());
-  const past=Object.keys(vh).filter(has).sort().reverse().slice(0,60);
-  document.getElementById("jEmpty").hidden=!!past.length;
-  document.getElementById("jN").textContent=past.length?past.length+" message"+(past.length>1?"s":""):"";
-  document.getElementById("journal").innerHTML=past.map(k=>`<div class="jr"><div class="meta">${new Date(k+"T12:00:00").toLocaleDateString("fr-FR",{weekday:"long",day:"numeric",month:"long"})}</div>${vh[k].msg&&vh[k].msg.trim()?`<p>${esc(vh[k].msg)}</p>`:""}${vh[k].voeu&&vh[k].voeu.trim()?`<p><b>✨ Mon vœu :</b> ${esc(vh[k].voeu)}</p>`:""}</div>`).join("");
+  renderJournal();
 }
+const dlab=k=>new Date(k+"T12:00:00").toLocaleDateString("fr-FR",{weekday:"long",day:"numeric",month:"long"});
+function renderJournal(){
+  const ks=Object.keys(vh).sort().reverse();
+  const mk=ks.filter(k=>vh[k].voeu&&vh[k].voeu.trim()).slice(0,90);
+  const open=mk.filter(k=>!vh[k].voeuOk),done=mk.filter(k=>vh[k].voeuOk);
+  document.getElementById("mfEmpty").hidden=!!mk.length;
+  document.getElementById("mfN").textContent=open.length?" · "+open.length+" en cours":"";
+  const item=(k,ok)=>`<div class="mf${ok?" ok":""}"><q>${esc(vh[k].voeu)}</q><div class="meta">${dlab(k)}${ok?` · <span class="mfok">✓ Manifesté le ${new Date(vh[k].voeuOk+"T12:00:00").toLocaleDateString("fr-FR",{day:"numeric",month:"long"})}</span>`:""}</div>
+    <div class="acts">${ok?"":`<button type="button" class="vis" data-vis="${k}">✨ Visualiser</button><button type="button" data-mok="${k}">C'est manifesté 🙏</button>`}<button type="button" class="jdel" data-del="${k}:voeu">Effacer</button></div></div>`;
+  document.getElementById("mfList").innerHTML=open.map(k=>item(k,false)).join("")+(done.length?`<div class="mf"><div class="meta" style="font-weight:600">Déjà manifesté ✨</div></div>`+done.map(k=>item(k,true)).join(""):"");
+  const past=ks.filter(k=>vh[k].msg&&vh[k].msg.trim()).slice(0,60);
+  document.getElementById("jEmpty").hidden=!!past.length;
+  document.getElementById("jN").textContent=past.length?" · "+past.length:"";
+  document.getElementById("journal").innerHTML=past.map(k=>`<div class="jr"><div class="meta">${dlab(k)}</div><div class="jl"><p>${esc(vh[k].msg)}</p><button type="button" class="jdel" data-del="${k}:msg">Effacer</button></div></div>`).join("");
+}
+document.getElementById("pane-n").addEventListener("click",e=>{
+  const v=e.target.closest("[data-vis]");if(v){document.getElementById("visuTxt").textContent=vh[v.dataset.vis].voeu;document.getElementById("visu").hidden=false;return;}
+  const o=e.target.closest("[data-mok]");if(o){vh[o.dataset.mok].voeuOk=today;saveV();renderJournal();toast("Merci la vie ✨");return;}
+  const d=e.target.closest("[data-del]");if(!d)return;
+  if(!d.classList.contains("sure")){d.classList.add("sure");d.textContent="Sûr ? Effacer";setTimeout(()=>{if(d.isConnected){d.classList.remove("sure");d.textContent="Effacer"}},3500);return;}
+  const [k,f]=d.dataset.del.split(":");vh[k][f]="";if(f==="voeu")delete vh[k].voeuOk;saveV();
+  if(k===today){(f==="msg"?msg:voeu).value="";}renderJournal();toast("Effacé");
+});
+document.getElementById("visuX").onclick=()=>{document.getElementById("visu").hidden=true};
 document.getElementById("ritList").addEventListener("change",e=>{const k=e.target.dataset.rit;if(!k)return;
   if(e.target.checked)vh[today][k]=true;else delete vh[today][k];saveV();renderDay();
   if(doneCount(today)===RITS.length)toast("Tous tes rituels sont faits. Belle journée vivante ✨");});
