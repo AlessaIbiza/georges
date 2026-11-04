@@ -129,7 +129,7 @@ form.add button{grid-column:1/-1;padding:10px;border-radius:10px;border:0;backgr
 .mnote{margin:0;color:var(--muted)}
 .rec{padding:14px;display:flex;flex-direction:column;gap:10px}
 .rec h3{font:700 1.15rem/1.2 var(--display);margin:0;text-wrap:balance}
-.rhead{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.rhead{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.rec>.steph{display:inline-block;margin-bottom:8px}
 .time{flex:none;font-size:.8rem;color:var(--muted);border:1px solid var(--line);border-radius:10px;padding:2px 8px}
 .rec ul,.rec ol{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:3px}
 .rec h4{margin:0;font:700 .78rem var(--body);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
@@ -964,6 +964,10 @@ const REC={
   {n:"Pancakes avoine-banane, fraises et kiwi",time:"15 min",ing:[["avoine",1,"40 g de flocons d'avoine"],["laitS",1,"250 ml de lait de soja enrichi"],["banane",1,"1 banane écrasée"],["lin",1,"1 c. à soupe de lin moulu"],["pureeA",1,"2 c. à soupe de purée d'amande"],["fraise",1,"100 g de fraises"],["kiwi",1,"1 kiwi"],[null,0,"½ c. à café de levure chimique"]],
    steps:["Mélange le lin avec 3 c. à soupe d'eau et laisse gonfler 5 min.","Mixe avec l'avoine, la banane, la levure et un peu de lait, puis cuis de petits pancakes.","Garnis de purée d'amande, de fraises et de kiwi. Bois le reste du lait à côté."]}]},
  midi:{t:"Midi",note:"Le repas le plus protéiné de la journée.",list:[
+  {n:"Spaghetti bolo végane de Steph",steph:1,time:"25 min",ing:[["tvp",1,"50 g de soja texturé (pesé sec)"],["tomate",2,"2 tomates bien mûres, ou 200 g de coulis"],["patesB",1,"150 g de spaghetti cuits (sans gluten si tu préfères)"],[null,0,"1 petit oignon, 1 gousse d'ail, 2 c. à soupe de concentré de tomate, du basilic frais, huile d'olive, sel, poivre"]],
+   steps:["Réhydrate le soja texturé 10 min dans de l'eau chaude ou un bouillon, puis presse-le bien pour enlever l'eau : c'est ce qui lui donne du goût.","Fais revenir l'oignon et l'ail émincés dans l'huile d'olive, puis ajoute le soja et laisse-le dorer 5 min.","Ajoute les tomates, le concentré de tomate, sale, poivre, et laisse mijoter 10 min, jusqu'à ce que la sauce épaississe.","Sers sur les spaghetti avec plein de basilic frais."]},
+  {n:"Riz coco au poulet végane de Steph",steph:1,time:"25 min",ing:[["tvp",1,"50 g de soja texturé en gros morceaux (pesé sec)"],["riz",1,"150 g de riz cuit"],[null,0,"1 oignon, 15 cl de lait de coco, 1 c. à soupe de concentré de tomate, 1 à 2 c. à café de curry, huile, sel"]],
+   steps:["Réhydrate le soja texturé 10 min dans de l'eau chaude ou un bouillon, puis presse-le bien.","Fais revenir l'oignon émincé jusqu'à ce qu'il soit doré, ajoute le soja et le curry, et laisse dorer 5 min.","Verse le lait de coco et le concentré de tomate, et laisse mijoter jusqu'à obtenir une sauce bien épaisse et nappante.","Sers sur le riz."]},
   {n:"Chili au soja texturé",time:"25 min",ing:[["tvp",1,"50 g de soja texturé"],["haric",1,"150 g de haricots rouges"],["tomate",2,"2 tomates ou 200 g de coulis"],["poivron",1,"½ poivron rouge"],["rizC",1,"150 g de riz complet cuit"],[null,0,"Oignon, ail, cumin, paprika"]],
    steps:["Réhydrate le soja 10 min dans un bouillon chaud.","Fais revenir l'oignon, l'ail et le poivron, puis ajoute le soja, les haricots, les tomates et les épices.","Laisse mijoter 15 min et sers avec le riz."]},
   {n:"Salade de quinoa complète",time:"15 min",ing:[["quinoa",1,"150 g de quinoa cuit"],["edam",1,"100 g d'edamame"],["avocat",1,"½ avocat"],["radis",1,"1 poignée de radis"],["carotte",1,"100 g de carottes râpées"],["grenade",1,"½ grenade en graines"],["courge",1,"30 g de graines de courge"],[null,0,"Jus de citron, huile de colza"]],
@@ -980,6 +984,10 @@ const REC={
   {n:"Edamame tièdes et une orange",time:"5 min",ing:[["edam",1,"100 g d'edamame"],["orange",1,"1 orange"],[null,0,"1 pincée de fleur de sel"]],steps:["Réchauffe les edamame 3 min à l'eau bouillante et sale légèrement.","Termine par l'orange."]},
   {n:"Figues, noix et chocolat noir",time:"2 min",ing:[["figue",1,"3 figues sèches"],["noix",1,"1 poignée de noix"],["choco",1,"2 carrés de chocolat noir"]],steps:["Un goûter riche en calcium, en fer et en oméga-3, à grignoter."]}]},
  soir:{t:"Dîner",note:"Léger et tôt, idéalement avant 19 h, pour laisser le corps au repos.",list:[
+  {n:"Soupe verte de Steph",steph:1,time:"25 min",ing:[["pdt",1,"2 pommes de terre (≈ 200 g)"],["courgette",2,"2 courgettes"],[null,0,"1 oignon, bouillon de légumes, sel, poivre, un filet d'huile d'olive"]],
+   steps:["Coupe les pommes de terre, les courgettes et l'oignon en morceaux.","Fais cuire 20 min dans le bouillon, juste à hauteur des légumes.","Mixe, rectifie l'assaisonnement et ajoute un filet d'huile d'olive."]},
+  {n:"Soupe orange de Steph",steph:1,time:"25 min",ing:[["pdt",1,"2 pommes de terre (≈ 200 g)"],["carotte",3,"3 carottes (≈ 300 g)"],[null,0,"1 oignon, bouillon de légumes, sel, poivre, une pincée de cumin si tu aimes"]],
+   steps:["Coupe les pommes de terre, les carottes et l'oignon en morceaux.","Fais cuire 20 min dans le bouillon, juste à hauteur des légumes.","Mixe, et assaisonne à ton goût."]},
   {n:"Soupe de lentilles corail et carotte",time:"25 min",ing:[["soupeL",1,"1 bol de lentilles corail"],["carotte",1,"1 carotte"],["persil",1,"1 poignée de persil"],["lin",1,"1 c. à soupe de lin moulu"],[null,0,"Oignon, cumin, gingembre"]],
    steps:["Fais cuire lentilles, carotte et oignon 20 min dans l'eau avec les épices.","Mixe, puis parsème de persil et de lin."]},
   {n:"Tofu poêlé aux champignons et roquette",time:"15 min",ing:[["tofu",1,"100 g de tofu ferme"],["champi",1,"100 g de champignons"],["salade",1,"1 poignée de roquette"],["tomate",1,"1 tomate"],[null,0,"Ail, persil, huile d'olive"]],
@@ -1001,10 +1009,10 @@ const canUneat=r=>r.ing.some(([id])=>id)&&r.ing.every(([id,q])=>!id||(st.c[id]||
 function renderRecipes(){
   document.getElementById("meals").innerHTML=ORDER.map(k=>`<button type="button" data-meal="${k}" aria-pressed="${k===meal}">${REC[k].t}</button>`).join("");
   const m=REC[meal];document.getElementById("mnote").textContent=m.note;
-  const L=m.list,star=L.find(r=>r.star),O=star?L.filter(r=>r!==star):L,n=star?2:3,start=(dayNum+shift)%O.length,
-    pick=(star?[star]:[]).concat([...Array(Math.min(n,O.length)).keys()].map(i=>O[(start+i)%O.length]));
+  const L=m.list,top=L.filter(r=>r.star||r.steph),O=L.filter(r=>!top.includes(r)),n=Math.max(1,3-top.length),start=(dayNum+shift)%O.length,
+    pick=top.concat([...Array(Math.min(n,O.length)).keys()].map(i=>O[(start+i)%O.length]));
   document.getElementById("recs").innerHTML=pick.map(r=>{const t=recTotals(r),ri=L.indexOf(r);
-    return `<article class="card rec${r.star?" star":""}">${r.photo?`<div class="rphoto"><img src="${r.photo}" alt="${r.n}" loading="lazy"><div><span class="steph">La recette de Steph 💚</span><h3>${r.n}</h3><span class="time">${r.time}</span></div></div>`:`<div class="rhead"><h3>${r.n}</h3><span class="time">${r.time}</span></div>`}
+    return `<article class="card rec${r.star?" star":""}">${r.photo?`<div class="rphoto"><img src="${r.photo}" alt="${r.n}" loading="lazy"><div><span class="steph">La recette de Steph 💚</span><h3>${r.n}</h3><span class="time">${r.time}</span></div></div>`:`${r.steph?`<span class="steph">La recette de Steph 💚</span>`:""}<div class="rhead"><h3>${r.n}</h3><span class="time">${r.time}</span></div>`}
       <div class="nut">${r.kc&&!window.PERSO_MODE?`<span class="kc">${r.kc} kcal</span>`:""}<span class="p">${fmt(t.p)} g protéines</span><span class="f">fer ${fmt(t.fe)} mg</span><span class="k">calcium ${fmt(t.ca)} mg</span><span class="c">vit C ${fmt(t.c)} mg</span></div>
       ${t.fe>=6&&t.c>=75?`<span class="badge">Fer bien absorbé</span>`:""}
       <h4>Ingrédients</h4><ul>${r.ing.map(i=>`<li>${i[2]}</li>`).join("")}</ul>
