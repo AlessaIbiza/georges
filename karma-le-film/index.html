@@ -101,7 +101,7 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--gold);outline-offse
   <input type="email" id="mail" autocomplete="email" inputmode="email" placeholder="ton e-mail" required>
   <button class="btn" id="ok" type="submit">Entrer</button>
   <p class="err" id="err" role="alert"></p>
-  <p style="font-size:11.5px">Billet et lien valables pour un seul utilisateur, sur deux appareils maximum (un ordinateur, un téléphone).</p>
+  <p style="font-size:11.5px">Billet et lien valables pour un seul utilisateur, sur deux appareils maximum (un ordinateur, un téléphone). Sur un même appareil, le navigateur et l'icône de l'écran d'accueil comptent pour un seul.</p>
  </form>
  <a class="buy" id="buy" href="https://www.lamagiedalessa.com/karma-le-film" target="_blank" rel="noopener" hidden><span>Tu n'as pas encore ton film ?</span><b>Je commande Karma →</b></a>
 
@@ -188,7 +188,7 @@ else if(D.teaser){const tb=$("teaser");tb.hidden=false;tb.onclick=()=>{curKey=nu
  const pass=lg(P);
  if(pass){open();fetch(API+"/verifier",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({pass})}).then(r=>r.json()).then(r=>{if(r&&r.ok===false){try{localStorage.removeItem(P)}catch(_){}shut()}}).catch(()=>{})}else shut();
  $("gate").onsubmit=async e=>{e.preventDefault();const b=$("ok"),er=$("err"),email=$("mail").value.trim();er.textContent="";b.disabled=true;b.textContent="Un instant…";
-  try{const r=await (await fetch(API+"/activer",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email,produit:D.slug,appareil:dev})})).json();
+  try{const r=await (await fetch(API+"/activer",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email,produit:D.slug,appareil:dev,tactile:navigator.maxTouchPoints>1})})).json();
    if(r.ok){ls(P,r.pass);open()}
    else if(r.raison==="appareils")er.textContent="Ce voyage est déjà ouvert sur deux appareils. Si tu as changé de téléphone ou d'ordinateur, réponds au mail de ton achat : on te remet l'accès.";
    else er.textContent="Cet e-mail n'apparaît pas parmi les achats de "+D.nom+". Vérifie l'orthographe, ou essaie l'autre e-mail que tu utilises. Si ça ne marche toujours pas, réponds au mail de ton achat.";
@@ -200,8 +200,13 @@ else if(D.teaser){const tb=$("teaser");tb.hidden=false;tb.onclick=()=>{curKey=nu
  const ua=navigator.userAgent,box=$("inst");
  if(matchMedia("(display-mode: standalone)").matches||navigator.standalone===true)return;
  const ios=/iPhone|iPad|iPod/.test(ua)||(/Macintosh/.test(ua)&&navigator.maxTouchPoints>1),android=/Android/.test(ua);
- if(ios){box.innerHTML="<b>Garde "+D.nom+" sur ton écran d'accueil :</b> dans Safari, touche Partager (le carré avec la flèche), puis « Sur l'écran d'accueil ».";box.hidden=false}
- else if(android){box.innerHTML="<b>Garde "+D.nom+" sur ton écran d'accueil :</b> dans Chrome, touche ⋮ en haut à droite, puis « Ajouter à l'écran d'accueil ».";box.hidden=false}
+ const inapp=/FBAN|FBAV|Instagram|GSA\/|Line\/|WhatsApp|LinkedInApp|Snapchat|TikTok|Pinterest/.test(ua),autre=/CriOS|FxiOS|EdgiOS|OPiOS/.test(ua)||inapp,mac=/Macintosh/.test(ua)&&!ios,safariMac=mac&&/Safari/.test(ua)&&!/Chrome|Firefox|Edg/.test(ua);
+ const say=t=>{box.innerHTML=t;box.hidden=false};
+ if(ios&&!autre)say("<b>Garde "+D.nom+" sur ton écran d'accueil :</b> dans Safari, touche Partager (le carré avec la flèche), puis « Sur l'écran d'accueil ». Ouvre ensuite l'icône et entre ton e-mail une dernière fois.");
+ else if(ios)say("<b>Pour garder "+D.nom+" sur ton écran d'accueil, ouvre cette page dans Safari</b> (menu ⋯ ou ↗ → « Ouvrir dans Safari »), puis touche Partager → « Sur l'écran d'accueil ».");
+ else if(android)say("<b>Garde "+D.nom+" sur ton écran d'accueil :</b> dans Chrome, touche ⋮ en haut à droite, puis « Ajouter à l'écran d'accueil ».");
+ else if(safariMac)say("<b>Garde "+D.nom+" sur ton Mac :</b> dans Safari, menu Fichier → « Ajouter au Dock ». Ouvre ensuite l'icône et entre ton e-mail une dernière fois.");
+ else say("<b>Garde "+D.nom+" à portée de main :</b> ajoute cette page à tes favoris (Ctrl + D, ou ⌘ + D sur Mac).");
  addEventListener("beforeinstallprompt",e=>{e.preventDefault();box.innerHTML="<b>Garde "+D.nom+" à portée de main,</b> avec sa propre icône.<br><button id='ib' type='button'>Installer "+D.nom+"</button>";box.hidden=false;$("ib").onclick=()=>e.prompt()});
 })();
 </script>

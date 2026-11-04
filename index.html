@@ -372,7 +372,7 @@ form.add button{grid-column:1/-1;padding:10px;border-radius:10px;border:0;backgr
     <input id="gcode" type="email" inputmode="email" autocomplete="email" autocapitalize="off" placeholder="ton e-mail" style="text-transform:none;letter-spacing:0">
     <button type="submit">Entrer</button>
     <div class="gerr" id="gerr" role="alert"></div>
-    <div class="gnote">Tu ne le saisis qu'une fois : ton appareil s'en souvient.<br>Valable pour une seule personne, sur deux appareils maximum (un ordinateur, un téléphone).</div>
+    <div class="gnote">Tu ne le saisis qu'une fois : ton appareil s'en souvient.<br>Valable pour une seule personne, sur deux appareils maximum (un ordinateur, un téléphone).<br>Sur un même appareil, le navigateur et l'icône de l'écran d'accueil comptent pour un seul.</div>
   </form>
 </div>
 <div class="exo" id="ytw" role="dialog" aria-modal="true" aria-labelledby="ytT" hidden>
@@ -1875,7 +1875,7 @@ else{gShut();const pv=lget("pass_vivant");if(pv&&pv.includes("@")){document.getE
 document.getElementById("gateForm").addEventListener("submit",async e=>{
   e.preventDefault();const email=document.getElementById("gcode").value.trim(),er=document.getElementById("gerr"),btn=e.target.querySelector("button");if(!email)return;
   er.textContent="";btn.disabled=true;btn.textContent="Un instant…";
-  try{const r=await (await fetch(VAPI+"/activer",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email,produit:"georges",appareil:vdev})})).json();
+  try{const r=await (await fetch(VAPI+"/activer",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email,produit:"georges",appareil:vdev,tactile:navigator.maxTouchPoints>1})})).json();
     if(r.ok){lset(VP,r.pass);window.scrollTo(0,0);gate.hidden=true;showGeorges();}
     else if(r.raison==="appareils")er.textContent="Georges est déjà ouvert sur deux appareils. Si tu as changé de téléphone ou d'ordinateur, réponds au mail de ton achat : on te remet l'accès.";
     else er.textContent="Cet e-mail n'apparaît pas parmi les achats de Vivant. Vérifie l'orthographe, ou essaie l'autre e-mail que tu utilises. Si ça ne marche toujours pas, réponds au mail de ton achat.";
@@ -1911,10 +1911,22 @@ showTab(H==="mediter"?"m":H==="assiette"?"a":H==="journal"?"n":H==="aujourdhui"?
   function show(t,btn){if(installed||later())return;txt.innerHTML=t;go.hidden=!btn;box.hidden=false;}
   document.getElementById("instX").addEventListener("click",function(){box.hidden=true;try{localStorage.setItem("inst_later",new Date().toDateString())}catch(e){}});
   window.addEventListener("beforeinstallprompt",function(e){e.preventDefault();if(android&&!chrome)return;dp=e;
-    show("<strong>Accueille Georges sur ton téléphone.</strong> Il aura sa propre icône sur ton écran d'accueil."+(android?" <br><small>Ton téléphone dit que l'écran d'accueil est verrouillé ? Appui long sur ton écran d'accueil → Paramètres → désactive « Verrouiller la disposition ».</small>":""),true);});
+    show((android?"<strong>Accueille Georges sur ton téléphone.</strong> Il aura sa propre icône sur ton écran d'accueil.":"<strong>Accueille Georges sur ton ordinateur.</strong> Il aura sa propre icône, comme une application.")+(android?" <br><small>Ton téléphone dit que l'écran d'accueil est verrouillé ? Appui long sur ton écran d'accueil → Paramètres → désactive « Verrouiller la disposition ».</small>":""),true);});
   go.addEventListener("click",function(){if(dp){dp.prompt();dp.userChoice.then(function(){dp=null;box.hidden=true;});return;}
     if(go.dataset.chrome){location.href=go.dataset.chrome;}});
   window.addEventListener("appinstalled",function(){box.hidden=true;installed=true;});
+  // iPhone, iPad, Mac, PC : chacun sa consigne
+  var ios=/iPhone|iPad|iPod/.test(ua)||(/Macintosh/.test(ua)&&navigator.maxTouchPoints>1);
+  var autreIos=/CriOS|FxiOS|EdgiOS|OPiOS|FBAN|FBAV|Instagram|GSA\/|Line\/|WhatsApp|LinkedInApp|Snapchat|TikTok|Pinterest/.test(ua);
+  var safariMac=!ios&&/Macintosh/.test(ua)&&/Safari/.test(ua)&&!/Chrome|Firefox|Edg/.test(ua);
+  var encore=" Ouvre ensuite l'icône et entre ton e-mail une dernière fois.";
+  if(!installed&&!android){
+    if(ios&&!autreIos)show("<strong>Accueille Georges sur ton écran d'accueil.</strong> Dans Safari, touche Partager (le carré avec la flèche), puis « Sur l'écran d'accueil »."+encore,false);
+    else if(ios)show("<strong>Pour poser Georges sur ton écran d'accueil, ouvre cette page dans Safari</strong> (menu ⋯ ou ↗ → « Ouvrir dans Safari »), puis touche Partager → « Sur l'écran d'accueil ».",false);
+    else if(safariMac)show("<strong>Garde Georges sur ton Mac.</strong> Dans Safari, menu Fichier → « Ajouter au Dock »."+encore,false);
+    else setTimeout(function(){if(!dp)show("<strong>Garde Georges à portée de main.</strong> Ajoute cette page à tes favoris (Ctrl + D, ou ⌘ + D sur Mac).",false);},2500);
+  }
+  if(android&&chrome&&!installed)setTimeout(function(){if(!dp)show("<strong>Accueille Georges sur ton téléphone.</strong> Dans Chrome, touche ⋮ en haut à droite, puis « Ajouter à l'écran d'accueil ».",false);},2500);
   if(android&&!chrome&&!installed){
     var u=location.href.replace(/^https?:\/\//,"").replace(/[?#].*$/,"");
     go.dataset.chrome="intent://"+u+"#Intent;scheme=https;package=com.android.chrome;end";
