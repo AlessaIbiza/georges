@@ -1870,7 +1870,11 @@ let vdev=lget(VD);if(!vdev){vdev=crypto.randomUUID?crypto.randomUUID():String(Ma
 function gOpen(){gate.hidden=true;if(load("georges_vu","")!==today)showGeorges();}
 function gShut(){gate.hidden=false;setTimeout(()=>document.getElementById("gcode").focus(),50);}
 const vpass=lget(VP);
-if(vpass){gOpen();fetch(VAPI+"/verifier",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({pass:vpass})}).then(r=>r.json()).then(r=>{if(r&&r.ok===false){try{localStorage.removeItem(VP)}catch(e){}gShut()}}).catch(()=>{});}
+function gVerif(p){fetch(VAPI+"/verifier",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({pass:p})}).then(r=>r.json()).then(r=>{if(r&&r.ok===false){try{localStorage.removeItem(VP)}catch(e){}gShut()}}).catch(()=>{});}
+// Georges posé sur l'écran d'accueil reprend sans recharger la page : on revérifie à chaque retour
+addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible"){const p=lget(VP);if(p)gVerif(p);}});
+addEventListener("pageshow",e=>{if(e.persisted){const p=lget(VP);if(p)gVerif(p);}});
+if(vpass){gOpen();gVerif(vpass);}
 else{gShut();const pv=lget("pass_vivant");if(pv&&pv.includes("@")){document.getElementById("gcode").value=pv.split("|")[0];setTimeout(()=>document.getElementById("gateForm").requestSubmit(),80);}}
 document.getElementById("gateForm").addEventListener("submit",async e=>{
   e.preventDefault();const email=document.getElementById("gcode").value.trim(),er=document.getElementById("gerr"),btn=e.target.querySelector("button");if(!email)return;
