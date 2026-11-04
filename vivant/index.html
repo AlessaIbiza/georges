@@ -56,7 +56,7 @@ footer{font-size:11px;color:var(--muted);text-align:center;line-height:1.6;margi
 .decouvre[hidden]{display:none}
 .decouvre h2{font-family:var(--serif);font-weight:600;font-size:24px;line-height:1.15;text-align:center}
 .decouvre p{font-size:14px;color:var(--muted);text-align:center;text-wrap:pretty}
-.decouvre .teaser{border-radius:12px;overflow:hidden;border:1px solid var(--line);background:#000}.decouvre .teaser img{display:block;width:100%;aspect-ratio:1412/700;object-fit:cover}.decouvre .teaser audio{display:block;width:100%}
+.decouvre .teaser{position:relative;display:block;width:100%;padding:0;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#000;cursor:pointer;box-shadow:0 18px 40px #0008}.decouvre .teaser img{display:block;width:100%;aspect-ratio:1412/700;object-fit:cover;filter:brightness(.85)}.tplay{position:absolute;left:50%;top:50%;transform:translate(-50%,-62%);width:66px;height:66px;border-radius:50%;display:grid;place-items:center;font-size:24px;color:#04140f;background:linear-gradient(135deg,var(--turq),var(--emer));box-shadow:0 0 0 8px #5fd3c430,0 10px 30px #0009;padding-left:4px;box-sizing:border-box}.tplay.on{padding-left:0}.tlab{position:absolute;left:0;right:0;bottom:16px;text-align:center;font:600 13px var(--sans);letter-spacing:.06em;color:#fff;text-shadow:0 1px 6px #000}.tbar{position:absolute;left:0;right:0;bottom:0;height:4px;background:#ffffff22}.tbar b{display:block;height:100%;width:0;background:var(--turq)}
 .decouvre ul{list-style:none;display:flex;flex-direction:column;gap:8px;font-size:14.5px;padding:0;margin:0}
 .decouvre .btn{display:block;text-align:center;text-decoration:none;background:linear-gradient(135deg,var(--turq),var(--emer));color:#04140f;border-radius:999px;padding:14px 18px;font:700 15.5px var(--sans)}
 .decouvre .prix{font-family:var(--serif);font-size:20px;text-align:center;color:var(--gold)}
@@ -77,8 +77,7 @@ footer{font-size:11px;color:var(--muted);text-align:center;line-height:1.6;margi
  </form>
  <section class="decouvre" id="decouvre" hidden>
   <h2>Tu n'as pas encore ton univers Vivant ?</h2>
-  <p>Mets ton casque, et écoute la bande-annonce.</p>
-  <div class="teaser"><img src="cover.jpg" alt="Vivant, voyage au centre de la Terre"><audio src="teaser.m4a" controls preload="none"></audio></div>
+    <button class="teaser" id="tz" type="button" aria-label="Écouter la bande-annonce"><img src="cover.jpg" alt=""><span class="tplay" id="tzi">▶</span><span class="tlab" id="tzl">Écouter la bande-annonce · 1 min</span><i class="tbar"><b id="tzb"></b></i></button><audio id="tza" src="teaser.m4a" preload="none"></audio>
   <ul>
    <li>🎧 <b>Ton voyage intérieur Vivant</b>, une Fiction audio immersive® jusqu'au centre de la Terre</li>
    <li>🌿 <b>Ton aventure de 7 jours</b> : 7 vidéos, une chaque matin dans ta boîte mail</li>
@@ -170,4 +169,11 @@ $("keep").onclick=async()=>{const k=$("keep");if(k.classList.contains("ok"))retu
  addEventListener("beforeinstallprompt",e=>{e.preventDefault();box.innerHTML="<b>Garde Vivant à portée de main,</b> avec sa propre icône.<br><button id='ib' type='button'>Installer Vivant</button>";box.hidden=false;$("ib").onclick=()=>e.prompt()});
 })();
 </script>
+<script>(function(){var a=document.getElementById("tza"),b=document.getElementById("tz"),i=document.getElementById("tzi"),l=document.getElementById("tzl"),bar=document.getElementById("tzb");if(!a)return;
+b.onclick=function(){if(a.paused){a.play();}else{a.pause();}};
+a.onplay=function(){i.textContent="❚❚";i.classList.add("on");l.textContent="Mets ton casque, ferme les yeux…"};
+a.onpause=function(){i.textContent="▶";i.classList.remove("on");l.textContent="Reprendre la bande-annonce"};
+a.onended=function(){bar.style.width="100%";l.textContent="Réécouter la bande-annonce"};
+a.ontimeupdate=function(){if(a.duration)bar.style.width=(a.currentTime/a.duration*100)+"%"};
+var g=document.getElementById("go");if(g)g.addEventListener("click",function(){a.pause()});})();</script>
 </body></html>
