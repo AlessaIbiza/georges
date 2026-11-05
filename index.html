@@ -183,6 +183,8 @@ form.add button{grid-column:1/-1;padding:10px;border-radius:10px;border:0;backgr
 .mf .meta{margin-top:2px}.mf .acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
 .mf .acts button{border:1px solid var(--line);background:var(--card);color:var(--fg);font:600 .85rem var(--body);padding:7px 12px;border-radius:999px;cursor:pointer}
 .mf .acts .vis{background:var(--leaf);color:#fff;border-color:var(--leaf)}
+.grat{display:flex;flex-direction:column;gap:8px}.grat input{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--fg);font:400 1rem/1.4 var(--body)}.grat input:focus-visible{outline:2px solid var(--leaf);outline-offset:1px}
+.gr ul{margin:4px 0 0;padding-left:18px}.gr li{margin:2px 0}
 .mf .acts .jdel{border:0;background:none;color:var(--muted);font-weight:500;margin-left:auto}.mf .acts .jdel.sure{background:#c0392b;color:#fff}
 .mf.ok q{opacity:.75}.mfok{font:600 .8rem var(--body);color:var(--leaf)}
 #visu{position:fixed;inset:0;z-index:90;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;padding:30px 26px;text-align:center;color:#fff;background:radial-gradient(ellipse at 50% 35%,#18b3a6 0%,#0a7f78 38%,#06393a 75%,#04201f 100%)}
@@ -553,6 +555,15 @@ form.add button{grid-column:1/-1;padding:10px;border-radius:10px;border:0;backgr
         <div class="meta" id="voeuSaved"></div>
       </div>
     </section>
+
+    <section class="card" aria-labelledby="gratT">
+      <h2 id="gratT">Ma gratitude du jour 🙏<span id="gratN"></span></h2>
+      <div class="pad">
+        <label class="meta" for="g1">Note 5 choses pour lesquelles tu as de la gratitude aujourd'hui. Petites ou grandes. Ton esprit apprend à voir ce qui est beau, et tes filtres intérieurs se tournent vers le bon.</label>
+        <div class="grat" id="gratList"><input type="text" id="g1" data-gi="0" maxlength="160" placeholder="1. Merci pour…" autocomplete="off"><input type="text" id="g2" data-gi="1" maxlength="160" placeholder="2. Merci pour…" autocomplete="off"><input type="text" id="g3" data-gi="2" maxlength="160" placeholder="3. Merci pour…" autocomplete="off"><input type="text" id="g4" data-gi="3" maxlength="160" placeholder="4. Merci pour…" autocomplete="off"><input type="text" id="g5" data-gi="4" maxlength="160" placeholder="5. Merci pour…" autocomplete="off"></div>
+        <div class="meta" id="gratSaved"></div>
+      </div>
+    </section>
   </div>
 
   <!-- JOURNAL -->
@@ -580,6 +591,11 @@ form.add button{grid-column:1/-1;padding:10px;border-radius:10px;border:0;backgr
       <h2 id="mfT">Mes manifestations ✨<span id="mfN"></span></h2>
       <div id="mfList"></div>
       <div class="empty" id="mfEmpty">Écris ta manifestation du jour dans « Aujourd'hui » : elle apparaîtra ici, pour la relire et la visualiser autant de fois que tu veux.</div>
+    </section>
+    <section class="card" aria-labelledby="grJT">
+      <h2 id="grJT">Mes gratitudes 🙏<span id="grJN"></span></h2>
+      <div id="grJ"></div>
+      <div class="empty" id="grJEmpty">Tes gratitudes apparaîtront ici, jour après jour. Relis-les quand tu en as besoin.</div>
     </section>
     <section class="card" id="journalCard" aria-labelledby="jrT">
       <h2 id="jrT">Mes messages intuitifs<span id="jN"></span></h2>
@@ -1296,6 +1312,10 @@ function renderJournal(){
   const item=(k,ok)=>`<div class="mf${ok?" ok":""}"><q>${esc(vh[k].voeu)}</q><div class="meta">${dlab(k)}${ok?` · <span class="mfok">✓ Manifesté le ${new Date(vh[k].voeuOk+"T12:00:00").toLocaleDateString("fr-FR",{day:"numeric",month:"long"})}</span>`:""}</div>
     <div class="acts">${ok?"":`<button type="button" class="vis" data-vis="${k}">✨ Visualiser</button><button type="button" data-mok="${k}">C'est manifesté 🙏</button>`}<button type="button" class="jdel" data-del="${k}:voeu">Effacer</button></div></div>`;
   document.getElementById("mfList").innerHTML=open.map(k=>item(k,false)).join("")+(done.length?`<div class="mf"><div class="meta" style="font-weight:600">Déjà manifesté ✨</div></div>`+done.map(k=>item(k,true)).join(""):"");
+  const gk=ks.filter(k=>(vh[k].grat||[]).some(x=>x&&x.trim())).slice(0,60);
+  document.getElementById("grJEmpty").hidden=!!gk.length;
+  document.getElementById("grJN").textContent=gk.length?" · "+gk.length+" jour"+(gk.length>1?"s":""):"";
+  document.getElementById("grJ").innerHTML=gk.map(k=>`<div class="jr gr"><div class="meta">${dlab(k)}</div><div class="jl"><ul>${vh[k].grat.filter(x=>x&&x.trim()).map(x=>`<li>${esc(x)}</li>`).join("")}</ul><button type="button" class="jdel" data-del="${k}:grat">Effacer</button></div></div>`).join("");
   const past=ks.filter(k=>vh[k].msg&&vh[k].msg.trim()).slice(0,60);
   document.getElementById("jEmpty").hidden=!!past.length;
   document.getElementById("jN").textContent=past.length?" · "+past.length:"";
@@ -1306,8 +1326,8 @@ document.getElementById("pane-n").addEventListener("click",e=>{
   const o=e.target.closest("[data-mok]");if(o){vh[o.dataset.mok].voeuOk=today;saveV();renderJournal();toast("Merci la vie ✨");return;}
   const d=e.target.closest("[data-del]");if(!d)return;
   if(!d.classList.contains("sure")){d.classList.add("sure");d.textContent="Sûr ? Effacer";setTimeout(()=>{if(d.isConnected){d.classList.remove("sure");d.textContent="Effacer"}},3500);return;}
-  const [k,f]=d.dataset.del.split(":");vh[k][f]="";if(f==="voeu")delete vh[k].voeuOk;saveV();
-  if(k===today){(f==="msg"?msg:voeu).value="";}renderJournal();toast("Effacé");
+  const [k,f]=d.dataset.del.split(":");if(f==="grat"){vh[k].grat=[];}else vh[k][f]="";if(f==="voeu")delete vh[k].voeuOk;saveV();
+  if(k===today){if(f==="grat")document.querySelectorAll("#gratList input").forEach(x=>x.value="");else (f==="msg"?msg:voeu).value="";gratCount();}renderJournal();toast("Effacé");
 });
 document.getElementById("visuX").onclick=()=>{document.getElementById("visu").hidden=true};
 document.getElementById("ritList").addEventListener("change",e=>{const k=e.target.dataset.rit;if(!k)return;
@@ -1317,6 +1337,12 @@ const msg=document.getElementById("msg");msg.value=vh[today].msg||"";
 const voeu=document.getElementById("voeu");voeu.value=vh[today].voeu||"";
 let voeuT;voeu.addEventListener("input",()=>{vh[today].voeu=voeu.value;saveV();clearTimeout(voeuT);
   voeuT=setTimeout(()=>{document.getElementById("voeuSaved").textContent="Enregistré ✓";renderDay();},500);});
+const gIn=[...document.querySelectorAll("#gratList input")];if(!Array.isArray(vh[today].grat))vh[today].grat=[];
+gIn.forEach((x,i)=>{x.value=vh[today].grat[i]||""});
+function gratCount(){const n=gIn.filter(x=>x.value.trim()).length;document.getElementById("gratN").textContent=n?` · ${n} sur 5`:"";}
+gratCount();let gratT;
+document.getElementById("gratList").addEventListener("input",()=>{vh[today].grat=gIn.map(x=>x.value);saveV();gratCount();clearTimeout(gratT);
+  gratT=setTimeout(()=>{document.getElementById("gratSaved").textContent=gIn.every(x=>x.value.trim())?"Merci la vie ✨ Tes 5 gratitudes sont notées.":"Enregistré ✓";renderJournal();},500);});
 let msgT;msg.addEventListener("input",()=>{vh[today].msg=msg.value;saveV();clearTimeout(msgT);
   msgT=setTimeout(()=>{document.getElementById("msgSaved").textContent="Enregistré ✓";renderDay();},500);});
 // ---------- Écran Aujourd'hui : menus, alimentation, progression ----------
