@@ -11,7 +11,7 @@
 <link rel="manifest" href="manifest.json">
 <meta http-equiv="Cache-Control" content="no-cache">
 <style>[hidden]{display:none!important}</style>
-<script>(function(){var B="1794484327";function chk(){try{fetch("version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.json()}).then(function(j){if(j&&j.v&&j.v!==B){var k="gv-reload";try{if(sessionStorage.getItem(k)===j.v)return;sessionStorage.setItem(k,j.v)}catch(e){}location.replace(location.pathname+"?v="+j.v)}}).catch(function(){})}catch(e){}}chk();document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible")chk()});})();</script>
+<script>(function(){var B="1794484359";function chk(){try{fetch("version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.json()}).then(function(j){if(j&&j.v&&j.v!==B){var k="gv-reload";try{if(sessionStorage.getItem(k)===j.v)return;sessionStorage.setItem(k,j.v)}catch(e){}location.replace(location.pathname+"?v="+j.v)}}).catch(function(){})}catch(e){}}chk();document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible")chk()});})();</script>
 <title>Georges</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700&family=Figtree:wght@400;500;600&display=swap">
 <style>
@@ -2040,7 +2040,7 @@ function openG(mode){
   else if(mode==="joie"){k.textContent="Ta joie, offre-la à la Terre";t.textContent=rnd(PLANETE);
     b.innerHTML=`<button type="button" class="gbig" data-g="fait">Je le fais 🌍</button><button type="button" class="gsoft" data-g="joie">Un autre geste</button>`;}
   else if(mode==="respire"){k.textContent="Respire avec Georges";t.textContent="Choisis ta respiration. Georges respire avec toi.";
-    x.innerHTML=`<div class="brlist"><button type="button" class="gsoft" data-g="respire1"><b>🐾 La minute de Georges</b><span>La plus douce · 1 min</span></button>${BREATHS.map((r,i)=>`<button type="button" class="gsoft" data-brg="${i}"><b>${r.e} ${esc(r.n)}</b><span>${esc(r.s)} · ${brDur(r)}</span></button>`).join("")}</div>`;
+    x.innerHTML=`<div class="brlist"><button type="button" class="gsoft" data-g="respire1"><b>🐾 La minute de Georges</b><span>La plus douce · 1 min</span></button>${BREATHS.map((r,i)=>`<button type="button" class="gsoft" data-brg="${i}"><b>${r.e} ${esc(r.n)}</b><span>${esc(r.s)} · ${brDur(r)}</span>${r.fast?`<span style="color:var(--vitc);font-weight:600">⚠️ Assis ou allongé, jamais debout, en conduisant ou dans l'eau. À éviter enceinte, ou en cas d'hypertension, de souci cardiaque ou d'épilepsie.</span>`:""}</button>`).join("")}</div>`;
     b.innerHTML=`<button type="button" class="gsoft" data-g="close">Plus tard</button>`;}
   else if(mode==="respire1"){k.textContent="Respire avec Georges";t.textContent="Suis le cercle. Une minute, rien de plus.";
     x.innerHTML=`<div class="breath"><div class="bcircle" id="bc"></div><div class="blabel" id="bl">Inspire…</div></div>`;
