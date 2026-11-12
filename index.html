@@ -27,11 +27,6 @@
 @keyframes beat{0%{transform:scale(1)}15%{transform:scale(1.28)}30%{transform:scale(1)}45%{transform:scale(1.18)}60%,100%{transform:scale(1)}}
 .starbtn:focus-visible{outline:2px solid #ffd98a;border-radius:50%}
 .startxt{font-family:var(--display);font-size:1.05rem;line-height:1.4;margin:4px 0 2px;color:#fff;min-height:1.4em}
-.consto{width:100%;max-width:300px;height:auto;margin:6px auto 0;display:block}
-.consto line{stroke:#ffd98a;stroke-width:1.1;opacity:.55}
-.consto circle.off{fill:#5d6aa3;opacity:.45}
-.consto circle.on{fill:#fff3cf;filter:drop-shadow(0 0 3px #ffd98a)}
-.consto circle.new{animation:born 1.6s ease-out}
 @keyframes born{0%{r:9;opacity:0}60%{r:5;opacity:1}100%{opacity:1}}
 .ciel .ccount{font-size:.88rem;color:#c4cdf0;margin:2px 0 10px}
 .syncbox textarea,.rvbox textarea{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--fg);font:400 1rem/1.5 var(--body);resize:vertical;margin-top:6px}
@@ -52,7 +47,7 @@
 .jr.rv .rvq{margin:0 0 4px}
 @media (prefers-reduced-motion:reduce){.starbtn svg,.sky .bg circle{animation:none}}
 </style>
-<script>(function(){var B="1794485895";function chk(){try{fetch("version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.json()}).then(function(j){if(j&&j.v&&j.v!==B){var k="gv-reload";try{if(sessionStorage.getItem(k)===j.v)return;sessionStorage.setItem(k,j.v)}catch(e){}location.replace(location.pathname+"?v="+j.v)}}).catch(function(){})}catch(e){}}chk();document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible")chk()});})();</script>
+<script>(function(){var B="1794485963";function chk(){try{fetch("version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.json()}).then(function(j){if(j&&j.v&&j.v!==B){var k="gv-reload";try{if(sessionStorage.getItem(k)===j.v)return;sessionStorage.setItem(k,j.v)}catch(e){}location.replace(location.pathname+"?v="+j.v)}}).catch(function(){})}catch(e){}}chk();document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible")chk()});})();</script>
 <title>Georges</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700&family=Figtree:wght@400;500;600&display=swap">
 <style>
@@ -608,17 +603,6 @@ details.cat>summary h2+.row,details.cat>summary+.row{border-top:0}
       <div id="ritList"></div>
       <div class="streak" id="streak"></div>
       <div class="days" id="vivDays" aria-label="Mes 7 derniers jours"></div>
-    </section>
-
-    <section class="card ciel" aria-labelledby="etT">
-      <h2 id="etT">L'étoile de Georges ✨</h2>
-      <div class="sky">
-        <svg class="bg" viewBox="0 0 300 300" preserveAspectRatio="none" aria-hidden="true" id="skyBg"></svg>
-        <button type="button" class="starbtn" id="starBtn" aria-label="Toucher l'étoile de Georges"><svg viewBox="0 0 100 100" aria-hidden="true"><defs><radialGradient id="stG" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#fffdf2"/><stop offset=".55" stop-color="#ffe39a"/><stop offset="1" stop-color="#f2b63a"/></radialGradient></defs><path d="M50 4 C54 36 64 46 96 50 C64 54 54 64 50 96 C46 64 36 54 4 50 C36 46 46 36 50 4Z" fill="url(#stG)"/><circle cx="50" cy="50" r="7" fill="#fff"/></svg></button>
-        <p class="startxt" id="starTxt">Pose ta main sur ton cœur, et touche l'étoile.</p>
-        <svg class="consto" id="consto" viewBox="20 20 160 130" aria-label="Ta constellation de Georges"></svg>
-        <p class="ccount" id="cCount"></p>
-      </div>
     </section>
 
     <section class="card" aria-labelledby="syT">
@@ -2183,38 +2167,6 @@ function renderLune(){
   slot.innerHTML=`<section class="card lune" aria-label="Message de la lune"><div class="pad"><div class="lk">${L.t==="Pleine lune"?"🌕":"🌑"} ${esc(L.t)} · ${jour}</div><p class="lt">${esc(L.m)}</p><div class="ls">Stéphanie et Georges 🐾</div></div></section>`;
 }
 renderLune();
-
-// L'étoile : la constellation de Georges, une étoile de plus chaque jour où tu viens la toucher
-const CST=[[100,30],[80,34],[62,42],[46,52],[36,70],[33,94],[44,106],[58,94],[62,108],[72,124],[86,134],[100,138],[114,134],[128,124],[138,108],[142,94],[156,106],[167,94],[164,70],[154,52],[138,42],[120,34],[82,76],[118,76],[100,104],[90,96],[110,96],[100,118]];
-const CST_ORDER=[22,23,24,0,1,21,2,20,3,19,4,18,5,17,6,16,7,15,8,14,9,13,10,12,11,25,26,27];
-const CST_LINES=[...Array(22).keys()].map(i=>[i,(i+1)%22]).concat([[25,24],[24,26],[24,27]]);
-function starDays(){return Object.keys(vh).filter(k=>vh[k].etoile).sort();}
-function renderStar(newIdx){
-  const n=starDays().length,done=Math.floor(n/28),lit=n%28===0&&n>0?28:n%28;
-  const on=new Set(CST_ORDER.slice(0,lit));
-  document.getElementById("consto").innerHTML=CST_LINES.map(([a,b])=>on.has(a)&&on.has(b)?`<line x1="${CST[a][0]}" y1="${CST[a][1]}" x2="${CST[b][0]}" y2="${CST[b][1]}"/>`:"").join("")
-    +CST.map((p,i)=>`<circle cx="${p[0]}" cy="${p[1]}" r="${on.has(i)?(i===24?4:3.2):2}" class="${on.has(i)?"on":"off"}${i===newIdx?" new":""}"/>`).join("");
-  document.getElementById("cCount").textContent=n===0?"Chaque jour où tu touches l'étoile, une étoile s'allume. En 28 jours, Georges apparaît dans ton ciel."
-    :lit===28?`Ta constellation de Georges est complète ✨${done>1?" ("+done+" fois)":""} Demain, une nouvelle commence.`
-    :`${lit} étoile${lit>1?"s":""} sur 28 · Georges apparaît peu à peu dans ton ciel${done?" · "+done+" constellation"+(done>1?"s":"")+" déjà complète"+(done>1?"s":""):""}`;
-}
-(function(){let h="";for(let i=0;i<40;i++){const x=(i*73+dayNum*7)%300,y=(i*131)%300,r=(i%5===0)?1.3:.7;h+=`<circle cx="${x}" cy="${y}" r="${r}" style="animation-delay:${(i%9)*.35}s"/>`;}document.getElementById("skyBg").innerHTML=h;})();
-if(vh[today].etoile)document.getElementById("starTxt").textContent="Georges est là 🐾";
-// Battement de cœur : vibration sur Android ; sur iPhone (iOS 18 et plus), petite vibration via un interrupteur caché
-const hapL=document.createElement("label");hapL.style.cssText="position:absolute;width:1px;height:1px;overflow:hidden;opacity:0;pointer-events:none";hapL.setAttribute("aria-hidden","true");
-const hapI=document.createElement("input");hapI.type="checkbox";hapI.setAttribute("switch","");hapI.tabIndex=-1;hapL.appendChild(hapI);document.body.appendChild(hapL);
-function heartbeat(){
-  if(navigator.vibrate){try{navigator.vibrate([70,110,70,500,70,110,70]);}catch(_){}return;}
-  try{hapL.click();setTimeout(()=>hapL.click(),180);setTimeout(()=>hapL.click(),780);setTimeout(()=>hapL.click(),960);}catch(_){}
-}
-renderStar();
-document.getElementById("starBtn").addEventListener("click",()=>{
-  const b=document.getElementById("starBtn");b.classList.remove("beat");void b.offsetWidth;b.classList.add("beat");
-  heartbeat();
-  const first=!vh[today].etoile;
-  document.getElementById("starTxt").textContent="Georges est là 🐾";
-  if(first){vh[today].etoile=true;saveV();const n=starDays().length,lit=n%28||28;renderStar(CST_ORDER[lit-1]);toast(lit===28?"Ta constellation de Georges est complète ✨":"Une nouvelle étoile s'allume ✨");}
-});
 
 // La synchronicité du jour : la même pour tous les Gardiens
 const SYNCS=["Quelqu'un va te parler d'un animal sans que tu aies rien demandé.","Le même nombre va croiser ta route trois fois aujourd'hui.","Une chanson va répondre à une question que tu te poses en ce moment.","Une personne à qui tu as pensé ces jours-ci va te faire signe.","Un mot que tu n'emploies jamais va revenir deux fois dans ta journée.","Un inconnu va te sourire au moment exact où tu en avais besoin.","Tu vas lire, sur une affiche, un écran ou une page ouverte, la phrase qu'il te fallait.","Une même couleur va te suivre toute la journée, partout où tu poses les yeux.","Un plan va changer à la dernière minute, et ce sera mieux ainsi.","Tu vas entendre ton prénom, alors que personne ne s'adresse à toi.","Tu vas regarder l'heure pile sur une heure double.","Un souvenir d'enfance va remonter, sans raison apparente. Il a quelque chose à te dire.","Tu vas recevoir un message au moment exact où tu pensais à cette personne.","Un oiseau va se poser tout près de toi et rester un instant à te regarder.","Quelqu'un va te proposer son aide sans que tu l'aies demandée.","Le nom d'un même lieu, ou d'un même pays, va revenir deux fois vers toi.","Un objet que tu croyais perdu va réapparaître, ou revenir dans tes mains.","Un enfant va dire une phrase qui te touchera bien plus qu'il ne le croit.","Le même prénom va revenir trois fois dans ta journée.","Un chien va venir vers toi comme s'il te connaissait. Georges n'est jamais loin.","Une odeur va te ramener d'un coup vers quelqu'un que tu aimes.","Tu vas tomber sur un livre, une vidéo ou un post qui parle exactement de ce que tu vis.","Le ciel ou la lumière va changer au moment précis où tu prends une décision.","Quelqu'un va te remercier pour une chose que tu avais oubliée.","Tu vas penser à une chanson, et quelques heures plus tard elle passera quelque part.","Une coccinelle, un papillon ou un petit insecte va se poser sur toi ou tout près.","Deux personnes qui ne se connaissent pas vont te donner le même conseil.","Tu vas recevoir une nouvelle que tu attendais, ou qui te libère d'un poids.","Un nombre lié à ta date de naissance va apparaître devant toi.","Une conversation entendue par hasard, dans la rue ou à la table d'à côté, va te répondre."];
