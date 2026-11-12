@@ -10,8 +10,49 @@
 <link rel="icon" href="icon-512.png?v=8">
 <link rel="manifest" href="manifest.json">
 <meta http-equiv="Cache-Control" content="no-cache">
-<style>[hidden]{display:none!important}</style>
-<script>(function(){var B="1794484359";function chk(){try{fetch("version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.json()}).then(function(j){if(j&&j.v&&j.v!==B){var k="gv-reload";try{if(sessionStorage.getItem(k)===j.v)return;sessionStorage.setItem(k,j.v)}catch(e){}location.replace(location.pathname+"?v="+j.v)}}).catch(function(){})}catch(e){}}chk();document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible")chk()});})();</script>
+<style>[hidden]{display:none!important}
+/* ---------- Avec Georges : lune, étoile, synchronicité, rêves ---------- */
+.card.ciel{background:radial-gradient(ellipse at 50% -10%,#24467a 0%,#101d45 55%,#070c22 100%);border-color:#22305e;color:#eef2ff}
+.ciel h2{color:#fff}
+.ciel .meta{color:#c4cdf0}
+.ciel .tagx{color:#ffd98a}
+.sky{position:relative;padding:6px 14px 4px;text-align:center}
+.sky .bg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.sky .bg circle{fill:#fff;animation:tw 3.2s ease-in-out infinite}
+@keyframes tw{0%,100%{opacity:.25}50%{opacity:.9}}
+.starbtn{position:relative;background:none;border:0;padding:6px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.starbtn svg{width:96px;height:96px;display:block;filter:drop-shadow(0 0 14px rgba(255,214,120,.75));animation:pulse 2.6s ease-in-out infinite}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+.starbtn.beat svg{animation:beat .9s ease-in-out 2}
+@keyframes beat{0%{transform:scale(1)}15%{transform:scale(1.28)}30%{transform:scale(1)}45%{transform:scale(1.18)}60%,100%{transform:scale(1)}}
+.starbtn:focus-visible{outline:2px solid #ffd98a;border-radius:50%}
+.startxt{font-family:var(--display);font-size:1.05rem;line-height:1.4;margin:4px 0 2px;color:#fff;min-height:1.4em}
+.consto{width:100%;max-width:300px;height:auto;margin:6px auto 0;display:block}
+.consto line{stroke:#ffd98a;stroke-width:1.1;opacity:.55}
+.consto circle.off{fill:#5d6aa3;opacity:.45}
+.consto circle.on{fill:#fff3cf;filter:drop-shadow(0 0 3px #ffd98a)}
+.consto circle.new{animation:born 1.6s ease-out}
+@keyframes born{0%{r:9;opacity:0}60%{r:5;opacity:1}100%{opacity:1}}
+.ciel .ccount{font-size:.88rem;color:#c4cdf0;margin:2px 0 10px}
+.syncbox textarea,.rvbox textarea{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--fg);font:400 1rem/1.5 var(--body);resize:vertical;margin-top:6px}
+.jr.rv details .meta,.jr.rv summary{text-transform:none}
+.jr.rv summary{cursor:pointer;color:var(--ca);font-size:.88rem;font-weight:600}
+.syncbox,.rvbox{padding:2px 14px 14px;display:flex;flex-direction:column;gap:10px}
+.synctxt{font-family:var(--display);font-size:1.15rem;line-height:1.4;margin:0}
+.syncok{align-self:flex-start}
+.syncok[aria-pressed="true"]{background:var(--leaf);color:#fff;border-color:var(--leaf)}
+.gmsgn{background:color-mix(in srgb,var(--ca) 12%,var(--card));border-left:3px solid var(--ca);border-radius:10px;padding:12px 14px;line-height:1.5}
+.gmsgn .sig{display:block;margin-top:8px;font-weight:600;color:var(--ca)}
+.rvq{font-size:.92rem;color:var(--muted);font-style:italic}
+.card.lune{background:radial-gradient(ellipse at 80% 0%,#3a3f78 0%,#151a3f 60%,#0b0f29 100%);border-color:#2a2f63;color:#f3f1ff}
+.lune .lk{font-size:.8rem;letter-spacing:.08em;text-transform:uppercase;color:#ffe3a3;font-weight:600}
+.lune .lt{font-family:var(--display);font-size:1.15rem;line-height:1.5;white-space:pre-line;margin:6px 0 0}
+.lune .ls{margin-top:10px;color:#d9d4ff;font-weight:600}
+.lune .pad{padding:16px}
+.jr.rv .rvq{margin:0 0 4px}
+@media (prefers-reduced-motion:reduce){.starbtn svg,.sky .bg circle{animation:none}}
+</style>
+<script>(function(){var B="1794485521";function chk(){try{fetch("version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.json()}).then(function(j){if(j&&j.v&&j.v!==B){var k="gv-reload";try{if(sessionStorage.getItem(k)===j.v)return;sessionStorage.setItem(k,j.v)}catch(e){}location.replace(location.pathname+"?v="+j.v)}}).catch(function(){})}catch(e){}}chk();document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible")chk()});})();</script>
 <title>Georges</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700&family=Figtree:wght@400;500;600&display=swap">
 <style>
@@ -560,6 +601,48 @@ details.cat>summary h2+.row,details.cat>summary+.row{border-top:0}
 
     <div id="launchSlot"></div>
 
+    <div id="luneSlot"></div>
+
+    <section class="card ciel" aria-labelledby="etT">
+      <h2 id="etT">L'étoile de Georges ✨</h2>
+      <div class="sky">
+        <svg class="bg" viewBox="0 0 300 300" preserveAspectRatio="none" aria-hidden="true" id="skyBg"></svg>
+        <button type="button" class="starbtn" id="starBtn" aria-label="Toucher l'étoile de Georges"><svg viewBox="0 0 100 100" aria-hidden="true"><defs><radialGradient id="stG" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#fffdf2"/><stop offset=".55" stop-color="#ffe39a"/><stop offset="1" stop-color="#f2b63a"/></radialGradient></defs><path d="M50 4 C54 36 64 46 96 50 C64 54 54 64 50 96 C46 64 36 54 4 50 C36 46 46 36 50 4Z" fill="url(#stG)"/><circle cx="50" cy="50" r="7" fill="#fff"/></svg></button>
+        <p class="startxt" id="starTxt">Pose ta main sur ton cœur, et touche l'étoile.</p>
+        <svg class="consto" id="consto" viewBox="20 20 160 130" aria-label="Ta constellation de Georges"></svg>
+        <p class="ccount" id="cCount"></p>
+      </div>
+    </section>
+
+    <section class="card" aria-labelledby="syT">
+      <h2 id="syT">La synchronicité du jour</h2>
+      <div class="syncbox">
+        <span class="tagx">Aujourd'hui, tous les Gardiens guettent le même signe</span>
+        <p class="synctxt" id="syncTxt"></p>
+        <p class="meta" style="margin:0">Tu n'es pas seul·e : partout, d'autres Gardiens ouvrent les yeux sur ce même signe en ce moment. Quand il arrive, souris. L'univers te parle.</p>
+        <button type="button" class="gsoft syncok" id="syncOk" aria-pressed="false">Je l'ai vue ✨</button>
+        <textarea id="syncNote" rows="2" placeholder="Comment elle est venue…" hidden></textarea>
+      </div>
+    </section>
+
+    <section class="card" aria-labelledby="rvT">
+      <h2 id="rvT">Mes rêves avec Georges 🌙</h2>
+      <div class="rvbox">
+        <div id="rvMatin">
+          <label for="reve" class="meta">Au réveil, avant de prendre ton téléphone pour autre chose : note ce dont tu te souviens. Un détail suffit, une couleur, une sensation.</label>
+          <div class="rvq" id="rvHier" hidden></div>
+          <textarea id="reve" rows="3" placeholder="Cette nuit, j'ai rêvé…"></textarea>
+          <div class="meta" id="reveSaved"></div>
+        </div>
+        <div id="rvSoir">
+          <label for="nuitQ" class="meta">Le soir, avant de dormir : pose à Georges la question qui t'habite. Il viendra te guider cette nuit, pour libérer ce qui doit l'être.</label>
+          <textarea id="nuitQ" rows="2" placeholder="Georges, cette nuit, éclaire-moi sur…"></textarea>
+          <button type="button" class="gbig" id="nuitGo" style="margin-top:8px">Demander mon message pour la nuit</button>
+          <div id="nuitRes"></div>
+        </div>
+      </div>
+    </section>
+
 
     <section class="card" aria-labelledby="ritT">
       <h2 id="ritT">Mes 5 engagements du jour<span id="ritScore"></span></h2>
@@ -626,6 +709,11 @@ details.cat>summary h2+.row,details.cat>summary+.row{border-top:0}
       <h2 id="grJT">Mes gratitudes 🙏<span id="grJN"></span></h2>
       <div id="grJ"></div>
       <div class="empty" id="grJEmpty">Tes gratitudes apparaîtront ici, jour après jour. Relis-les quand tu en as besoin.</div>
+    </section>
+    <section class="card" aria-labelledby="rvJT">
+      <h2 id="rvJT">Mes rêves 🌙<span id="rvJN"></span></h2>
+      <div id="rvJ"></div>
+      <div class="empty" id="rvJEmpty">Tes rêves et les messages de Georges pour la nuit apparaîtront ici. Relis-les : souvent, le sens arrive quelques jours plus tard.</div>
     </section>
     <section class="card" id="journalCard" aria-labelledby="jrT">
       <h2 id="jrT">Mes messages intuitifs<span id="jN"></span></h2>
@@ -2076,6 +2164,98 @@ document.addEventListener("click",e=>{
     try{navigator.clipboard.writeText(v).then(done,done);}catch(_){done();}}
 });
 renderLaunch();
+
+// ---------- Avec Georges : la lune, l'étoile, la synchronicité, les rêves ----------
+// LUNE_MSG : c'est Stéphanie qui écrit chaque message (m). Vide = rien ne s'affiche.
+// Le message s'affiche le jour de la lune et les 2 jours suivants.
+const LUNE_MSG=[
+  {d:"2026-11-24",t:"Pleine lune",m:""},
+  {d:"2026-12-09",t:"Nouvelle lune",m:""},
+  {d:"2026-12-24",t:"Pleine lune",m:""},
+  {d:"2027-01-07",t:"Nouvelle lune",m:""}
+];
+function renderLune(){
+  const slot=document.getElementById("luneSlot"),t0=new Date(today+"T12:00:00");
+  const L=LUNE_MSG.find(l=>{if(!l.m||!l.m.trim())return false;const g=Math.round((t0-new Date(l.d+"T12:00:00"))/864e5);return g>=0&&g<=2;});
+  if(!L){slot.innerHTML="";return;}
+  const jour=new Date(L.d+"T12:00:00").toLocaleDateString("fr-FR",{weekday:"long",day:"numeric",month:"long"});
+  slot.innerHTML=`<section class="card lune" aria-label="Message de la lune"><div class="pad"><div class="lk">${L.t==="Pleine lune"?"🌕":"🌑"} ${esc(L.t)} · ${jour}</div><p class="lt">${esc(L.m)}</p><div class="ls">Stéphanie et Georges 🐾</div></div></section>`;
+}
+renderLune();
+
+// L'étoile : la constellation de Georges, une étoile de plus chaque jour où tu viens la toucher
+const CST=[[100,30],[80,34],[62,42],[46,52],[36,70],[33,94],[44,106],[58,94],[62,108],[72,124],[86,134],[100,138],[114,134],[128,124],[138,108],[142,94],[156,106],[167,94],[164,70],[154,52],[138,42],[120,34],[82,76],[118,76],[100,104],[90,96],[110,96],[100,118]];
+const CST_ORDER=[22,23,24,0,1,21,2,20,3,19,4,18,5,17,6,16,7,15,8,14,9,13,10,12,11,25,26,27];
+const CST_LINES=[...Array(22).keys()].map(i=>[i,(i+1)%22]).concat([[25,24],[24,26],[24,27]]);
+function starDays(){return Object.keys(vh).filter(k=>vh[k].etoile).sort();}
+function renderStar(newIdx){
+  const n=starDays().length,done=Math.floor(n/28),lit=n%28===0&&n>0?28:n%28;
+  const on=new Set(CST_ORDER.slice(0,lit));
+  document.getElementById("consto").innerHTML=CST_LINES.map(([a,b])=>on.has(a)&&on.has(b)?`<line x1="${CST[a][0]}" y1="${CST[a][1]}" x2="${CST[b][0]}" y2="${CST[b][1]}"/>`:"").join("")
+    +CST.map((p,i)=>`<circle cx="${p[0]}" cy="${p[1]}" r="${on.has(i)?(i===24?4:3.2):2}" class="${on.has(i)?"on":"off"}${i===newIdx?" new":""}"/>`).join("");
+  document.getElementById("cCount").textContent=n===0?"Chaque jour où tu touches l'étoile, une étoile s'allume. En 28 jours, Georges apparaît dans ton ciel."
+    :lit===28?`Ta constellation de Georges est complète ✨${done>1?" ("+done+" fois)":""} Demain, une nouvelle commence.`
+    :`${lit} étoile${lit>1?"s":""} sur 28 · Georges apparaît peu à peu dans ton ciel${done?" · "+done+" constellation"+(done>1?"s":"")+" déjà complète"+(done>1?"s":""):""}`;
+}
+(function(){let h="";for(let i=0;i<40;i++){const x=(i*73+dayNum*7)%300,y=(i*131)%300,r=(i%5===0)?1.3:.7;h+=`<circle cx="${x}" cy="${y}" r="${r}" style="animation-delay:${(i%9)*.35}s"/>`;}document.getElementById("skyBg").innerHTML=h;})();
+if(vh[today].etoile)document.getElementById("starTxt").textContent="Georges est là 🐾";
+// Battement de cœur : vibration sur Android ; sur iPhone (iOS 18 et plus), petite vibration via un interrupteur caché
+const hapL=document.createElement("label");hapL.style.cssText="position:absolute;width:1px;height:1px;overflow:hidden;opacity:0;pointer-events:none";hapL.setAttribute("aria-hidden","true");
+const hapI=document.createElement("input");hapI.type="checkbox";hapI.setAttribute("switch","");hapI.tabIndex=-1;hapL.appendChild(hapI);document.body.appendChild(hapL);
+function heartbeat(){
+  if(navigator.vibrate){try{navigator.vibrate([70,110,70,500,70,110,70]);}catch(_){}return;}
+  try{hapL.click();setTimeout(()=>hapL.click(),180);setTimeout(()=>hapL.click(),780);setTimeout(()=>hapL.click(),960);}catch(_){}
+}
+renderStar();
+document.getElementById("starBtn").addEventListener("click",()=>{
+  const b=document.getElementById("starBtn");b.classList.remove("beat");void b.offsetWidth;b.classList.add("beat");
+  heartbeat();
+  const first=!vh[today].etoile;
+  document.getElementById("starTxt").textContent="Georges est là 🐾";
+  if(first){vh[today].etoile=true;saveV();const n=starDays().length,lit=n%28||28;renderStar(CST_ORDER[lit-1]);toast(lit===28?"Ta constellation de Georges est complète ✨":"Une nouvelle étoile s'allume ✨");}
+});
+
+// La synchronicité du jour : la même pour tous les Gardiens
+const SYNCS=["Quelqu'un va te parler d'un animal sans que tu aies rien demandé.","Le même nombre va croiser ta route trois fois aujourd'hui.","Une chanson va répondre à une question que tu te poses en ce moment.","Une personne à qui tu as pensé ces jours-ci va te faire signe.","Un mot que tu n'emploies jamais va revenir deux fois dans ta journée.","Un inconnu va te sourire au moment exact où tu en avais besoin.","Tu vas lire, sur une affiche, un écran ou une page ouverte, la phrase qu'il te fallait.","Une même couleur va te suivre toute la journée, partout où tu poses les yeux.","Un plan va changer à la dernière minute, et ce sera mieux ainsi.","Tu vas entendre ton prénom, alors que personne ne s'adresse à toi.","Tu vas regarder l'heure pile sur une heure double.","Un souvenir d'enfance va remonter, sans raison apparente. Il a quelque chose à te dire.","Tu vas recevoir un message au moment exact où tu pensais à cette personne.","Un oiseau va se poser tout près de toi et rester un instant à te regarder.","Quelqu'un va te proposer son aide sans que tu l'aies demandée.","Le nom d'un même lieu, ou d'un même pays, va revenir deux fois vers toi.","Un objet que tu croyais perdu va réapparaître, ou revenir dans tes mains.","Un enfant va dire une phrase qui te touchera bien plus qu'il ne le croit.","Le même prénom va revenir trois fois dans ta journée.","Un chien va venir vers toi comme s'il te connaissait. Georges n'est jamais loin.","Une odeur va te ramener d'un coup vers quelqu'un que tu aimes.","Tu vas tomber sur un livre, une vidéo ou un post qui parle exactement de ce que tu vis.","Le ciel ou la lumière va changer au moment précis où tu prends une décision.","Quelqu'un va te remercier pour une chose que tu avais oubliée.","Tu vas penser à une chanson, et quelques heures plus tard elle passera quelque part.","Une coccinelle, un papillon ou un petit insecte va se poser sur toi ou tout près.","Deux personnes qui ne se connaissent pas vont te donner le même conseil.","Tu vas recevoir une nouvelle que tu attendais, ou qui te libère d'un poids.","Un nombre lié à ta date de naissance va apparaître devant toi.","Une conversation entendue par hasard, dans la rue ou à la table d'à côté, va te répondre."];
+document.getElementById("syncTxt").textContent=SYNCS[((dayNum%SYNCS.length)+SYNCS.length)%SYNCS.length];
+const syncOk=document.getElementById("syncOk"),syncNote=document.getElementById("syncNote");
+function renderSync(){const v=!!vh[today].sync;syncOk.setAttribute("aria-pressed",v);syncOk.textContent=v?"Je l'ai vue ✓":"Je l'ai vue ✨";syncNote.hidden=!v;syncNote.value=vh[today].syncNote||"";}
+renderSync();
+syncOk.addEventListener("click",()=>{if(vh[today].sync){delete vh[today].sync;}else{vh[today].sync=true;toast("Tu vois ? L'univers te parle ✨");}saveV();renderSync();});
+syncNote.addEventListener("input",()=>{vh[today].syncNote=syncNote.value;saveV();});
+
+// Les rêves : le matin on note, le soir on demande un message à Georges pour la nuit
+const NUITS=["Ce soir, dépose ta question sous ton oreiller, et lâche-la. Tu n'as plus besoin de la porter : cette nuit, je la porte pour toi. Je marcherai devant toi dans tes rêves. Au réveil, note le premier détail qui te revient, même minuscule. C'est là que se cache la réponse.","Respire trois fois, lentement. À chaque souffle, laisse tomber un peu du poids de ta journée. Cette nuit, je viendrai m'asseoir près de toi. Ce qui est noué en toi peut commencer à se dénouer, sans effort. Tu n'as rien à faire, juste à dormir.","Tu as posé ta question. C'est déjà beaucoup. La nuit sait ce que le jour ne sait pas. Je viendrai te guider, peut-être par une image, une couleur, un visage. Ne cherche pas à comprendre tout de suite : accueille, simplement.","Ce soir, je te propose une chose : avant de fermer les yeux, pardonne-toi une seule chose de ta journée. Une seule. Puis laisse-moi faire. Cette nuit, je viendrai libérer ce que tu gardes trop serré.","Imagine que tu poses ta question dans une petite boîte de lumière, et que tu me la confies. Je la garde. Je reviendrai avec la réponse, dans un rêve, ou demain, au détour d'un signe. Dors en paix.","Ce que tu demandes est entendu. Cette nuit, je t'emmène marcher sur un chemin calme, le long de l'eau. Tu laisseras sur la rive ce qui ne t'appartient plus. Au réveil, tu te sentiras plus léger·e, même si tu ne te souviens de rien.","Ton cœur a parlé, et le ciel a écouté. Cette nuit, je veille. Si un rêve te secoue, ce n'est pas un mauvais signe : c'est quelque chose qui sort pour te laisser de la place. Note-le demain matin, sans juger.","Avant de dormir, pose une main sur ton ventre, une main sur ton cœur. Dis doucement : « Je suis prêt·e à recevoir. » Puis endors-toi. Je viendrai. Je viens toujours.","La réponse que tu cherches n'est pas dans ta tête, elle est plus bas, dans ton corps. Cette nuit, je vais t'aider à l'entendre. Demain, observe ce que tu ressens en te levant : c'est déjà un message.","Ce soir, tu n'as pas besoin d'être fort·e. Tu peux poser les armes. Cette nuit, je monte la garde. Tout ce que tu as retenu aujourd'hui, larmes, colère, fatigue, tu peux le laisser partir dans tes rêves.","Les rêves sont des lettres que ton âme t'écrit. Cette nuit, je serai le facteur. Garde ton téléphone loin de toi au réveil, et laisse-toi une minute pour te souvenir, les yeux encore fermés.","Ta question est juste. Et parfois, la réponse arrive sous une forme inattendue : un rêve qui semble n'avoir aucun rapport, une phrase entendue demain. Reste ouvert·e. Je viendrai te guider, à ma façon.","Cette nuit, je t'emmène voir les étoiles. Là-haut, tout paraît plus simple, plus petit, plus doux. Tu reviendras avec un peu de ce calme. Dors, je suis là.","Tu peux laisser partir ce qui te réveille la nuit. Il est temps. Je viendrai, et ensemble on va le déposer à la Terre. Elle sait quoi en faire. Elle transforme tout."];
+const yday=ymd(new Date(new Date(today+"T12:00:00").getTime()-864e5));
+const reve=document.getElementById("reve"),nuitQ=document.getElementById("nuitQ");
+function hashS(t){let h=0;for(const c of t)h=(h*31+c.charCodeAt(0))|0;return Math.abs(h);}
+function renderRv(){
+  reve.value=vh[today].reve||"";
+  const y=vh[yday]&&vh[yday].nuit;const rh=document.getElementById("rvHier");
+  if(y&&y.q){rh.hidden=false;rh.textContent="Hier soir, tu as demandé à Georges : « "+y.q+" »";}else rh.hidden=true;
+  const n=vh[today].nuit;
+  nuitQ.value=n?n.q:"";
+  document.getElementById("nuitRes").innerHTML=n?`<div class="gmsgn" style="margin-top:10px">${esc(n.m)}<span class="sig">Je viendrai te guider cette nuit. Georges 🐾</span></div>`:"";
+  document.getElementById("nuitGo").textContent=n?"Redemander mon message":"Demander mon message pour la nuit";
+  // le soir, la question de la nuit passe en premier
+  const box=document.querySelector(".rvbox"),soir=new Date().getHours()>=17;
+  box.insertBefore(document.getElementById(soir?"rvSoir":"rvMatin"),box.firstChild);
+}
+renderRv();
+let reveT;reve.addEventListener("input",()=>{vh[today].reve=reve.value;saveV();clearTimeout(reveT);reveT=setTimeout(()=>{document.getElementById("reveSaved").textContent="Enregistré ✓";renderRvJ();},500);});
+document.getElementById("nuitGo").addEventListener("click",()=>{
+  const q=nuitQ.value.trim();if(!q){nuitQ.focus();toast("Écris d'abord ta question à Georges");return;}
+  const prev=vh[today].nuit,i=(hashS(q)+dayNum+(prev?1:0))%NUITS.length;
+  vh[today].nuit={q,m:NUITS[i]};saveV();renderRv();renderRvJ();toast("Georges a entendu 🌙");
+});
+function renderRvJ(){
+  const ks=Object.keys(vh).sort().reverse().filter(k=>(vh[k].reve&&vh[k].reve.trim())||vh[k].nuit).slice(0,90);
+  document.getElementById("rvJEmpty").hidden=!!ks.length;
+  document.getElementById("rvJN").textContent=ks.length?" · "+ks.length:"";
+  document.getElementById("rvJ").innerHTML=ks.map(k=>{const v=vh[k];return `<div class="jr rv"><div class="meta">${dlab(k)}</div><div class="jl"><div>${v.nuit?`<p class="rvq">Ma question du soir : « ${esc(v.nuit.q)} »</p>`:""}${v.reve&&v.reve.trim()?`<p>🌙 ${esc(v.reve)}</p>`:""}${v.nuit?`<details><summary>Le message de Georges</summary><p class="meta">${esc(v.nuit.m)}</p></details>`:""}</div><button type="button" class="jdel" data-rdel="${k}">Effacer</button></div></div>`;}).join("");
+}
+renderRvJ();
+document.getElementById("rvJ").addEventListener("click",e=>{const b=e.target.closest("[data-rdel]");if(!b)return;const k=b.dataset.rdel;delete vh[k].reve;delete vh[k].nuit;saveV();if(k===today)renderRv();renderRvJ();toast("Effacé");});
 document.addEventListener("click",e=>{const r=e.target.closest("[data-brg]");if(r){stopBreath();document.getElementById("gmsg").hidden=true;brOpen(+r.dataset.brg);}});
 document.addEventListener("click",e=>{const g=e.target.closest("[data-g]");if(!g)return;const m=g.dataset.g;
   if(m==="close"){if(gMode==="jour")store("georges_vu",today);stopBreath();document.getElementById("gmsg").hidden=true;}
