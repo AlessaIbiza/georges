@@ -11,7 +11,7 @@
 <link rel="manifest" href="manifest.json">
 <meta http-equiv="Cache-Control" content="no-cache">
 <style>[hidden]{display:none!important}</style>
-<script>(function(){var B="1794481436";function chk(){try{fetch("version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.json()}).then(function(j){if(j&&j.v&&j.v!==B){var k="gv-reload";try{if(sessionStorage.getItem(k)===j.v)return;sessionStorage.setItem(k,j.v)}catch(e){}location.replace(location.pathname+"?v="+j.v)}}).catch(function(){})}catch(e){}}chk();document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible")chk()});})();</script>
+<script>(function(){var B="1794481607";function chk(){try{fetch("version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.json()}).then(function(j){if(j&&j.v&&j.v!==B){var k="gv-reload";try{if(sessionStorage.getItem(k)===j.v)return;sessionStorage.setItem(k,j.v)}catch(e){}location.replace(location.pathname+"?v="+j.v)}}).catch(function(){})}catch(e){}}chk();document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible")chk()});})();</script>
 <title>Georges</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700&family=Figtree:wght@400;500;600&display=swap">
 <style>
@@ -150,6 +150,7 @@ details.cat>summary h2+.row,details.cat>summary+.row{border-top:0}
 .ep .gr{display:flex;align-items:center;gap:6px;font-size:.85rem;color:var(--muted)}
 .ep .gr input{width:80px;padding:6px 8px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--fg);font:600 .95rem var(--body)}
 .eatbox .tot{background:var(--leaf-soft);border-radius:12px;padding:10px 12px;font-weight:600}
+.ep .warn{font-size:.82rem;color:#9a5a00;background:color-mix(in srgb,var(--vitc) 16%,var(--card));border-radius:8px;padding:6px 8px;line-height:1.35}
 .manual>summary{cursor:pointer;color:var(--muted);font-size:.88rem;padding:0 14px 12px}
 .reset{align-self:center;background:none;border:1px solid var(--line);color:var(--muted);padding:8px 16px;border-radius:20px;font:500 .9rem var(--body);cursor:pointer}
 .meals{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}
@@ -1061,20 +1062,28 @@ function eatRender(){const box=document.getElementById("eatRes");
   box.innerHTML=EAT.map((e,i)=>{
     if(e.kind==="animal")return `<div class="ep no"><div class="nm">${esc(e.txt)}</div><div class="sub">Ça ne correspond pas à l'alimentation végétale, je ne l'ajoute pas à Georges. Pour info : ${esc(e.info)}.</div></div>`;
     if(e.kind==="food")return `<div class="ep"><div class="top"><div><div class="nm">${esc(e.f[1])}</div><div class="sub">« ${esc(e.txt)} » · ${esc(e.f[2])}</div></div><div class="ctr"><button type="button" data-eq="${i}" data-d="-0.5" aria-label="Moins">−</button><span class="n">${fmt(e.q)}</span><button type="button" class="plus" data-eq="${i}" data-d="0.5" aria-label="Plus">+</button></div></div><div class="nut">${nutHTML(scale(e.f,e.q))}</div><button type="button" class="alt" data-off="${i}">Pas ça ? Chercher un produit du commerce</button></div>`;
-    if(e.kind==="off")return `<div class="ep"><div class="top"><div><div class="nm">${esc(e.f[1])}</div><div class="sub">« ${esc(e.txt)} »</div></div></div><label class="gr">Quantité<input type="number" inputmode="decimal" min="1" value="${e.g}" data-g="${i}"> g</label><div class="nut">${nutHTML(offScale(e))}</div><button type="button" class="alt" data-off="${i}">Choisir un autre produit</button></div>`;
-    if(e.kind==="search")return `<div class="ep"><div class="nm">« ${esc(e.txt)} »</div><div class="sub">${e.busy?"Je cherche dans les produits du commerce…":e.err?esc(e.err):"Choisis le bon produit :"}</div><div class="offl">${(e.list||[]).map((o,j)=>`<button type="button" data-pick="${i}:${j}">${esc(o.n)}<small>${esc(o.b||"")}${o.b?" · ":""}${fmt(o.p)} g de protéines pour 100 g</small></button>`).join("")}</div>${e.err?`<button type="button" class="alt" data-skip="${i}">Laisser de côté</button>`:""}</div>`;
+    if(e.kind==="off")return `<div class="ep"><div class="top"><div><div class="nm">${esc(e.f[1])}</div><div class="sub">« ${esc(e.txt)} »</div></div></div>${warnHTML(e.o.w)}<label class="gr">Quantité<input type="number" inputmode="decimal" min="1" value="${e.g}" data-g="${i}"> g</label><div class="nut">${nutHTML(offScale(e))}</div><button type="button" class="alt" data-off="${i}">Choisir un autre produit</button></div>`;
+    if(e.kind==="search")return `<div class="ep"><div class="nm">« ${esc(e.txt)} »</div><div class="sub">${e.busy?"Je cherche dans les produits du commerce…":e.err?esc(e.err):"Choisis le bon produit :"}</div><div class="offl">${(e.list||[]).map((o,j)=>`<button type="button" data-pick="${i}:${j}">${esc(o.n)}<small>${esc(o.b||"")}${o.b?" · ":""}${fmt(o.p)} g de protéines pour 100 g${o.w&&o.w.length?" · ⚠️ "+esc(o.w[0]):""}</small></button>`).join("")}</div>${e.err?`<button type="button" class="alt" data-skip="${i}">Laisser de côté</button>`:""}</div>`;
     return "";}).join("");
   const ok=EAT.filter(e=>e.kind==="food"||e.kind==="off");
   if(ok.length){const t=sumEat();box.insertAdjacentHTML("beforeend",`<div class="tot">Ton repas : ${fmt(t[3])} g de protéines<div class="nut" style="font-weight:500">${nutHTML(t)}</div></div><button type="button" class="go" id="eatAdd">Ajouter à ma journée</button>`);}
 }
+// Petits mots d'attention pour les produits du commerce
+function warn(o){const N=o.nutriments||{},w=[],su=+N.sugars_100g;
+  if(+o.nova_group===4)w.push("produit ultra-transformé");
+  if(su>=22.5)w.push(`très sucré (${fmt(su)} g de sucre pour 100 g)`);else if(su>=12.5)w.push(`riche en sucre (${fmt(su)} g pour 100 g)`);
+  if((+o.additives_n||0)>=3)w.push(`${o.additives_n} additifs`);
+  if(/^[de]$/i.test(o.nutriscore_grade||""))w.push("Nutri-Score "+o.nutriscore_grade.toUpperCase());
+  return w;}
+const warnHTML=w=>w&&w.length?`<div class="warn">⚠️ Attention, ce produit n'est pas très sain : ${esc(w.join(", "))}. À garder pour le plaisir, de temps en temps.</div>`:"";
 const scale=(f,q)=>[f[0],f[1],f[2],...f.slice(3).map(x=>x*q)];
 function offScale(e){const k=e.g/100,n=e.o;return ["","","",n.p*k,n.fe*k,n.zn*k,n.ca*k,n.c*k,0];}
 function sumEat(){const t=["","","",0,0,0,0,0,0];EAT.forEach(e=>{const v=e.kind==="food"?scale(e.f,e.q):e.kind==="off"?offScale(e):null;if(v)for(let i=3;i<9;i++)t[i]+=v[i]});return t;}
 async function offSearch(i){const e=EAT[i];e.kind="search";e.busy=true;e.list=[];e.err="";eatRender();
-  try{const u="https://world.openfoodfacts.org/cgi/search.pl?search_simple=1&action=process&json=1&page_size=8&fields=product_name,brands,nutriments,serving_quantity&search_terms="+encodeURIComponent(e.txt);
+  try{const u="https://world.openfoodfacts.org/cgi/search.pl?search_simple=1&action=process&json=1&page_size=8&fields=product_name,brands,nutriments,serving_quantity,nova_group,nutriscore_grade,additives_n&search_terms="+encodeURIComponent(e.txt);
     const r=await fetch(u);const d=await r.json();
     e.list=(d.products||[]).filter(o=>o.product_name&&o.nutriments&&o.nutriments.proteins_100g!=null).slice(0,6).map(o=>{const N=o.nutriments,mg=k=>(N[k]||0)*1000;
-      return {n:o.product_name,b:(o.brands||"").split(",")[0],sq:+o.serving_quantity||0,p:+N.proteins_100g||0,fe:mg("iron_100g"),zn:mg("zinc_100g"),ca:mg("calcium_100g"),c:mg("vitamin-c_100g")}});
+      return {n:o.product_name,b:(o.brands||"").split(",")[0],sq:+o.serving_quantity||0,w:warn(o),p:+N.proteins_100g||0,fe:mg("iron_100g"),zn:mg("zinc_100g"),ca:mg("calcium_100g"),c:mg("vitamin-c_100g")}});
     if(!e.list.length)e.err="Je n'ai rien trouvé. Essaie avec la marque, ou ajoute-le avec ses valeurs exactes plus bas.";
   }catch(_){e.err="Pas de connexion pour chercher ce produit. Réessaie plus tard, ou ajoute-le avec ses valeurs exactes plus bas."}
   e.busy=false;eatRender();}
