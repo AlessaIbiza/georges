@@ -11,7 +11,7 @@
 <link rel="manifest" href="manifest.json">
 <meta http-equiv="Cache-Control" content="no-cache">
 <style>[hidden]{display:none!important}</style>
-<script>(function(){var B="1794481607";function chk(){try{fetch("version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.json()}).then(function(j){if(j&&j.v&&j.v!==B){var k="gv-reload";try{if(sessionStorage.getItem(k)===j.v)return;sessionStorage.setItem(k,j.v)}catch(e){}location.replace(location.pathname+"?v="+j.v)}}).catch(function(){})}catch(e){}}chk();document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible")chk()});})();</script>
+<script>(function(){var B="1794481738";function chk(){try{fetch("version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.json()}).then(function(j){if(j&&j.v&&j.v!==B){var k="gv-reload";try{if(sessionStorage.getItem(k)===j.v)return;sessionStorage.setItem(k,j.v)}catch(e){}location.replace(location.pathname+"?v="+j.v)}}).catch(function(){})}catch(e){}}chk();document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible")chk()});})();</script>
 <title>Georges</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700&family=Figtree:wght@400;500;600&display=swap">
 <style>
@@ -1041,11 +1041,11 @@ const EXTRA=[
  ["xChocoL","Chocolat au lait végétal","2 carrés, 20 g",1.2,0.5,0.3,10,0,0],["xPatTar","Pâte à tartiner","1 c. à soupe",1,0.4,0.2,10,0,0],["xCoco","Noix de coco râpée","2 c. à soupe, 10 g",0.7,0.3,0.2,3,0,0]];
 // Ce qui n'est pas végétal : on informe, on ne compte pas
 const ANIMAL=[
- [/\b(oeuf|oeufs|omelette)\b/,"Œuf","1 œuf ≈ 6 g de protéines"],
- [/\b(fromage|comte|emmental|gruyere|mozzarella|mozza|chevre|feta|parmesan|raclette|camembert|brie|roquefort|cheddar|ricotta|burrata)\b/,"Fromage","30 g de fromage ≈ 7 g de protéines"],
- [/\b(poulet|dinde|boeuf|steak hache|porc|jambon|lardons?|saucisses?|saucisson|chorizo|viande|veau|agneau|canard)\b/,"Viande","100 g de viande ≈ 25 g de protéines"],
- [/\b(poisson|saumon|thon|cabillaud|sardines?|maquereau|crevettes?|moules?|fruits de mer|surimi)\b/,"Poisson","100 g de poisson ≈ 22 g de protéines"],
- [/\b(lait de vache|yaourt grec|skyr|fromage blanc|creme fraiche|beurre doux|beurre sale)\b/,"Produit laitier","1 pot ou 1 verre ≈ 5 à 10 g de protéines"]];
+ [/\b(oeuf|oeufs|omelette)\b/,"Œuf","ton œuf, c'est environ 6 g de protéines"],
+ [/\b(fromage|comte|emmental|gruyere|mozzarella|mozza|chevre|feta|parmesan|raclette|camembert|brie|roquefort|cheddar|ricotta|burrata)\b/,"Fromage","ton fromage, c'est environ 7 g de protéines pour 30 g"],
+ [/\b(poulet|dinde|boeuf|steak hache|porc|jambon|lardons?|saucisses?|saucisson|chorizo|viande|veau|agneau|canard)\b/,"Viande","ta viande, c'est environ 25 g de protéines pour 100 g"],
+ [/\b(poisson|saumon|thon|cabillaud|sardines?|maquereau|crevettes?|moules?|fruits de mer|surimi)\b/,"Poisson","ton poisson, c'est environ 22 g de protéines pour 100 g"],
+ [/\b(lait de vache|yaourt grec|skyr|fromage blanc|creme fraiche|beurre doux|beurre sale)\b/,"Produit laitier","ton produit laitier, c'est environ 5 à 10 g de protéines"]];
 const STOP=new Set(("de du des la le les l d un une au aux et avec a en sur pour quelques petit petits petite petites morceau morceaux bout bouts bol assiette tranche tranches portion "+
  "salade puree soupe veloute cuit cuite cuits cuites cru crue crus crues poche poches grille grillee grilles rotie roti roties rotis vapeur frais fraiche maison bio nature gros grosse grosses "+
  "c cuillere cuilleres soupe g gr ml cl verre pot").split(" "));
@@ -1057,10 +1057,16 @@ function foodKeys(){if(FOODKEYS)return FOODKEYS;
 function matchFood(part){const T=toks(part);if(!T.length)return null;let best=null,bs=0;
   for(const [f,K] of foodKeys()){let sc=0;T.forEach(t=>{if(K.has(t))sc++});if(sc>bs||(sc===bs&&sc&&f[1].length<best[1].length)){bs=sc;best=f}}
   return bs&&bs/T.length>=0.5?best:null;}
+// Plusieurs aliments dans un même morceau (« salade lentilles carottes betterave »)
+function matchMulti(part){const T=toks(part),used=new Set(),out=[];
+  for(let k=0;k<6;k++){let best=null,bs=0;
+    for(const [f,K] of foodKeys()){let sc=0;T.forEach((t,i)=>{if(!used.has(i)&&K.has(t))sc++});if(sc>bs||(sc===bs&&sc&&f[1].length<best[1].length)){bs=sc;best=f}}
+    if(!bs)break;T.forEach((t,i)=>{if(foodKeys().find(([f])=>f===best)[1].has(t))used.add(i)});if(!out.includes(best))out.push(best);}
+  return out;}
 let EAT=[];
 function eatRender(){const box=document.getElementById("eatRes");
   box.innerHTML=EAT.map((e,i)=>{
-    if(e.kind==="animal")return `<div class="ep no"><div class="nm">${esc(e.txt)}</div><div class="sub">Ça ne correspond pas à l'alimentation végétale, je ne l'ajoute pas à Georges. Pour info : ${esc(e.info)}.</div></div>`;
+    if(e.kind==="animal")return `<div class="ep no"><div class="nm">${esc(e.txt)}</div><div class="sub">Pour info, ${esc(e.info)}, mais ce n'est pas végétal : je ne le compte pas dans Georges. Tout le reste de ton repas, lui, est bien ajouté.</div></div>`;
     if(e.kind==="food")return `<div class="ep"><div class="top"><div><div class="nm">${esc(e.f[1])}</div><div class="sub">« ${esc(e.txt)} » · ${esc(e.f[2])}</div></div><div class="ctr"><button type="button" data-eq="${i}" data-d="-0.5" aria-label="Moins">−</button><span class="n">${fmt(e.q)}</span><button type="button" class="plus" data-eq="${i}" data-d="0.5" aria-label="Plus">+</button></div></div><div class="nut">${nutHTML(scale(e.f,e.q))}</div><button type="button" class="alt" data-off="${i}">Pas ça ? Chercher un produit du commerce</button></div>`;
     if(e.kind==="off")return `<div class="ep"><div class="top"><div><div class="nm">${esc(e.f[1])}</div><div class="sub">« ${esc(e.txt)} »</div></div></div>${warnHTML(e.o.w)}<label class="gr">Quantité<input type="number" inputmode="decimal" min="1" value="${e.g}" data-g="${i}"> g</label><div class="nut">${nutHTML(offScale(e))}</div><button type="button" class="alt" data-off="${i}">Choisir un autre produit</button></div>`;
     if(e.kind==="search")return `<div class="ep"><div class="nm">« ${esc(e.txt)} »</div><div class="sub">${e.busy?"Je cherche dans les produits du commerce…":e.err?esc(e.err):"Choisis le bon produit :"}</div><div class="offl">${(e.list||[]).map((o,j)=>`<button type="button" data-pick="${i}:${j}">${esc(o.n)}<small>${esc(o.b||"")}${o.b?" · ":""}${fmt(o.p)} g de protéines pour 100 g${o.w&&o.w.length?" · ⚠️ "+esc(o.w[0]):""}</small></button>`).join("")}</div>${e.err?`<button type="button" class="alt" data-skip="${i}">Laisser de côté</button>`:""}</div>`;
@@ -1089,10 +1095,15 @@ async function offSearch(i){const e=EAT[i];e.kind="search";e.busy=true;e.list=[]
   e.busy=false;eatRender();}
 document.getElementById("eatGo").addEventListener("click",()=>{
   const txt=document.getElementById("eatQ").value.trim();if(!txt)return;FOODKEYS=null;
-  EAT=txt.split(/,|;|\n|\s+\+\s+|\s+et\s+|\s+avec\s+/i).map(x=>x.trim()).filter(Boolean).map(part=>{
-    const n=" "+norm(part.replace(/œ/gi,"oe").replace(/æ/gi,"ae")).replace(/[^a-z0-9 ]/g," ")+" ";const a=ANIMAL.find(([re])=>re.test(n));
-    if(a&&!/\b(vegetal|vegan|vegane|soja|tofu)\b/.test(n))return {kind:"animal",txt:part,info:a[2]};
-    const f=matchFood(part);return f?{kind:"food",txt:part,f,q:1}:{kind:"search",txt:part};});
+  EAT=[];
+  txt.split(/,|;|\n|\s+\+\s+|\s+et\s+|\s+avec\s+/i).map(x=>x.trim()).filter(Boolean).forEach(part=>{
+    let n=" "+norm(part.replace(/œ/gi,"oe").replace(/æ/gi,"ae")).replace(/[^a-z0-9 ]/g," ")+" ";
+    if(!/\b(vegetal|vegan|vegane|soja|tofu)\b/.test(n)){let rest=n;
+      ANIMAL.forEach(([re,lab,info])=>{const g=new RegExp(re.source,"g");if(g.test(rest)){EAT.push({kind:"animal",txt:lab,info});rest=rest.replace(new RegExp(re.source,"g")," ")}});
+      if(rest!==n){part=rest.replace(/\s+/g," ").trim();if(!toks(part).length)return;}}
+    const multi=matchMulti(part);
+    if(multi.length>1){multi.forEach(f=>EAT.push({kind:"food",txt:part,f,q:1}));return;}
+    const f=matchFood(part);EAT.push(f?{kind:"food",txt:part,f,q:1}:{kind:"search",txt:part});});
   eatRender();EAT.forEach((e,i)=>{if(e.kind==="search")offSearch(i)});
 });
 document.getElementById("eatRes").addEventListener("click",ev=>{const b=ev.target.closest("button");if(!b)return;
@@ -1104,7 +1115,7 @@ document.getElementById("eatRes").addEventListener("click",ev=>{const b=ev.targe
   if(b.id==="eatAdd"){const ok=EAT.filter(e=>e.kind==="food"||e.kind==="off");if(!ok.length)return;
     // un aliment de la liste seul : on l'ajoute directement ; sinon on crée « mon repas » réutilisable
     if(ok.length===1&&ok[0].kind==="food"&&!ok[0].f[0].startsWith("x")){const id=ok[0].f[0];st.c[id]=(st.c[id]||0)+ok[0].q;save();build();}
-    else{const t=sumEat(),raw=ok.map(e=>e.txt).join(", ");const name=raw.charAt(0).toUpperCase()+raw.slice(1);
+    else{const t=sumEat(),raw=[...new Set(ok.map(e=>e.txt))].join(", ");const name=raw.charAt(0).toUpperCase()+raw.slice(1);
       const port=ok.map(e=>e.kind==="off"?`${e.g} g ${e.f[1]}`:(e.q!==1?fmt(e.q)+" × ":"")+e.f[1]).join(", ");
       const id="u"+Date.now();custom.push([id,name.length>60?name.slice(0,57)+"…":name,port,...t.slice(3).map(x=>Math.round(x*10)/10)]);store("custom",custom);st.c[id]=1;save();build();}
     EAT=[];document.getElementById("eatQ").value="";eatRender();toast("Ajouté à ta journée ✓");}
