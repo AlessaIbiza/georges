@@ -122,6 +122,35 @@ form.add label.wide{grid-column:1/-1}
 form.add input{padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--fg);font:500 .95rem var(--body);width:100%}
 form.add button{grid-column:1/-1;padding:10px;border-radius:10px;border:0;background:var(--leaf);color:var(--bg);font:600 .95rem var(--body);cursor:pointer}
 .empty{padding:14px;color:var(--muted)}
+.rtitle{font:700 1.15rem var(--display);margin:10px 2px 0}
+details.cat>summary{list-style:none;cursor:pointer}
+details.cat>summary::-webkit-details-marker{display:none}
+details.cat>summary h2{border-bottom:0;align-items:center}
+details.cat[open]>summary h2{border-bottom:1px solid var(--line)}
+details.cat>summary h2 .chev{display:inline-flex;align-items:center;gap:8px}
+details.cat>summary h2 .chev::after{content:"";width:9px;height:9px;border-right:2.5px solid var(--leaf);border-bottom:2.5px solid var(--leaf);transform:rotate(45deg) translate(-2px,-2px);transition:transform .2s}
+details.cat[open]>summary h2 .chev::after{transform:rotate(-135deg) translate(-2px,-2px)}
+details.cat>summary h2 .chev b{font:600 .78rem var(--body);color:var(--leaf);background:var(--leaf-soft);border-radius:10px;padding:1px 8px}
+details.cat>summary h2+.row,details.cat>summary+.row{border-top:0}
+.eatbox{padding:12px 14px;display:flex;flex-direction:column;gap:10px}
+.eatbox textarea{width:100%;min-height:64px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--fg);font:500 1rem var(--body);resize:vertical}
+.eatbox .go{padding:11px;border-radius:10px;border:0;background:var(--leaf);color:var(--bg);font:600 1rem var(--body);cursor:pointer}
+.eatbox .go[disabled]{opacity:.5}
+.eatbox .hint{font-size:.82rem;color:var(--muted);margin:0}
+.ep{border:1px solid var(--line);border-radius:12px;padding:10px 12px;display:flex;flex-direction:column;gap:6px}
+.ep .top{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.ep .nm{font-weight:600}
+.ep .sub{font-size:.8rem;color:var(--muted)}
+.ep.no{background:color-mix(in srgb,var(--vitc) 12%,var(--card))}
+.ep.no .nm::before{content:"🥚 "}
+.ep .alt{background:none;border:0;color:var(--leaf);font:600 .85rem var(--body);text-decoration:underline;cursor:pointer;padding:0;align-self:flex-start}
+.ep .offl{display:flex;flex-direction:column;gap:6px}
+.ep .offl button{text-align:left;border:1px solid var(--line);background:var(--card);color:var(--fg);border-radius:10px;padding:8px 10px;font:500 .9rem var(--body);cursor:pointer}
+.ep .offl button small{display:block;color:var(--muted);font-size:.78rem}
+.ep .gr{display:flex;align-items:center;gap:6px;font-size:.85rem;color:var(--muted)}
+.ep .gr input{width:80px;padding:6px 8px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--fg);font:600 .95rem var(--body)}
+.eatbox .tot{background:var(--leaf-soft);border-radius:12px;padding:10px 12px;font-weight:600}
+.manual>summary{cursor:pointer;color:var(--muted);font-size:.88rem;padding:0 14px 12px}
 .reset{align-self:center;background:none;border:1px solid var(--line);color:var(--muted);padding:8px 16px;border-radius:20px;font:500 .9rem var(--body);cursor:pointer}
 .meals{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}
 .meals button{flex:none;padding:8px 14px;border-radius:18px;border:1px solid var(--line);background:var(--card);color:var(--fg);font:600 .9rem var(--body);cursor:pointer}
@@ -615,8 +644,8 @@ form.add button{grid-column:1/-1;padding:10px;border-radius:10px;border:0;backgr
   <div id="pane-a" class="pane" role="tabpanel" aria-labelledby="tab-a" hidden>
   <div class="meals subnav" role="group" aria-label="Mon assiette">
     <button type="button" id="tab-s" aria-pressed="true">Mon suivi</button>
-    <button type="button" id="tab-d" aria-pressed="false">Menus du jour</button>
-    <button type="button" id="tab-r" aria-pressed="false">Recettes</button>
+    <button type="button" id="tab-d" aria-pressed="false">Repas et recettes</button>
+    <button type="button" id="tab-r" aria-pressed="false" hidden>Recettes</button>
     <button type="button" id="tab-e" aria-pressed="false">Les essentiels</button>
   </div>
 
@@ -626,6 +655,12 @@ form.add button{grid-column:1/-1;padding:10px;border-radius:10px;border:0;backgr
       <h2 id="menuT">Mes menus du jour<span id="menuScore"></span></h2>
       <div id="menus"></div>
     </section>
+
+    <h2 class="rtitle">Toutes mes recettes</h2>
+    <div class="meals" id="meals" role="group" aria-label="Repas"></div>
+    <p class="mnote" id="mnote"></p>
+    <div id="recs" class="pane"></div>
+    <button type="button" class="more" id="more">D'autres idées</button>
 
       <section class="card" aria-labelledby="aliT">
       <h2 id="aliT">Mon alimentation<span><button type="button" class="linkbtn" id="goA">Mon suivi complet →</button></span></h2>
@@ -712,14 +747,15 @@ form.add button{grid-column:1/-1;padding:10px;border-radius:10px;border:0;backgr
       <div class="ate" id="ate"></div>
     </section>
 
-    <div class="search">
-      <input id="q" type="search" aria-label="Chercher un aliment" placeholder="Chercher un aliment (ex. tofu, lentilles)" autocomplete="off">
-    </div>
-    <div id="cats"></div>
-    <div class="empty" id="noRes" hidden>Aucun aliment trouvé. Tu peux l'ajouter juste en dessous.</div>
-
-    <section class="card" aria-labelledby="addT">
-      <h2 id="addT">Ajouter un aliment</h2>
+    <section class="card" aria-labelledby="eatT">
+      <h2 id="eatT">Ajouter ce que j'ai mangé</h2>
+      <div class="eatbox">
+        <p class="hint">Écris ton repas comme tu le dirais, en séparant par des virgules. Georges calcule tes protéines tout seul.</p>
+        <textarea id="eatQ" placeholder="ex. salade de lentilles, purée de betterave, carottes"></textarea>
+        <button type="button" class="go" id="eatGo">Calculer</button>
+        <div id="eatRes" style="display:flex;flex-direction:column;gap:8px"></div>
+      </div>
+      <details class="manual"><summary>Je connais les valeurs exactes de mon aliment</summary>
       <form class="add" id="addForm">
         <label class="wide" for="aName">Nom<input id="aName" required placeholder="ex. Houmous maison"></label>
         <label class="wide" for="aPort">Portion<input id="aPort" placeholder="ex. 3 c. à soupe"></label>
@@ -731,18 +767,22 @@ form.add button{grid-column:1/-1;padding:10px;border-radius:10px;border:0;backgr
         <label for="aO">Oméga-3 (g)<input id="aO" inputmode="decimal" placeholder="0"></label>
         <button type="submit">Ajouter à mes aliments</button>
       </form>
+      </details>
     </section>
+
+    <div class="search">
+      <input id="q" type="search" aria-label="Chercher un aliment" placeholder="Chercher un aliment (ex. tofu, lentilles)" autocomplete="off">
+    </div>
+    <div id="cats"></div>
+    <div class="empty" id="noRes" hidden>Aucun aliment trouvé. Tu peux l'ajouter juste en dessous.</div>
+
+
 
     <button class="reset" id="reset" type="button">Recommencer la journée</button>
   </div>
 
   <!-- RECETTES -->
-  <div id="pane-r" class="pane" role="tabpanel" aria-labelledby="tab-r" hidden>
-    <div class="meals" id="meals" role="group" aria-label="Repas"></div>
-    <p class="mnote" id="mnote"></p>
-    <div id="recs" class="pane"></div>
-    <button type="button" class="more" id="more">D'autres idées</button>
-  </div>
+  <div id="pane-r" class="pane" hidden></div>
 
   <!-- ESSENTIELS -->
   <div id="pane-e" class="pane" role="tabpanel" aria-labelledby="tab-e" hidden>
@@ -833,6 +873,10 @@ const CATS=[
   ["champi","Champignons","100 g",3,0.5,0.5,3,2,0],
   ["salade","Roquette","1 poignée, 50 g",1.3,0.7,0.2,80,7.5,0],
   ["persil","Persil frais","1 petite poignée, 15 g",0.4,0.9,0.2,21,20,0],
+  ["pousseS","Pousses de soja (haricot mungo)","100 g",3,0.9,0.4,13,13,0],
+  ["lentG","Lentilles germées","100 g",9,3.2,1.5,25,16,0.1],
+  ["poisG","Pois chiches germés","100 g",7,2,1.2,50,4,0],
+  ["alfalfa","Graines germées (alfalfa, radis, brocoli)","1 poignée, 30 g",1.2,0.3,0.3,12,4,0],
   ["nori","Algue nori (iode)","2 feuilles, 5 g",1.5,0.9,0.1,15,2,0]]},
  {t:"Fruits",items:[
   ["orange","Orange","1 moyenne",1.2,0.1,0.1,50,70,0],
@@ -894,14 +938,14 @@ function rowHTML(f,isCustom){const [id,n,p]=f;
   return `<div class="row" id="r-${id}" data-name="${esc(norm(n))}"><div class="info"><div class="name">${esc(n)}</div><div class="meta">${esc(p||"1 portion")}</div><div class="nut">${nutHTML(f)}</div>${isCustom?`<button type="button" class="del" data-del="${id}">Supprimer</button>`:""}</div>
     <div class="ctr"><button type="button" aria-label="Retirer ${esc(n)}" data-id="${id}" data-d="-1">−</button><span class="n" id="n-${id}">0</span><button type="button" class="plus" aria-label="Ajouter ${esc(n)}" data-id="${id}" data-d="1">+</button></div></div>`;}
 function build(){
-  document.getElementById("cats").innerHTML=allCats().map(c=>`<section class="card cat"><h2>${esc(c.t)}<span>${c.items.length}</span></h2>${c.items.map(i=>rowHTML(i,c.custom)).join("")}</section>`).join("");
+  document.getElementById("cats").innerHTML=allCats().map(c=>`<details class="card cat"${c.custom?" open":""}><summary><h2>${esc(c.t)}<span class="chev"><b class="cn" hidden></b>${c.items.length}</span></h2></summary>${c.items.map(i=>rowHTML(i,c.custom)).join("")}</details>`).join("");
   filter();render();
 }
 function filter(){
   const q=norm(document.getElementById("q").value.trim());let any=false;
   document.querySelectorAll(".cat").forEach(sec=>{let vis=0;
     sec.querySelectorAll(".row").forEach(r=>{const s=!q||r.dataset.name.includes(q);r.hidden=!s;if(s)vis++;});
-    sec.hidden=vis===0;if(vis)any=true;});
+    sec.hidden=vis===0;if(vis)any=true;if(q)sec.open=vis>0;else if(sec.dataset.q)sec.open=false;sec.dataset.q=q?"1":"";});
   document.getElementById("noRes").hidden=any;
 }
 document.getElementById("q").addEventListener("input",filter);
@@ -959,6 +1003,7 @@ function render(){
   for(let i=6;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);const k=ymd(d);
     h+=`<div class="day${i===0?" today":""}"><span class="dot${hist[k]&&hist[k].b12?" on":""}"></span>${i===0?"Auj.":JOURS[d.getDay()]}</div>`;}
   document.getElementById("b12days").innerHTML=h;
+  document.querySelectorAll("details.cat").forEach(sec=>{let n=0;sec.querySelectorAll(".row").forEach(r=>{if(r.classList.contains("on"))n++});const b=sec.querySelector(".cn");if(b){b.hidden=!n;b.textContent=n+" choisi"+(n>1?"s":"")}});
   document.getElementById("ateCard").hidden=!ate.length;
   document.getElementById("ate").innerHTML=ate.join("");
   document.getElementById("ateN").textContent=ate.length?ate.length+" aliment"+(ate.length>1?"s":""):"";
@@ -975,6 +1020,89 @@ function render(){
   window.__T=T;if(window.__vivReady)renderExtras();
 }
 build();
+
+// ---------- Ajouter ce que j'ai mangé ----------
+// Aliments en plus, reconnus dans le texte (même format que CATS)
+const EXTRA=[
+ ["xConc","Concombre","100 g",0.7,0.3,0.2,16,3,0],["xSal","Salade verte","1 bol, 50 g",0.7,0.4,0.1,18,5,0.05],["xMache","Mâche","1 poignée, 50 g",1,1,0.3,19,19,0.1],
+ ["xOign","Oignon","50 g",0.6,0.1,0.1,12,4,0],["xPoir","Poireau","100 g",1.5,1,0.1,35,10,0],["xAuber","Aubergine","150 g",1.5,0.4,0.2,13,3,0],["xChou","Chou","100 g",1.3,0.5,0.2,40,35,0],
+ ["xMais","Maïs","100 g",3.3,0.5,0.6,3,7,0],["xFeve","Fèves","100 g",7.6,1.5,1,36,0.3,0],["xFlag","Flageolets cuits","150 g",10,3,1.3,60,0,0],["xHarN","Haricots noirs cuits","150 g",13,3.2,1.7,40,0,0.1],
+ ["xPoisCa","Pois cassés cuits","150 g",12,1.9,1.5,21,0.6,0],["xLentC","Lentilles corail cuites","150 g",13,3,1.6,25,1,0],["xBoul","Boulgour cuit","150 g",4.6,1.4,0.9,15,0,0],
+ ["xSem","Semoule de couscous cuite","150 g",5.7,0.6,0.4,12,0,0],["xPainB","Pain blanc ou baguette","1 morceau, 50 g",4.5,0.6,0.4,15,0,0],["xGal","Galettes de riz","2 galettes",1.6,0.3,0.5,2,0,0],
+ ["xPol","Polenta cuite","150 g",3,0.5,0.3,3,0,0],["xGnoc","Gnocchis","150 g",4.5,0.6,0.4,15,4,0],["xFrite","Frites","1 portion, 150 g",4.5,1,0.5,15,10,0],
+ ["xLaitAv","Lait d'avoine","1 verre de 250 ml",2.5,0.5,0.4,300,0,0],["xLaitRiz","Lait de riz","1 verre de 250 ml",0.7,0.2,0.4,300,0,0],["xLaitCo","Boisson ou lait de coco","1 verre de 250 ml",0.5,0.5,0.3,300,0,0],
+ ["xYaCo","Yaourt végétal coco","1 pot de 125 g",1,0.4,0.2,150,0,0],["xCremeS","Crème de soja","2 c. à soupe, 30 g",1,0.2,0.1,5,0,0],["xTofuS","Tofu soyeux","100 g",5,0.8,0.5,30,0,0.2],
+ ["xSteak","Steak végétal","1 steak, 100 g",15,2.5,1.2,40,0,0],["xFala","Falafels","4 falafels, 100 g",13,3.4,1.5,54,1.6,0],["xOlive","Olives","10 olives",0.4,1,0.1,25,0,0],
+ ["xPist","Pistaches","1 poignée, 30 g",6,1.2,0.7,32,2,0],["xNois","Noisettes","1 poignée, 30 g",4.5,1.4,0.7,34,2,0],["xCacah","Cacahuètes","1 poignée, 30 g",7.7,1.4,1,28,0,0],
+ ["xLevure","Levure maltée","1 c. à soupe, 5 g",2.5,0.3,0.4,5,0,0],["xSpir","Spiruline","1 c. à café, 3 g",1.7,0.9,0.1,4,0,0],["xSoupeL","Soupe de légumes","1 bol de 300 ml",3,1,0.5,60,15,0],
+ ["xPoire","Poire","1 poire",0.6,0.3,0.2,15,7,0],["xPeche","Pêche ou nectarine","1 fruit",1,0.4,0.2,9,10,0],["xMelon","Melon ou pastèque","1 tranche, 200 g",1.4,0.5,0.2,18,30,0],
+ ["xClem","Clémentine ou mandarine","2 fruits",1.2,0.2,0.1,50,70,0],["xCerise","Cerises","150 g",1.5,0.5,0.1,20,10,0],["xComp","Compote","1 pot, 100 g",0.3,0.2,0.1,5,2,0],
+ ["xChocoL","Chocolat au lait végétal","2 carrés, 20 g",1.2,0.5,0.3,10,0,0],["xPatTar","Pâte à tartiner","1 c. à soupe",1,0.4,0.2,10,0,0],["xCoco","Noix de coco râpée","2 c. à soupe, 10 g",0.7,0.3,0.2,3,0,0]];
+// Ce qui n'est pas végétal : on informe, on ne compte pas
+const ANIMAL=[
+ [/\b(oeuf|oeufs|omelette)\b/,"Œuf","1 œuf ≈ 6 g de protéines"],
+ [/\b(fromage|comte|emmental|gruyere|mozzarella|mozza|chevre|feta|parmesan|raclette|camembert|brie|roquefort|cheddar|ricotta|burrata)\b/,"Fromage","30 g de fromage ≈ 7 g de protéines"],
+ [/\b(poulet|dinde|boeuf|steak hache|porc|jambon|lardons?|saucisses?|saucisson|chorizo|viande|veau|agneau|canard)\b/,"Viande","100 g de viande ≈ 25 g de protéines"],
+ [/\b(poisson|saumon|thon|cabillaud|sardines?|maquereau|crevettes?|moules?|fruits de mer|surimi)\b/,"Poisson","100 g de poisson ≈ 22 g de protéines"],
+ [/\b(lait de vache|yaourt grec|skyr|fromage blanc|creme fraiche|beurre doux|beurre sale)\b/,"Produit laitier","1 pot ou 1 verre ≈ 5 à 10 g de protéines"]];
+const STOP=new Set(("de du des la le les l d un une au aux et avec a en sur pour quelques petit petits petite petites morceau morceaux bout bouts bol assiette tranche tranches portion "+
+ "salade puree soupe veloute cuit cuite cuits cuites cru crue crus crues poche poches grille grillee grilles rotie roti roties rotis vapeur frais fraiche maison bio nature gros grosse grosses "+
+ "c cuillere cuilleres soupe g gr ml cl verre pot").split(" "));
+const sing=w=>w.length>4?w.replace(/(x|s)$/,""):w;
+const toks=t=>norm(t.replace(/œ/gi,"oe")).replace(/[^a-z0-9 ]/g," ").split(/\s+/).filter(w=>w&&!STOP.has(w)&&!/^\d/.test(w)).map(sing);
+let FOODKEYS=null;
+function foodKeys(){if(FOODKEYS)return FOODKEYS;
+  FOODKEYS=allFoods().concat(EXTRA).map(f=>[f,new Set(toks(f[1]))]);return FOODKEYS;}
+function matchFood(part){const T=toks(part);if(!T.length)return null;let best=null,bs=0;
+  for(const [f,K] of foodKeys()){let sc=0;T.forEach(t=>{if(K.has(t))sc++});if(sc>bs||(sc===bs&&sc&&f[1].length<best[1].length)){bs=sc;best=f}}
+  return bs&&bs/T.length>=0.5?best:null;}
+let EAT=[];
+function eatRender(){const box=document.getElementById("eatRes");
+  box.innerHTML=EAT.map((e,i)=>{
+    if(e.kind==="animal")return `<div class="ep no"><div class="nm">${esc(e.txt)}</div><div class="sub">Ça ne correspond pas à l'alimentation végétale, je ne l'ajoute pas à Georges. Pour info : ${esc(e.info)}.</div></div>`;
+    if(e.kind==="food")return `<div class="ep"><div class="top"><div><div class="nm">${esc(e.f[1])}</div><div class="sub">« ${esc(e.txt)} » · ${esc(e.f[2])}</div></div><div class="ctr"><button type="button" data-eq="${i}" data-d="-0.5" aria-label="Moins">−</button><span class="n">${fmt(e.q)}</span><button type="button" class="plus" data-eq="${i}" data-d="0.5" aria-label="Plus">+</button></div></div><div class="nut">${nutHTML(scale(e.f,e.q))}</div><button type="button" class="alt" data-off="${i}">Pas ça ? Chercher un produit du commerce</button></div>`;
+    if(e.kind==="off")return `<div class="ep"><div class="top"><div><div class="nm">${esc(e.f[1])}</div><div class="sub">« ${esc(e.txt)} »</div></div></div><label class="gr">Quantité<input type="number" inputmode="decimal" min="1" value="${e.g}" data-g="${i}"> g</label><div class="nut">${nutHTML(offScale(e))}</div><button type="button" class="alt" data-off="${i}">Choisir un autre produit</button></div>`;
+    if(e.kind==="search")return `<div class="ep"><div class="nm">« ${esc(e.txt)} »</div><div class="sub">${e.busy?"Je cherche dans les produits du commerce…":e.err?esc(e.err):"Choisis le bon produit :"}</div><div class="offl">${(e.list||[]).map((o,j)=>`<button type="button" data-pick="${i}:${j}">${esc(o.n)}<small>${esc(o.b||"")}${o.b?" · ":""}${fmt(o.p)} g de protéines pour 100 g</small></button>`).join("")}</div>${e.err?`<button type="button" class="alt" data-skip="${i}">Laisser de côté</button>`:""}</div>`;
+    return "";}).join("");
+  const ok=EAT.filter(e=>e.kind==="food"||e.kind==="off");
+  if(ok.length){const t=sumEat();box.insertAdjacentHTML("beforeend",`<div class="tot">Ton repas : ${fmt(t[3])} g de protéines<div class="nut" style="font-weight:500">${nutHTML(t)}</div></div><button type="button" class="go" id="eatAdd">Ajouter à ma journée</button>`);}
+}
+const scale=(f,q)=>[f[0],f[1],f[2],...f.slice(3).map(x=>x*q)];
+function offScale(e){const k=e.g/100,n=e.o;return ["","","",n.p*k,n.fe*k,n.zn*k,n.ca*k,n.c*k,0];}
+function sumEat(){const t=["","","",0,0,0,0,0,0];EAT.forEach(e=>{const v=e.kind==="food"?scale(e.f,e.q):e.kind==="off"?offScale(e):null;if(v)for(let i=3;i<9;i++)t[i]+=v[i]});return t;}
+async function offSearch(i){const e=EAT[i];e.kind="search";e.busy=true;e.list=[];e.err="";eatRender();
+  try{const u="https://world.openfoodfacts.org/cgi/search.pl?search_simple=1&action=process&json=1&page_size=8&fields=product_name,brands,nutriments,serving_quantity&search_terms="+encodeURIComponent(e.txt);
+    const r=await fetch(u);const d=await r.json();
+    e.list=(d.products||[]).filter(o=>o.product_name&&o.nutriments&&o.nutriments.proteins_100g!=null).slice(0,6).map(o=>{const N=o.nutriments,mg=k=>(N[k]||0)*1000;
+      return {n:o.product_name,b:(o.brands||"").split(",")[0],sq:+o.serving_quantity||0,p:+N.proteins_100g||0,fe:mg("iron_100g"),zn:mg("zinc_100g"),ca:mg("calcium_100g"),c:mg("vitamin-c_100g")}});
+    if(!e.list.length)e.err="Je n'ai rien trouvé. Essaie avec la marque, ou ajoute-le avec ses valeurs exactes plus bas.";
+  }catch(_){e.err="Pas de connexion pour chercher ce produit. Réessaie plus tard, ou ajoute-le avec ses valeurs exactes plus bas."}
+  e.busy=false;eatRender();}
+document.getElementById("eatGo").addEventListener("click",()=>{
+  const txt=document.getElementById("eatQ").value.trim();if(!txt)return;FOODKEYS=null;
+  EAT=txt.split(/,|;|\n|\s+\+\s+|\s+et\s+|\s+avec\s+/i).map(x=>x.trim()).filter(Boolean).map(part=>{
+    const n=" "+norm(part.replace(/œ/gi,"oe").replace(/æ/gi,"ae")).replace(/[^a-z0-9 ]/g," ")+" ";const a=ANIMAL.find(([re])=>re.test(n));
+    if(a&&!/\b(vegetal|vegan|vegane|soja|tofu)\b/.test(n))return {kind:"animal",txt:part,info:a[2]};
+    const f=matchFood(part);return f?{kind:"food",txt:part,f,q:1}:{kind:"search",txt:part};});
+  eatRender();EAT.forEach((e,i)=>{if(e.kind==="search")offSearch(i)});
+});
+document.getElementById("eatRes").addEventListener("click",ev=>{const b=ev.target.closest("button");if(!b)return;
+  if(b.dataset.eq!=null){const e=EAT[+b.dataset.eq];e.q=Math.max(0.5,Math.min(5,e.q+ +b.dataset.d));eatRender();return;}
+  if(b.dataset.off!=null){offSearch(+b.dataset.off);return;}
+  if(b.dataset.skip!=null){EAT.splice(+b.dataset.skip,1);eatRender();return;}
+  if(b.dataset.pick){const [i,j]=b.dataset.pick.split(":").map(Number);const e=EAT[i],o=e.list[j];
+    EAT[i]={kind:"off",txt:e.txt,o,g:o.sq||125,f:["",o.b?`${o.n} (${o.b})`:o.n]};eatRender();return;}
+  if(b.id==="eatAdd"){const ok=EAT.filter(e=>e.kind==="food"||e.kind==="off");if(!ok.length)return;
+    // un aliment de la liste seul : on l'ajoute directement ; sinon on crée « mon repas » réutilisable
+    if(ok.length===1&&ok[0].kind==="food"&&!ok[0].f[0].startsWith("x")){const id=ok[0].f[0];st.c[id]=(st.c[id]||0)+ok[0].q;save();build();}
+    else{const t=sumEat(),raw=ok.map(e=>e.txt).join(", ");const name=raw.charAt(0).toUpperCase()+raw.slice(1);
+      const port=ok.map(e=>e.kind==="off"?`${e.g} g ${e.f[1]}`:(e.q!==1?fmt(e.q)+" × ":"")+e.f[1]).join(", ");
+      const id="u"+Date.now();custom.push([id,name.length>60?name.slice(0,57)+"…":name,port,...t.slice(3).map(x=>Math.round(x*10)/10)]);store("custom",custom);st.c[id]=1;save();build();}
+    EAT=[];document.getElementById("eatQ").value="";eatRender();toast("Ajouté à ta journée ✓");}
+});
+document.getElementById("eatRes").addEventListener("input",ev=>{const g=ev.target.dataset.g;if(g==null)return;const v=parseFloat(ev.target.value);if(v>0){EAT[+g].g=v;
+  const e=EAT[+g],box=ev.target.closest(".ep").querySelector(".nut");box.innerHTML=nutHTML(offScale(e));const t=document.querySelector("#eatRes .tot");
+  if(t){const s=sumEat();t.firstChild.textContent=`Ton repas : ${fmt(s[3])} g de protéines`;t.querySelector(".nut").innerHTML=nutHTML(s);}}});
 
 // ---------- Recettes ----------
 const REC={
@@ -1725,7 +1853,7 @@ document.getElementById("bkLoad").addEventListener("click",()=>{
 });
 
 // ---------- Onglets ----------
-const SUBS={g:"",j:"",d:"Tes menus végétaux du jour. Touche « Autre idée » si une recette ne te tente pas.",
+const SUBS={g:"",j:"",d:"Tes menus du jour, et toutes tes recettes juste en dessous. Touche « Autre idée » si un plat ne te tente pas, et « J'ai mangé ça » pour remplir ton suivi.",
   m:"Ton voyage Vivant, tes méditations et tes soins énergétiques.",
   n:"Ton chemin, jour après jour : tes journées vivantes et tes messages intuitifs.",
   s:"Note ce que tu manges : protéines, fer, calcium, zinc, vitamine C et oméga-3 se calculent tout seuls.",
@@ -1738,7 +1866,7 @@ function showTab(t){
   store("tab2",t);
 }
 function showSub(s,keep){
-  sub=s;["d","s","r","e"].forEach(k=>{document.getElementById("pane-"+k).hidden=k!==s;document.getElementById("tab-"+k).setAttribute("aria-pressed",k===s);});
+  if(s==="r")s="d";sub=s;["d","s","r","e"].forEach(k=>{document.getElementById("pane-"+k).hidden=k!==s;document.getElementById("tab-"+k).setAttribute("aria-pressed",k===s);});
   document.getElementById("sub").textContent=SUBS[s];store("sub3",s);
 }
 ["g","j","m","a","n"].forEach(k=>document.getElementById("tab-"+k).addEventListener("click",()=>{showTab(k);window.scrollTo(0,0);}));
@@ -1900,6 +2028,12 @@ function showGeorges(){openG("jour");}
 const launchNow=()=>NOUVEAUTES.filter(n=>n.debut<=today&&today<=n.fin&&load("later_"+n.id,"")!==today);
 function renderLaunch(){
   const L=launchNow(),slot=document.getElementById("launchSlot");
+  // Petit mot du jour (une seule journée), à la place de la série du moment
+  if(today==="2026-11-12"){slot.innerHTML=`<section class="card launch" aria-label="Petit mot de Georges" style="border:2px solid var(--vitc)">
+    <div class="gdtop"><div class="gport sm">${U(GEORGES_SVG)}</div><div class="info"><div class="ltype" style="color:var(--vitc)">Petite mise à jour</div><p class="lmot" style="color:var(--vitc);font-weight:600">Petite mise à jour pour plus de fluidité dans la rubrique alimentation.</p></div></div>
+    <div class="meta">Tu peux maintenant écrire ton repas comme tu le dis, et Georges calcule tes protéines tout seul. Les catégories se replient, et tes menus du jour et tes recettes sont réunis.</div>
+    <div class="lact"><button type="button" class="gbig" id="majGo">Je découvre</button></div></section>`;
+    document.getElementById("majGo").onclick=()=>{showTab("a");showSub("s");window.scrollTo(0,0)};return;}
   if(!L.length){slot.innerHTML="";return;}
   slot.innerHTML=L.map(n=>{
     const serie=n.type==="serie";
