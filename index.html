@@ -11,7 +11,7 @@
 <link rel="manifest" href="manifest.json">
 <meta http-equiv="Cache-Control" content="no-cache">
 <style>[hidden]{display:none!important}</style>
-<script>(function(){var B="1794481738";function chk(){try{fetch("version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.json()}).then(function(j){if(j&&j.v&&j.v!==B){var k="gv-reload";try{if(sessionStorage.getItem(k)===j.v)return;sessionStorage.setItem(k,j.v)}catch(e){}location.replace(location.pathname+"?v="+j.v)}}).catch(function(){})}catch(e){}}chk();document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible")chk()});})();</script>
+<script>(function(){var B="1794481804";function chk(){try{fetch("version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.json()}).then(function(j){if(j&&j.v&&j.v!==B){var k="gv-reload";try{if(sessionStorage.getItem(k)===j.v)return;sessionStorage.setItem(k,j.v)}catch(e){}location.replace(location.pathname+"?v="+j.v)}}).catch(function(){})}catch(e){}}chk();document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible")chk()});})();</script>
 <title>Georges</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700&family=Figtree:wght@400;500;600&display=swap">
 <style>
@@ -1086,12 +1086,16 @@ const scale=(f,q)=>[f[0],f[1],f[2],...f.slice(3).map(x=>x*q)];
 function offScale(e){const k=e.g/100,n=e.o;return ["","","",n.p*k,n.fe*k,n.zn*k,n.ca*k,n.c*k,0];}
 function sumEat(){const t=["","","",0,0,0,0,0,0];EAT.forEach(e=>{const v=e.kind==="food"?scale(e.f,e.q):e.kind==="off"?offScale(e):null;if(v)for(let i=3;i<9;i++)t[i]+=v[i]});return t;}
 async function offSearch(i){const e=EAT[i];e.kind="search";e.busy=true;e.list=[];e.err="";eatRender();
-  try{const u="https://world.openfoodfacts.org/cgi/search.pl?search_simple=1&action=process&json=1&page_size=8&fields=product_name,brands,nutriments,serving_quantity,nova_group,nutriscore_grade,additives_n&search_terms="+encodeURIComponent(e.txt);
-    const r=await fetch(u);const d=await r.json();
-    e.list=(d.products||[]).filter(o=>o.product_name&&o.nutriments&&o.nutriments.proteins_100g!=null).slice(0,6).map(o=>{const N=o.nutriments,mg=k=>(N[k]||0)*1000;
-      return {n:o.product_name,b:(o.brands||"").split(",")[0],sq:+o.serving_quantity||0,w:warn(o),p:+N.proteins_100g||0,fe:mg("iron_100g"),zn:mg("zinc_100g"),ca:mg("calcium_100g"),c:mg("vitamin-c_100g")}});
-    if(!e.list.length)e.err="Je n'ai rien trouvé. Essaie avec la marque, ou ajoute-le avec ses valeurs exactes plus bas.";
-  }catch(_){e.err="Pas de connexion pour chercher ce produit. Réessaie plus tard, ou ajoute-le avec ses valeurs exactes plus bas."}
+  const F="product_name,product_name_fr,brands,nutriments,serving_quantity,nova_group,nutriscore_grade,additives_n";
+  const mk=o=>{const N=o.nutriments||{},mg=k=>(+N[k]||0)*1000,b=Array.isArray(o.brands)?o.brands[0]:(o.brands||"").split(",")[0];
+    return {n:o.product_name_fr||o.product_name,b,sq:+o.serving_quantity||0,w:warn(o),p:+N.proteins_100g||0,fe:mg("iron_100g"),zn:mg("zinc_100g"),ca:mg("calcium_100g"),c:mg("vitamin-c_100g")}};
+  const ok=o=>(o.product_name_fr||o.product_name)&&o.nutriments&&o.nutriments.proteins_100g!=null;
+  const tries=[
+    async()=>{const r=await fetch("https://search.openfoodfacts.org/search?page_size=10&langs=fr&fields="+F+"&q="+encodeURIComponent(e.txt));if(!r.ok)throw 0;const d=await r.json();return d.hits||[]},
+    async()=>{const r=await fetch("https://world.openfoodfacts.org/cgi/search.pl?search_simple=1&action=process&json=1&page_size=10&fields="+F+"&search_terms="+encodeURIComponent(e.txt));if(!r.ok)throw 0;const d=await r.json();return d.products||[]}];
+  let got=null;for(const t of tries){try{got=await t();break}catch(_){}}
+  if(got===null)e.err="Je n'arrive pas à joindre la base des produits du commerce pour le moment. Réessaie dans un instant, ou ajoute-le avec ses valeurs exactes plus bas.";
+  else{e.list=got.filter(ok).slice(0,6).map(mk);if(!e.list.length)e.err="Je n'ai rien trouvé. Essaie avec la marque, ou ajoute-le avec ses valeurs exactes plus bas.";}
   e.busy=false;eatRender();}
 document.getElementById("eatGo").addEventListener("click",()=>{
   const txt=document.getElementById("eatQ").value.trim();if(!txt)return;FOODKEYS=null;
