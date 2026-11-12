@@ -11,7 +11,7 @@
 <link rel="manifest" href="manifest.json">
 <meta http-equiv="Cache-Control" content="no-cache">
 <style>[hidden]{display:none!important}</style>
-<script>(function(){var B="1794481804";function chk(){try{fetch("version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.json()}).then(function(j){if(j&&j.v&&j.v!==B){var k="gv-reload";try{if(sessionStorage.getItem(k)===j.v)return;sessionStorage.setItem(k,j.v)}catch(e){}location.replace(location.pathname+"?v="+j.v)}}).catch(function(){})}catch(e){}}chk();document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible")chk()});})();</script>
+<script>(function(){var B="1794484327";function chk(){try{fetch("version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.json()}).then(function(j){if(j&&j.v&&j.v!==B){var k="gv-reload";try{if(sessionStorage.getItem(k)===j.v)return;sessionStorage.setItem(k,j.v)}catch(e){}location.replace(location.pathname+"?v="+j.v)}}).catch(function(){})}catch(e){}}chk();document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible")chk()});})();</script>
 <title>Georges</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700&family=Figtree:wght@400;500;600&display=swap">
 <style>
@@ -1566,7 +1566,7 @@ function brStop(){clearTimeout(brTm);clearInterval(brTk);brTm=brTk=null;}
 function brOpen(i){brStop();brI=i;brK=0;const b=BREATHS[i];
   document.getElementById("brT").textContent=b.e+" "+b.n;document.getElementById("brD").textContent=b.d;
   document.getElementById("brN").textContent="Respiration · "+brDur(b);
-  const w=document.getElementById("brW");w.hidden=!b.fast;w.textContent="Assis ou allongé, jamais en conduisant ni dans l'eau. Si la tête tourne, reprends un souffle normal. Évite cette respiration si tu es enceinte, épileptique ou si tu as un souci cardiaque.";
+  const w=document.getElementById("brW");w.hidden=!b.fast;w.textContent="⚠️ Toujours assis ou allongé : jamais debout, en conduisant ou dans l'eau. Elle peut donner des vertiges ou des fourmillements : si la tête tourne, reprends un souffle normal. À éviter si tu es enceinte, si tu as de l'hypertension, un souci cardiaque ou de l'épilepsie.";
   const c=document.getElementById("brC");c.style.transitionDuration="0s";c.style.transform="scale(.45)";
   document.getElementById("brL").textContent="Prêt ?";document.getElementById("brS").textContent=brDur(b);
   document.getElementById("brGo").textContent="Commencer";document.getElementById("brGo").hidden=false;
@@ -1593,7 +1593,7 @@ function renderMedits(){
   const nvHTML=nv.length?`<section class="card"><h2>Les annonces de Georges<span>${nv.length}</span></h2>${nv.map(n=>`<div class="med"><div class="info"><div class="name">${esc(n.titre)}</div><div class="meta">${n.type==="serie"?"La série du moment":"Vidéo gratuite"} · ${esc(n.sous)}${n.episode?` · Épisode 1 offert : « ${esc(n.episode)} »`:""}</div></div>
       ${n.type==="serie"?(n.youtube?ytBtn(n.youtube,n.titre+" · Épisode 1","▶ Épisode 1 offert"):"")+(n.page?`<a class="go buy" href="${esc(n.page)}" target="_blank" rel="noopener">Découvrir ↗</a>`:(n.youtube?"":`<span class="soon">Lien à venir</span>`)):(n.youtube?ytBtn(n.youtube,n.titre,"▶ Regarder"," buy"):`<span class="soon">Lien à venir</span>`)}</div>`).join("")}</section>`:"";
   const exoCard=`<section class="card"><h2>Exercice du matin<span>2 min 30</span></h2><div class="med"><div class="info"><div class="name">Ancrage et étirement</div><div class="meta">5 mouvements de 30 secondes, en images</div></div><button type="button" class="go" data-exo="1">Ouvrir la fiche</button></div></section>`;
-  const brCard=`<section class="card"><h2>Respirations<span>${BREATHS.length}</span></h2>${BREATHS.map((b,i)=>`<div class="med"><div class="info"><div class="name">${b.e} ${esc(b.n)}</div><div class="meta">${esc(b.s)} · ${brDur(b)}</div></div><button type="button" class="go" data-br="${i}">Respirer</button></div>`).join("")}</section>`;
+  const brCard=`<section class="card"><h2>Respirations<span>${BREATHS.length}</span></h2>${BREATHS.map((b,i)=>`<div class="med"><div class="info"><div class="name">${b.e} ${esc(b.n)}</div><div class="meta">${esc(b.s)} · ${brDur(b)}</div>${b.fast?`<div class="meta" style="color:var(--vitc);font-weight:600">⚠️ Assis ou allongé, jamais debout, en conduisant ou dans l'eau. À éviter enceinte, ou en cas d'hypertension, de souci cardiaque ou d'épilepsie.</div>`:""}</div><button type="button" class="go" data-br="${i}">Respirer</button></div>`).join("")}</section>`;
   document.getElementById("medits").innerHTML=sec("Mon voyage intérieur immersif",VOYAGES)+nvHTML+sec("Mes méditations",MEDITS)+sec("Mes playlists YouTube",PLAYLISTS);
 }
 renderMedits();
