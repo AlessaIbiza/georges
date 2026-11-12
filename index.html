@@ -52,7 +52,7 @@
 .jr.rv .rvq{margin:0 0 4px}
 @media (prefers-reduced-motion:reduce){.starbtn svg,.sky .bg circle{animation:none}}
 </style>
-<script>(function(){var B="1794485521";function chk(){try{fetch("version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.json()}).then(function(j){if(j&&j.v&&j.v!==B){var k="gv-reload";try{if(sessionStorage.getItem(k)===j.v)return;sessionStorage.setItem(k,j.v)}catch(e){}location.replace(location.pathname+"?v="+j.v)}}).catch(function(){})}catch(e){}}chk();document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible")chk()});})();</script>
+<script>(function(){var B="1794485895";function chk(){try{fetch("version.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.json()}).then(function(j){if(j&&j.v&&j.v!==B){var k="gv-reload";try{if(sessionStorage.getItem(k)===j.v)return;sessionStorage.setItem(k,j.v)}catch(e){}location.replace(location.pathname+"?v="+j.v)}}).catch(function(){})}catch(e){}}chk();document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible")chk()});})();</script>
 <title>Georges</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700&family=Figtree:wght@400;500;600&display=swap">
 <style>
@@ -603,6 +603,13 @@ details.cat>summary h2+.row,details.cat>summary+.row{border-top:0}
 
     <div id="luneSlot"></div>
 
+    <section class="card" aria-labelledby="ritT">
+      <h2 id="ritT">Mes 5 engagements du jour<span id="ritScore"></span></h2>
+      <div id="ritList"></div>
+      <div class="streak" id="streak"></div>
+      <div class="days" id="vivDays" aria-label="Mes 7 derniers jours"></div>
+    </section>
+
     <section class="card ciel" aria-labelledby="etT">
       <h2 id="etT">L'étoile de Georges ✨</h2>
       <div class="sky">
@@ -644,12 +651,6 @@ details.cat>summary h2+.row,details.cat>summary+.row{border-top:0}
     </section>
 
 
-    <section class="card" aria-labelledby="ritT">
-      <h2 id="ritT">Mes 5 engagements du jour<span id="ritScore"></span></h2>
-      <div id="ritList"></div>
-      <div class="streak" id="streak"></div>
-      <div class="days" id="vivDays" aria-label="Mes 7 derniers jours"></div>
-    </section>
 
     <section class="card" aria-labelledby="msgT">
       <h2 id="msgT">Mon message intuitif</h2>
