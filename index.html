@@ -205,6 +205,7 @@ details.cat>summary h2+.row,details.cat>summary+.row{border-top:0}
 .rphoto div{display:flex;flex-direction:column;gap:5px;align-items:flex-start}
 .steph{align-self:flex-start;font-size:.78rem;font-weight:700;color:var(--leaf);background:var(--leaf-soft);border-radius:12px;padding:2px 10px}
 .nut .kc{font-weight:600}
+#kcCard h2{display:flex;justify-content:space-between;align-items:baseline;gap:8px}#kcCard .kcday{font-weight:400;color:var(--muted,#4a6b6b)}#kcCard .kcday b{font-size:1.4em;color:var(--leaf,#0a8379);margin-right:4px}
 .badge{align-self:flex-start;font-size:.8rem;font-weight:600;color:var(--iron);border:1.5px solid var(--iron);border-radius:12px;padding:2px 10px}
 .eat{align-self:stretch;padding:11px;border-radius:10px;border:0;background:var(--leaf);color:var(--bg);font:600 .95rem var(--body);cursor:pointer}
 .more{align-self:center;background:var(--card);border:1px solid var(--line);color:var(--fg);padding:9px 18px;border-radius:20px;font:600 .9rem var(--body);cursor:pointer}
@@ -745,23 +746,7 @@ details.cat>summary h2+.row,details.cat>summary+.row{border-top:0}
   <!-- SUIVI -->
   <div id="pane-s" class="pane" role="tabpanel" aria-labelledby="tab-s">
     <section class="card" aria-labelledby="kcT" id="kcCard">
-      <h2 id="kcT">Mes calories du jour<span id="kScore"></span></h2>
-      <div class="settings">
-        <label for="pT">Taille <input id="pT" type="number" inputmode="numeric" min="130" max="210"> cm</label>
-        <label for="pA">Âge <input id="pA" type="number" inputmode="numeric" min="16" max="99"> ans</label>
-        <label for="pG">Objectif <input id="pG" type="number" inputmode="decimal" min="35" max="180" step="0.1" placeholder="—"> kg</label>
-        <label for="pS">Sport <select id="pS"><option value="0">0 séance</option><option value="1">1 séance</option><option value="2">2 séances</option><option value="3">3 séances</option><option value="3.5">3 à 4 séances</option><option value="5">5 séances et +</option></select> / sem.</label>
-      </div>
-      <div class="sumtop">
-        <svg class="ring" viewBox="0 0 100 100" aria-hidden="true">
-          <circle class="bgc" cx="50" cy="50" r="42"/>
-          <circle class="fgc" id="kArc" cx="50" cy="50" r="42" transform="rotate(-90 50 50)" stroke-dasharray="263.9" stroke-dashoffset="263.9"/>
-          <text id="kTot" x="50" y="52" text-anchor="middle">0</text>
-          <text class="small" x="50" y="68" text-anchor="middle">kcal</text>
-        </svg>
-        <div class="stats"><b id="kLeft">—</b><div class="meta" id="kGoal"></div></div>
-      </div>
-      <p class="meta colnote" id="kNote"></p>
+      <h2 id="kcT">Mes calories du jour<span class="kcday"><b id="kTot">0</b> kcal</span></h2>
     </section>
     <section class="card" aria-label="Résumé du jour">
       <div class="settings">
@@ -1032,32 +1017,7 @@ const KCAL={laitS:85,laitA:40,yaS:65,avoine:150,painC:95,cacah:95,pureeA:200,tah
  xOlive:45,xPist:170,xNois:190,xCacah:170,xLevure:18,xSpir:10,xSoupeL:90,xPoire:100,xPeche:50,xMelon:65,xClem:70,xCerise:95,xComp:70,xChocoL:110,xPatTar:100,xCoco:65,
  pousseS:30,lentG:105,poisG:135,alfalfa:7,xConc:15,xSal:7,xMache:10,xOign:20,xPoir:30,xAuber:35,xChou:25,xMais:95,xFeve:90,xFlag:150,xHarN:200,xPoisCa:175,xLentC:170,xBoul:125};
 const kcalOf=f=>f[9]!=null?f[9]:(KCAL[f[0]]||0);
-let pp=Object.assign({t:"",a:"",g:"",s:3},load("perso",{}));
-function persoPlan(){
-  if(!(pp.t>0&&pp.a>0))return null;
-  const bmr=10*prof.kg+6.25*pp.t-5*pp.a+(prof.sex==="m"?5:-161);   // Mifflin-St Jeor
-  const tdee=bmr*(1.3+0.025*pp.s);
-  const lose=pp.g>0&&prof.kg-pp.g>0.3;
-  const goal=lose?Math.max(prof.sex==="m"?1700:1400,Math.round((tdee-300)/10)*10):Math.round(tdee/10)*10;   // déficit doux d'environ 300 kcal
-  return {tdee:Math.round(tdee),goal,lose};
-}
-[["pT","t"],["pA","a"],["pG","g"],["pS","s"]].forEach(([id,k])=>{const el=document.getElementById(id);if(pp[k]!==""&&pp[k]!=null)el.value=pp[k];
-  el.addEventListener(el.tagName==="SELECT"?"change":"input",()=>{const v=parseFloat(String(el.value).replace(",","."));pp[k]=v>0?v:"";store("perso",pp);render();});});
-function renderPerso(T){
-  const P=persoPlan(),k=Math.round(T.k),arc=document.getElementById("kArc");
-  document.getElementById("kTot").textContent=k;
-  if(!P){arc.setAttribute("stroke-dashoffset","263.9");document.getElementById("kLeft").textContent=`${k} kcal aujourd'hui`;
-    document.getElementById("kGoal").textContent="";document.getElementById("kScore").textContent="";
-    document.getElementById("kNote").textContent="Indique ta taille et ton âge pour connaître ce dont ton corps a besoin chaque jour.";return;}
-  arc.setAttribute("stroke-dashoffset",(263.9*(1-Math.min(1,k/P.goal))).toFixed(1));
-  arc.style.stroke=k>P.goal+100?"var(--iron)":"";
-  document.getElementById("kLeft").textContent=k<=P.goal?`Encore ${P.goal-k} kcal`:`${k-P.goal} kcal au-dessus`;
-  document.getElementById("kGoal").textContent=`Repère : ${P.goal} kcal par jour${P.lose?" pour perdre du gras en douceur":""}`;
-  document.getElementById("kScore").textContent=P.lose?` · déficit d'environ ${P.tdee-P.goal} kcal`:"";
-  document.getElementById("kNote").textContent=P.lose
-    ?`Ton corps dépense environ ${P.tdee} kcal par jour. Avec ${P.goal} kcal et tes protéines atteintes, tu perds en douceur du gras en gardant ton muscle.`
-    :`Ton corps dépense environ ${P.tdee} kcal par jour. C'est ton repère pour rester stable.`;
-}
+function renderPerso(T){document.getElementById("kTot").textContent=Math.round(T.k);}
 
 document.getElementById("kg").value=prof.kg;document.getElementById("act").value=prof.act;document.getElementById("sex").value=prof.sex;
 document.getElementById("bars").innerHTML=NUT.map(([k,,l,u,col])=>`<div class="bar"><div class="lab"><b>${l}</b><span id="t-${k}"></span></div><div class="track"><div id="b-${k}" style="background:var(${col})"></div></div></div>`).join("");
