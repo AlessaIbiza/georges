@@ -1,3 +1,6 @@
+# ⚠️ Plus utilisé depuis le 16/11/2026 : Georges contient maintenant le compteur de calories et l'équivalent œuf végétal.
+# Ce script ne correspond plus à index.html : ne pas le relancer, la page « Mon assiette » reste telle quelle.
+raise SystemExit("build-perso.py n'est plus utilisé : Georges contient désormais les calories.")
 # Fabrique la page perso « Mon assiette » (mes-proteines/) à partir de Georges (index.html).
 # Georges lui-même ne contient AUCUNE calorie : tout le module calories est ajouté ici, seulement dans la page perso.
 # À relancer après chaque modification de index.html :  python3 build-perso.py
