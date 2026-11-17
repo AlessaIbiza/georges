@@ -1,0 +1,178 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Eat to grow">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#2f6b4f">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" href="icon-192.png">
+<link rel="manifest" href="manifest.json">
+<title>Eat to grow</title>
+<style>
+:root{--ink:#1f2a24;--muted:#5d6b63;--green:#2f6b4f;--green2:#3f8a66;--leaf:#e3efe6;--terra:#c8643b;--sand:#f7f2ea;--card:#fff;--line:#e3e8e3;--gold:#e2a23a}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--sand);color:var(--ink);font:15px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,sans-serif}
+.wrap{max-width:560px;margin:0 auto;padding:calc(env(safe-area-inset-top,0px) + 14px) max(16px,env(safe-area-inset-right,0px)) calc(env(safe-area-inset-bottom,0px) + 90px) max(16px,env(safe-area-inset-left,0px))}
+h1{font:800 28px/1.1 Georgia,serif;color:var(--green);margin:0}
+h2{font:700 19px/1.2 Georgia,serif;color:var(--green);margin:22px 0 10px}
+.by{font-size:12.5px;color:var(--terra);font-weight:600;margin-top:3px}
+.card{background:var(--card);border-radius:16px;padding:16px;box-shadow:0 1px 0 var(--line)}
+.ring{display:flex;gap:16px;align-items:center;margin-top:16px}
+.ring svg{flex:none}
+.ring .num{font:800 30px/1 Georgia,serif;color:var(--green)}
+.ring .sub{color:var(--muted);font-size:13px}
+.msg{margin-top:6px;font-weight:600;color:var(--terra);font-size:14px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.food{border:1px solid var(--line);background:#fff;border-radius:12px;padding:10px 11px;text-align:left;font:inherit;color:inherit;cursor:pointer;display:flex;justify-content:space-between;gap:8px;align-items:center;min-width:0}
+.food span{font-size:13.5px;line-height:1.25;min-width:0}
+.food small{display:block;color:var(--muted);font-size:11.5px}
+.food b{flex:none;background:var(--leaf);color:var(--green);border-radius:99px;padding:3px 8px;font-size:12.5px}
+.food:active{transform:scale(.97)}
+.food.box b{background:#fbe6dc;color:var(--terra)}
+.cat{font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:700;margin:14px 0 6px}
+.log{list-style:none;margin:0;padding:0}
+.log li{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--line);font-size:14px}
+.log button{border:0;background:none;color:var(--muted);font-size:18px;cursor:pointer;padding:0 4px}
+.check{list-style:none;margin:0;padding:0}
+.check li{display:flex;gap:10px;align-items:center;padding:9px 0;border-bottom:1px solid var(--line);cursor:pointer;font-size:14.5px}
+.check li i{width:22px;height:22px;border-radius:7px;border:2px solid var(--green);flex:none;display:grid;place-items:center;font-style:normal;color:#fff;font-size:13px}
+.check li.on i{background:var(--green)}
+.check li.on span{color:var(--muted);text-decoration:line-through}
+.week{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;align-items:end;height:90px;margin-top:6px}
+.week div{display:flex;flex-direction:column;align-items:center;gap:4px;font-size:11px;color:var(--muted);height:100%;justify-content:flex-end}
+.week i{display:block;width:100%;border-radius:6px 6px 3px 3px;background:var(--green2);min-height:3px}
+.week i.low{background:#c9d9cf}
+nav{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid var(--line);display:flex;justify-content:center;padding-bottom:env(safe-area-inset-bottom,0px);z-index:5}
+nav button{flex:1;max-width:140px;border:0;background:none;padding:10px 4px 12px;font:600 12px/1.2 inherit;color:var(--muted);cursor:pointer}
+nav button span{display:block;font-size:20px;margin-bottom:2px}
+nav button[aria-pressed=true]{color:var(--green)}
+.pane[hidden]{display:none}
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+td{padding:8px 4px;border-bottom:1px solid var(--line);vertical-align:top}
+td:first-child{font-weight:700;color:var(--green);width:30%}
+.today td{background:var(--leaf)}
+.rec{margin-bottom:12px}
+.rec img,.rec .ph{width:100%;height:150px;object-fit:cover;border-radius:12px;display:grid;place-items:center;color:#fff;font:700 20px Georgia,serif}
+.rec h3{margin:10px 0 2px;font:700 17px Georgia,serif}
+.rec .p{display:inline-block;background:var(--terra);color:#fff;border-radius:99px;padding:1px 9px;font-size:12px;font-weight:600}
+.rec .ing{color:var(--muted);font-size:13px;margin:6px 0}
+.rec ol{margin:6px 0 0;padding-left:20px;font-size:14px}
+.rec li{margin-bottom:4px}
+.set{display:flex;gap:8px;align-items:center;font-size:13.5px;color:var(--muted);margin-top:10px}
+.set input{width:64px;font:inherit;padding:5px 7px;border:1px solid var(--line);border-radius:8px}
+.toast{position:fixed;left:50%;bottom:86px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:9px 16px;border-radius:99px;font-size:14px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:9}
+.toast.on{opacity:1}
+.install{font-size:13px;color:var(--muted);background:#fff;border-radius:12px;padding:12px;margin-top:14px}
+.reset{border:1px solid var(--line);background:#fff;border-radius:99px;padding:6px 12px;font:inherit;font-size:13px;color:var(--muted);cursor:pointer}
+</style></head><body>
+<div class="wrap">
+ <h1>Eat to grow</h1>
+ <div class="by">Made with love by Stéphie 💚</div>
+
+ <!-- TODAY -->
+ <section class="pane" id="p-today">
+  <div class="card ring">
+   <svg width="104" height="104" viewBox="0 0 104 104" aria-hidden="true"><circle cx="52" cy="52" r="44" fill="none" stroke="#e3efe6" stroke-width="12"/><circle id="arc" cx="52" cy="52" r="44" fill="none" stroke="#2f6b4f" stroke-width="12" stroke-linecap="round" stroke-dasharray="276.5" stroke-dashoffset="276.5" transform="rotate(-90 52 52)"/></svg>
+   <div><div class="num"><span id="got">0</span> g</div><div class="sub">of <span id="goal">110</span> g protein today</div><div class="msg" id="msg"></div></div>
+  </div>
+  <h2>Tap what you eat</h2>
+  <div class="cat">My boxes (from the guide)</div><div class="grid" id="g-box"></div>
+  <div class="cat">Plant protein</div><div class="grid" id="g-plant"></div>
+  <div class="cat">Eggs &amp; dairy</div><div class="grid" id="g-egg"></div>
+  <div class="cat">Extras</div><div class="grid" id="g-more"></div>
+  <h2>Today you ate</h2>
+  <div class="card"><ul class="log" id="log"></ul></div>
+  <h2>Daily habits</h2>
+  <div class="card"><ul class="check" id="habits"></ul></div>
+  <h2>Last 7 days</h2>
+  <div class="card"><div class="week" id="week"></div></div>
+  <div class="set">My weight <input id="kg" type="number" inputmode="numeric" value="61"> kg → goal <b id="goal2">110</b> g/day</div>
+ </section>
+
+ <!-- PLAN -->
+ <section class="pane" id="p-plan" hidden>
+  <h2>Your week</h2>
+  <p style="color:var(--muted);margin:0 0 10px;font-size:14px">Cook on Sunday and Wednesday. The other days, just heat a box.</p>
+  <div class="card"><table id="plan"></table></div>
+  <h2>A typical day ≈ 120 g</h2>
+  <div class="card"><table>
+   <tr><td>Breakfast</td><td>Oats, milk, peanut butter, banana, or 3 eggs on toast</td></tr>
+   <tr><td>Lunch</td><td>A box of bolognese, curry or chilli</td></tr>
+   <tr><td>Snack</td><td>Protein shake + banana, or 2 boiled eggs</td></tr>
+   <tr><td>Dinner</td><td>Another box + rice + yoghurt on top</td></tr></table></div>
+ </section>
+
+ <!-- SHOP -->
+ <section class="pane" id="p-shop" hidden>
+  <h2>Shopping list</h2>
+  <p style="color:var(--muted);margin:0 0 10px;font-size:14px">Checkers, Pick n Pay, Spar or Woolworths. Plain soya mince and soya chunks also at Dis-Chem.</p>
+  <div class="card"><ul class="check" id="shop"></ul></div>
+  <p><button class="reset" id="unshop" type="button">Untick everything for next week</button></p>
+ </section>
+
+ <!-- RECIPES -->
+ <section class="pane" id="p-rec" hidden>
+  <h2>Your recipes</h2>
+  <div id="recs"></div>
+ </section>
+
+ <div class="install" id="inst">📱 <b>Put it on your phone:</b> iPhone: open in Safari, tap Share, then “Add to Home Screen”. Android: open in Chrome, tap ⋮, then “Add to Home screen” or “Install app”. Your data stays only on your phone.</div>
+</div>
+
+<nav>
+ <button type="button" data-p="today" aria-pressed="true"><span>💪</span>Today</button>
+ <button type="button" data-p="plan" aria-pressed="false"><span>📅</span>Week</button>
+ <button type="button" data-p="shop" aria-pressed="false"><span>🛒</span>Shopping</button>
+ <button type="button" data-p="rec" aria-pressed="false"><span>🍲</span>Recipes</button>
+</nav>
+<div class="toast" id="toast"></div>
+
+<script>
+const FOODS={
+ box:[["Bolognese box","with spaghetti + cheese",35],["Coconut curry box","with rice",30],["Chilli box","with rice",27],["Lentil dhal box","with rice",23],["Protein breakfast bowl","yoghurt + soya mince",30],["Egg fried rice","3 eggs",25]],
+ plant:[["Soya mince","50 g dry",25],["Soya chunks","50 g dry",25],["Red beans","½ can",10],["Lentils","75 g dry",18],["Chickpeas","½ can",10],["Tofu","100 g",13],["Peanut butter","2 tbsp",8],["Oats","60 g",8],["Brown bread","2 slices",8],["Nuts","a handful",6]],
+ egg:[["1 egg","",6],["3-egg omelette","",18],["Greek yoghurt","200 g",18],["Amasi / milk","250 ml",8],["Cheese","1 slice, 30 g",7]],
+ more:[["Protein shake","1 scoop",22],["Rice","1 plate",5],["Pasta","1 plate",9],["Baked beans","½ can",10]]
+};
+const HAB=["Protein at breakfast","4–5 meals today","Protein shake","2 litres of water","Gym or a good walk","7–8 hours of sleep"];
+const SHOP=["Eggs · 30","Soya mince (plain) · 500 g","Soya chunks · 250 g","Red kidney beans · 3 cans","Chickpeas · 2 cans","Red lentils · 500 g","Greek yoghurt or amasi · 2 × 1 kg","Milk · 3 L","Cheese · 400 g","Peanut butter · 1 jar","Protein sachets","Rice · 2 kg","Spaghetti · 1 kg","Oats or Futurelife · 1 kg","Brown bread · 1 loaf","Tortilla wraps · 1 pack","Onions · 1 kg","Garlic · 1 bulb","Bananas · 10","Frozen mixed veg · 1 kg","Frozen peas · 500 g","Spinach · 1 bag","Lemons · 2","Chopped tomatoes · 4 cans","Tomato paste · 1 tin","Coconut milk · 2 cans","Stock cubes","Curry powder, paprika, cumin, herbs","Oil, salt, pepper"];
+const PLAN=[["Sunday","🍳 3 eggs on toast · 🔥 COOK: bolognese, curry, rice, boil 6 eggs · Dinner: bolognese"],["Monday","Oats + PB + banana · Bolognese · Shake + banana · Curry + rice + yoghurt"],["Tuesday","Protein bowl · Curry + rice · Shake + 2 eggs · Bolognese"],["Wednesday","3 eggs on toast · Curry + rice · Shake + banana · 🔥 COOK: chilli + dhal → chilli + rice"],["Thursday","Oats + PB + banana · Chilli wrap + cheese · Yoghurt + banana · Dhal + rice + 2 eggs"],["Friday","Protein bowl · Egg fried rice · Shake + banana · Chilli + rice"],["Saturday","3 eggs on toast + cheese · Dhal + rice · Shake + 2 eggs · Free meal, enjoy!"]];
+const RECS=[
+ {n:"Soya bolognese",p:"≈ 35 g / box",img:"bolo.jpg",ing:"4 boxes · 200 g soya mince, 2 onions, 3 garlic cloves, 2 cans chopped tomatoes, 2 tbsp tomato paste, 2 stock cubes, paprika, herbs, oil · spaghetti + cheese",s:["Soak the soya mince 10 min in 500 ml hot water with 1 stock cube. Squeeze it well with your hands: that's the secret.","Fry onion and garlic in oil 3 min. Add the soya mince, fry 5 min until a bit golden.","Add tomatoes, paste, the other stock cube, paprika and herbs. Simmer 15 min.","Cook the spaghetti, mix, share into 4 boxes. Add cheese when you eat."]},
+ {n:"Coconut curry “chicken”",p:"≈ 30 g / box",col:"linear-gradient(135deg,#d9a441,#c8643b)",ing:"4 boxes · 250 g soya chunks, 1 onion, 2 garlic cloves, 2 tbsp curry powder, 1 can coconut milk, 1 can chopped tomatoes, frozen veg, 1 stock cube · rice",s:["Soak the chunks 10 min in hot water with the stock cube. Squeeze well.","Fry the onion until golden, add chunks + curry powder, fry 5 min.","Add tomatoes, coconut milk and frozen veg. Simmer 15 min.","Cook a big pot of rice for the week. Share into 4 boxes."]},
+ {n:"Red bean chilli",p:"≈ 27 g / box",col:"linear-gradient(135deg,#b4442f,#7a2b22)",ing:"4 boxes · 100 g soya mince, 2 cans red kidney beans, 1 onion, 2 garlic cloves, 1 can tomatoes, cumin, paprika, a little chilli · rice or wraps",s:["Soak and squeeze the soya mince.","Fry onion and garlic, add soya mince and spices.","Add rinsed beans and tomatoes, simmer 15 min."]},
+ {n:"Lentil dhal",p:"≈ 30 g with 2 eggs",col:"linear-gradient(135deg,#e2a23a,#b8722a)",ing:"4 boxes · 300 g red lentils, 1 onion, 2 garlic cloves, 2 tbsp curry powder, coconut milk or water, spinach, lemon · rice + yoghurt or eggs",s:["Fry onion, garlic and curry powder 3 min.","Add rinsed lentils + 900 ml water. Cook 20 min, stirring, until creamy.","Add spinach at the end and a squeeze of lemon."]},
+ {n:"Stéphie's protein breakfast bowl",p:"≈ 30 g",img:"bowl.jpg",ing:"200 g Greek yoghurt, 2 tbsp fine soya mince, 1 tbsp chia (optional), banana or any fruit",s:["Mix the soya mince into the yoghurt, wait 10 min (it softens).","Add the fruit on top."]},
+ {n:"Egg fried rice",p:"≈ 25 g",col:"linear-gradient(135deg,#e7c25a,#c58b2b)",ing:"3 eggs, 1 bowl cooked rice from the fridge, frozen peas, oil, salt",s:["Fry rice and peas 3 min.","Push to the side, scramble the eggs, mix everything."]}];
+const $=id=>document.getElementById(id);
+const K="etg1";let S;try{S=JSON.parse(localStorage.getItem(K))||{}}catch(e){S={}}
+S.days=S.days||{};S.shop=S.shop||{};S.kg=S.kg||61;
+const save=()=>{try{localStorage.setItem(K,JSON.stringify(S))}catch(e){}};
+const dkey=d=>{const z=new Date(d.getTime()-d.getTimezoneOffset()*6e4);return z.toISOString().slice(0,10)};
+let T=dkey(new Date());
+const day=()=>S.days[T]=S.days[T]||{log:[],hab:{}};
+const goal=()=>Math.round(S.kg*1.8/5)*5;
+function toast(t){const e=$("toast");e.textContent=t;e.classList.add("on");clearTimeout(e._t);e._t=setTimeout(()=>e.classList.remove("on"),1400)}
+function foods(){for(const k in FOODS){$("g-"+k).innerHTML="";FOODS[k].forEach(([n,q,p])=>{const b=document.createElement("button");b.type="button";b.className="food"+(k==="box"?" box":"");b.innerHTML=`<span></span><b>+${p} g</b>`;b.querySelector("span").innerHTML=n+(q?`<small>${q}</small>`:"");b.onclick=()=>{day().log.push([n,p]);save();render();toast(`+${p} g · ${n}`)};$("g-"+k).appendChild(b)})}}
+function render(){const D=day(),got=D.log.reduce((a,x)=>a+x[1],0),G=goal();
+ $("got").textContent=got;$("goal").textContent=G;$("goal2").textContent=G;
+ $("arc").setAttribute("stroke-dashoffset",276.5*(1-Math.min(1,got/G)));
+ $("msg").textContent=got>=G?"Goal reached. Well done! 💪":got>=G*.6?`Only ${G-got} g to go`:got>0?"Good start, keep going":"Start with a protein breakfast";
+ const L=$("log");L.innerHTML="";if(!D.log.length)L.innerHTML='<li style="color:var(--muted)">Nothing yet today.</li>';
+ D.log.forEach(([n,p],i)=>{const li=document.createElement("li");li.innerHTML=`<span></span><span><b>${p} g</b> <button type="button" aria-label="Remove">×</button></span>`;li.firstChild.textContent=n;li.querySelector("button").onclick=()=>{D.log.splice(i,1);save();render()};L.appendChild(li)});
+ const H=$("habits");H.innerHTML="";HAB.forEach((h,i)=>{const li=document.createElement("li");if(D.hab[i])li.className="on";li.innerHTML=`<i>✓</i><span>${h}</span>`;li.onclick=()=>{D.hab[i]=!D.hab[i];save();render()};H.appendChild(li)});
+ const W=$("week");W.innerHTML="";for(let k=6;k>=0;k--){const d=new Date();d.setDate(d.getDate()-k);const dd=S.days[dkey(d)],g=dd?dd.log.reduce((a,x)=>a+x[1],0):0;const c=document.createElement("div");c.innerHTML=`<span>${g||""}</span><i class="${g<G?"low":""}" style="height:${Math.max(3,Math.min(60,g/G*60))}px"></i><span>${"SMTWTFS"[d.getDay()]}</span>`;W.appendChild(c)}
+ const td=new Date().getDay();$("plan").innerHTML=PLAN.map(([d,t],i)=>`<tr class="${i===td?"today":""}"><td>${d}</td><td>${t}</td></tr>`).join("");
+ const Sh=$("shop");Sh.innerHTML="";SHOP.forEach((s,i)=>{const li=document.createElement("li");if(S.shop[i])li.className="on";li.innerHTML=`<i>✓</i><span>${s}</span>`;li.onclick=()=>{S.shop[i]=!S.shop[i];save();render()};Sh.appendChild(li)});
+}
+$("recs").innerHTML=RECS.map(r=>`<div class="card rec">${r.img?`<img src="${r.img}" alt="${r.n}" loading="lazy">`:`<div class="ph" style="background:${r.col}">${r.n}</div>`}<h3>${r.n}</h3><span class="p">${r.p}</span><p class="ing">${r.ing}</p><ol>${r.s.map(x=>`<li>${x}</li>`).join("")}</ol></div>`).join("");
+$("kg").value=S.kg;$("kg").oninput=e=>{const v=+e.target.value;if(v>30&&v<200){S.kg=v;save();render()}};
+$("unshop").onclick=()=>{S.shop={};save();render();toast("List ready for next week")};
+document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>{document.querySelectorAll("nav button").forEach(x=>x.setAttribute("aria-pressed",x===b));document.querySelectorAll(".pane").forEach(p=>p.hidden=p.id!=="p-"+b.dataset.p);scrollTo(0,0)});
+if(matchMedia("(display-mode: standalone)").matches||navigator.standalone)$("inst").hidden=true;
+document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible"){const n=dkey(new Date());if(n!==T){T=n;render()}}});
+foods();render();
+</script>
+</body></html>
